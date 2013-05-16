@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:drawable="@drawable/nav_tab_bg_pressed"
+        android:maxLevel="0"/>
+    <item
+        android:maxLevel="1"
+        android:color="@android:color/transparent"/>
+
+</level-list>

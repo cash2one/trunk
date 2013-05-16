@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="46dip"
+        android:background="#f3f3f3" >
+
+        <EditText
+            android:id="@+id/searchEdit"
+            android:layout_width="fill_parent"
+            android:layout_height="32dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="35dip"
+            android:background="@drawable/contact_edit_bg_selector"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="2dip"
+            android:hint="共有0个联系人"
+            android:paddingLeft="5dip"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_search_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="40dip"
+            android:background="@drawable/btn_search_clear_selector" />
+    </FrameLayout>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="#bcbcbc"
+        android:dividerHeight="1dip"
+        android:drawSelectorOnTop="false"
+        android:fadingEdge="none"
+        android:scrollingCache="false" />
+
+</LinearLayout>

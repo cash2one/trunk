@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="default_smiley_texts">
+        <item msgid="6418813270603201918">":-)"</item>
+        <item msgid="5037069969500587717">":-("</item>
+        <item msgid="1706022067142803863">";-)"</item>
+        <item msgid="1248733150365342132">":-P"</item>
+        <item msgid="817475806953665071">"=-O"</item>
+        <item msgid="2791428909459014455">":-*"</item>
+        <item msgid="3521914049512875091">":O"</item>
+        <item msgid="1245726345240784103">"B-)"</item>
+        <item msgid="6236841507652113784">":-$"</item>
+        <item msgid="9041518876704445176">":-!"</item>
+        <item msgid="5938573563873054892">":-["</item>
+        <item msgid="662834190186827918">"O:-)"</item>
+        <item msgid="8667007781479284572">":-\\"</item>
+        <item msgid="6895634303037073990">":\'("</item>
+        <item msgid="3660685022708121640">":-X"</item>
+        <item msgid="2893940139682468617">":-D"</item>
+        <item msgid="4888792634429693183">"o_O"</item>
+    </string-array>
+    <string-array name="default_smiley_names">
+        <item msgid="1831934949361041701">[开心]</item>
+        <item msgid="1601611480575517120">[忧伤]</item>
+        <item msgid="1531181614218625881">[眨眼]</item>
+        <item msgid="3858808057949077894">[吐舌]</item>
+        <item msgid="7835238297967185651">[惊讶]</item>
+        <item msgid="1756223535005296033">[亲吻]</item>
+        <item msgid="1093906245140165107">[叫喊]</item>
+        <item msgid="8888348398641501700">[冷酷]</item>
+        <item msgid="6320683740534773967">[财迷]</item>
+        <item msgid="6610111212478853990">[说错了话]</item>
+        <item msgid="1706035208563940251">[尴尬]</item>
+        <item msgid="9079275787422313427">[天使]</item>
+        <item msgid="4630490399784004880">[犹豫]</item>
+        <item msgid="7002574538342357456">[哭泣]</item>
+        <item msgid="8503245780892674558">[保密]</item>
+        <item msgid="6334637439528489607">[大笑]</item>
+        <item msgid="7602915122893958066">[困惑]</item>
+    </string-array>
+    
+    <string-array name="share_message">
+        <item msgid="sina">新浪微博</item>
+        <item msgid="tencent">腾讯微博</item>
+        <item msgid="qq">QQ空间</item>
+        <item msgid="douban">豆瓣网</item>
+        <item msgid="renren">人人网</item>
+    </string-array>
+    
+    <string-array name="simple_menu_list">
+        <item>微博同步</item>
+        <item>语音搜索</item>
+        <item>云标签</item>
+        <item>定位服务</item>
+        <item>流动布局</item>
+        <item>侧边栏导航</item>
+        <item>PhoneGap</item>
+        <item>选择图片</item>
+        <item>下载文件</item>
+        <item>扩展通知</item>
+        <item>语音朗读</item>
+        <item>快速反馈</item>
+        <item>系统设置</item>
+        <item>TabHost</item>
+        <item>环形进度条</item>
+        <item>文字处理</item>
+        <item>下拉刷新</item>
+        <item>网页视频</item>
+        <item>录制视频</item>
+        <item>VPlayer</item>
+        <item>夜间模式</item>
+        <item>NDK使用</item>
+        <item>Google地图</item>
+        <item>屏幕亮度</item>
+        <item>更换风格</item>
+        <item>二维码</item>
+        <item>ActionBar</item>
+        <item>Segment</item>
+        <item>WiFi编程</item>
+        <item>PATH菜单</item>
+        <item>图片处理</item>
+        <item>应用管理</item>
+        <item>日期控件</item>
+        <item>时间控件</item>
+        <item>多线程下载</item>
+    </string-array>
+</resources>

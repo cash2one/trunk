@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="45dip"
+    android:orientation="horizontal" >
+
+    <ImageButton
+        android:id="@+id/btnChange"
+        android:layout_width="54dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="left"
+        android:background="@drawable/contact_header_bg"
+        android:gravity="center"
+        android:src="@drawable/contact_btn_change_selector" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:src="@drawable/contact_btn_divide_line" />
+
+    <TextView
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@drawable/contact_header_bg"
+        android:gravity="center"
+        android:text="联系人"
+        android:textColor="#fcfdfe"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:src="@drawable/contact_btn_divide_line" />
+
+    <ImageButton
+        android:id="@+id/btnAdd"
+        android:layout_width="54dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right"
+        android:background="@drawable/contact_header_bg"
+        android:gravity="center"
+        android:src="@drawable/contact_btn_add_selector" />
+
+</LinearLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="main_background">#ffffffff</color>
+
+    <!-- pinned color -->
+    <color name="pinned_header_background">#ff202020</color>
+    <color name="pinned_header_text">#ffffffff</color>
+
+    <!-- actionbar color -->
+    <color name="actionbar_separator">#8B1A1A</color>
+    <color name="actionbar_title">#FFFFFF</color>
+    <color name="actionbar_background_start">#db0000</color>
+    <color name="actionbar_background_center">#c50300</color>
+    <color name="actionbar_background_end">#b30500</color>
+    <color name="actionbar_background_item_pressed_start">#FF7F00</color>
+    <color name="actionbar_background_item_pressed_end">#EE7600</color>
+
+    <!-- alert dialog color [alert_dialog_text_color.xml] -->
+    <color name="dialog_text_color_normal">#858585</color>
+    <color name="dialog_text_color_pressed">#E6E6E6</color>
+    <color name="dialog_seperator_color">#EDEDED</color>
+
+    <!-- zing color -->
+    <color name="zing_result_view">#b0000000</color>
+    <color name="zing_viewfinder_mask">#60000000</color>
+    <color name="zing_viewfinder_frame">#ff000000</color>
+    <color name="zing_viewfinder_laser">#ffff0000</color>
+    <color name="zing_possible_result_points">#c0ffff00</color>
+
+</resources>

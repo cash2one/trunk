@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 插件提供的功能(类) -->
+<plugin>
+	<!-- 注意此插件类必须是Activity子类  -->
+	<feature name="com.shandagames.android.Plugin">
+	    <description icon="icon name" title="plugin title">plugin desc</description>
+		<method if-need-context="false" name="methodName1">method desc</method>
+		<method if-need-context="true" name="methodName2">method desc</method>
+	</feature>
+</plugin>
+
+<!-- 同主程序的清单文件一样，sharedUserId必须有且和主程序的一样,插件的activity的意图过滤描述必须是这样 示例：
+	<intent-filter>
+		<category android:name="android.intent.category.DEFAULT" />
+	</intent-filter> 
+-->

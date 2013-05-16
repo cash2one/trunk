@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">project</string>
+    
+    <string name="empty"/>
+    <string name="back">返回</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    
+    <string name="slideBar_navigatioin">侧边栏导航</string>
+    
+    <string name="pull_to_refresh_pull_label">下拉可以刷新</string>
+    <string name="pull_to_refresh_release_label">松开可以刷新</string>
+    <string name="pull_to_refresh_refreshing_label">正在加载数据&#8230;</string>
+    
+    <string name="chronometer_start">Start</string>
+    <string name="chronometer_stop">Stop</string>
+    <string name="chronometer_reset">Set fixed date</string>
+    <string name="chronometer_set_format">Set format string</string>
+    <string name="chronometer_clear_format">Clear format string</string>
+    <string name="chronometer_initial_format">Initial format: %s</string>
+    <string name="chronometer_set_listener">Set countdown complete listener</string>
+    
+</resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal" >
+
+            <com.shandagames.android.widget.wheel.WheelView
+                android:id="@+id/country"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <com.shandagames.android.widget.wheel.WheelView
+                android:id="@+id/city"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal" >
+
+            <com.shandagames.android.widget.wheel.WheelView
+                android:id="@+id/year"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.5" />
+
+            <com.shandagames.android.widget.wheel.WheelView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <com.shandagames.android.widget.wheel.WheelView
+                android:id="@+id/day"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

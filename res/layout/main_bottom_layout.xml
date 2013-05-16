@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FooterBar"
+    android:layout_alignParentBottom="true"
+    android:gravity="center" >
+
+    <TextView
+        android:id="@+id/footer"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="dreamxsky@gmail.com"
+        android:textColor="#606060" />
+
+</LinearLayout>

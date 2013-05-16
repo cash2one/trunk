@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+>
+     <com.shandagames.android.widget.PinnedExpandableListView
+		android:id="@android:id/list"
+		android:layout_width="0dip"
+		android:layout_height="fill_parent"
+		android:layout_marginLeft="0.0dip"
+		android:layout_weight="1.0"
+		android:cacheColorHint="#00000000"
+		android:choiceMode="singleChoice"
+		android:drawSelectorOnTop="false"
+		android:fastScrollEnabled="false"
+		android:footerDividersEnabled="true"
+		android:groupIndicator="@null"
+		android:scrollbars="vertical"
+		android:scrollingCache="true"/>
+</LinearLayout>

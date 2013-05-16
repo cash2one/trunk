@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="146dp"
+    android:minHeight="72dp"
+    android:updatePeriodMillis="1000"
+    android:initialLayout="@layout/appwidget"/>
+
+ <!-- 
+ 1. 在res文件夹下创建一个xml文件夹，里面创建一个xml文件用于提供元数据：
+ 2. 创建App Widget的布局文件，android:initialLayout引用资源文件
+ 3. 创建一个类继承AppWidgetProvider并覆盖里面的几个常用的方法
+ 4. 在AndroidManifest.xml文件中声明一个receiver，注意intent和meta-data子标签的设置
+ 	<intent-filter>
+		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+	</intent-filter>
+	<meta-data android:name="android.appwidget.provider" android:resource="@xml/test_appwidget_info" />
+	
+	注意：所占宽高最小尺寸=（单元格数×74）- 2 （单位：dip）
+		  android:updatePeriodMillis 这种方式已经在SKD1.5后被废弃了
+  -->

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap android:src="@drawable/nav_main_tab_bg" android:tileMode="repeat"
+  xmlns:android="http://schemas.android.com/apk/res/android" />
+
+<!--  
+  android中实现图片平铺效果:
+  
+  1).第一种利用系统提供的api实现
+ 
+		 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic);
+		 BitmapDrawable drawable = new BitmapDrawable(bitmap);
+		 drawable.setTileModeXY(TileMode.REPEAT , TileMode.REPEAT );
+		 drawable.setDither(true);
+		 view.setBackgroundDrawable(drawable);
+	 
+	 
+   2).第二种我们使用xml来轻松实现
+ 
+		 <bitmap xmlns:android="http://schemas.android.com/apk/res/android" android:src="@drawable/img"
+		 		  android:tileMode="repeat" />
+	 		  
+   3).第三种自己画出来
+ 
+		 public static Bitmap createRepeater(int width, Bitmap src){
+			 int count = (width + src.getWidth() - 1) / src.getWidth();
+			 
+			 Bitmap bitmap = Bitmap.createBitmap(width, src.getHeight(), Config.ARGB_8888);
+			 Canvas canvas = new Canvas(bitmap);
+			 
+			 for(int idx = 0; idx < count; ++ idx){
+			 	canvas.drawBitmap(src, idx * src.getWidth(), 0, null);
+			 }
+			 
+			 return bitmap;
+		 } 
+-->

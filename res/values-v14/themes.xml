@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme" parent="@android:style/Theme.Holo">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="@android:windowAnimationStyle">@style/Theme.Translucent</item>
+		<item name="android:checkboxStyle">@style/Theme.Checkbox</item>
+		<item name="android:radioButtonStyle">@style/Theme.RadioButton</item>
+    </style>
+</resources>

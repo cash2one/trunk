@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.shandagames.android"
+    android:installLocation="preferExternal"
+    android:versionCode="20120101"
+    android:versionName="1.0.0" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="15" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <application
+        android:name=".base.AndroidApplication" android:hardwareAccelerated="true"
+        android:icon="@drawable/icon" android:label="@string/app_name" android:theme="@style/Theme" >
+        <activity android:name="SplashActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity" android:alwaysRetainTaskState="true" android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+        <activity android:name="StartActivity" />
+        <activity android:name="WeiboViewActivity" />
+        <activity android:name="PinnedHeaderActivity" />
+        <activity android:name="PinnedExpandableActivity" />
+        <activity android:name="CloudTagActivity" />
+        <activity android:name="BaiduMapActivity" />
+        <activity android:name="TabHostActivity" />
+        <activity android:name="ContactActivity" />
+        <activity android:name="SettingsActivity" />
+        <activity android:name="StickyActivity" />
+        <activity android:name="CircleProgressActivity" />
+        <activity android:name="PhoneGapActivity" />
+        <activity android:name="PlacesActivity" />
+        <activity android:name="PlacesMapActivity" />
+        <activity android:name="WordsActivity" />
+        <activity android:name="PullToRefreshActivity" />
+        <activity android:name="ActionBarActivity" />
+        <activity android:name="SegmentedRadioActivity" />
+        <activity android:name="WiFiSettingActivity" />
+        <activity android:name="PathActivity" />
+        <activity android:name="ImageActivity" />
+        <activity android:name="WheelViewActivity" />
+        <activity android:name="BarCodeActivity" />
+        <activity android:name="FileDownloadActivity" />
+        
+        <activity android:name="SlideMenuActivity" android:label="@string/slideBar_navigatioin" />
+        <activity android:name="WebPlayerActivity" android:configChanges="orientation|keyboardHidden" />
+        <activity android:name="VideoActivity" android:screenOrientation="landscape" />
+        <activity android:name="VPlayerActivity" android:screenOrientation="landscape" />
+      	<activity android:name="com.shandagames.android.ballons.TapControlledMapActivity" />
+      
+        <activity android:name=".zing.view.CaptureActivity"
+            	  android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
+            	  android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".ballons.BallonsActivity" />
+        <activity android:name=".ballons.SimpleMapActivity" />
+        <activity android:name=".ballons.CustomMapActivity" />
+        
+        <activity android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="keyboardHidden|orientation" android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar" android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <service
+            android:name="io.vov.vitamio.VitamioService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="io.vov.vitamio.IVitamioService" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".receiver.BootBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.shandagames.android.provider.AppWidgetProviderHelper"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.app.widget.provider.UPDATE_APP_WIDGET" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_info" />
+        </receiver>
+
+        <service android:name="com.shandagames.android.service.UpdateService" />
+
+        <uses-library android:name="com.google.android.maps" />
+        <!-- 引入单元测试库 -->
+        <uses-library android:name="android.test.runner" />
+    </application>
+    <!-- 配置单元测试框架中的入口;targetPackage必须与应用的包相同; -->
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.shandagames.android" />
+
+</manifest>

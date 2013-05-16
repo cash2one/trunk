@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_title"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/title_bg"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <ImageButton
+        android:id="@+id/title_btn_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_btn_right"
+        android:minWidth="75.0dip"
+        android:src="@drawable/title_btn_more" />
+
+    <Button
+        android:id="@+id/title_btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/title_btn_back"
+        android:minWidth="75.0dip"
+        android:text="@string/back"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="19.0sp" />
+
+    <Button
+        android:id="@+id/title_btn_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/title_btn_right"
+        android:minWidth="75.0dip"
+        android:text="@string/confirm"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/title_btn_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_btn_right"
+        android:minWidth="75.0dip"
+        android:src="@drawable/title_btn_more"
+        android:visibility="invisible" />
+
+</LinearLayout>

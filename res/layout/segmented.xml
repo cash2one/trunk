@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.shandagames.android.widget.SegmentedRadioGroup
+        android:id="@+id/segment_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:checkedButton="@+id/button_one"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@id/button_one"
+            android:button="@null"
+            android:gravity="center"
+            android:minHeight="33dip"
+            android:minWidth="40dip"
+            android:text="One"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/segment_radio_colors" />
+
+        <RadioButton
+            android:id="@+id/button_two"
+            android:button="@null"
+            android:gravity="center"
+            android:minHeight="33dip"
+            android:minWidth="40dip"
+            android:text="Two"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/segment_radio_colors" />
+
+        <RadioButton
+            android:id="@+id/button_three"
+            android:button="@null"
+            android:gravity="center"
+            android:minHeight="33dip"
+            android:minWidth="40dip"
+            android:text="Three"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/segment_radio_colors" />
+    </com.shandagames.android.widget.SegmentedRadioGroup>
+
+    <com.shandagames.android.widget.SegmentedRadioGroup
+        android:id="@+id/segment_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:checkedButton="@+id/button_add"
+        android:orientation="horizontal" >
+
+        <com.shandagames.android.widget.SegmentedRadioImageButton
+            android:id="@id/button_add"
+            android:button="@android:drawable/ic_menu_add"
+            android:minHeight="33dip"
+            android:minWidth="40dip" />
+
+        <com.shandagames.android.widget.SegmentedRadioImageButton
+            android:id="@+id/button_call"
+            android:button="@android:drawable/ic_menu_call"
+            android:minHeight="33dip"
+            android:minWidth="40dip" />
+
+        <com.shandagames.android.widget.SegmentedRadioImageButton
+            android:id="@+id/button_camera"
+            android:button="@android:drawable/ic_menu_camera"
+            android:minHeight="33dip"
+            android:minWidth="40dip" />
+    </com.shandagames.android.widget.SegmentedRadioGroup>
+
+    <com.shandagames.android.widget.SlipButton
+        android:id="@+id/slip_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip" />
+
+</LinearLayout>
