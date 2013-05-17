@@ -252,9 +252,9 @@ public class DownloadManager extends Thread {
 	}
 	
 	private Intent newTaskIntent(DownloadTask task, String type) {
-		Intent intent = new Intent(DownloadObservable.INTENT_ACTION_DOWNLOAD_NOTIFICATION);
-		intent.putExtra(DownloadObservable.INTENT_EXTRAS_DOWNLOAD_VALUE, task);
-		intent.putExtra(DownloadObservable.INTENT_EXTRAS_DOWNLOAD_TYPE, type);
+		Intent intent = new Intent(DownloadCastReceiver.INTENT_ACTION_DOWNLOAD_NOTIFICATION);
+		intent.putExtra(DownloadCastReceiver.INTENT_EXTRAS_DOWNLOAD_VALUE, task);
+		intent.putExtra(DownloadCastReceiver.INTENT_EXTRAS_DOWNLOAD_TYPE, type);
 		return intent;
 	}
 	
@@ -262,23 +262,23 @@ public class DownloadManager extends Thread {
 		
 		@Override
 		public void updateProcess(DownloadTask task) {
-			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_UPDATE_PROGRESS));
+			mContext.sendBroadcast(newTaskIntent(task, DownloadCastReceiver.NOTIFICATIONI_UPDATE_PROGRESS));
 		}
 
 		@Override
 		public void finishDownload(DownloadTask task) {
 			completeTask(task);
-			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_FINISHED_DOWNLOAD));
+			mContext.sendBroadcast(newTaskIntent(task, DownloadCastReceiver.NOTIFICATIONI_FINISHED_DOWNLOAD));
 		}
 
 		@Override
 		public void preDownload(DownloadTask task) {
-			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_PREPARE_DOWNLOAD));
+			mContext.sendBroadcast(newTaskIntent(task, DownloadCastReceiver.NOTIFICATIONI_PREPARE_DOWNLOAD));
 		}
 
 		@Override
 		public void errorDownload(DownloadTask task, int error) {
-			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_ERROR_DOWNLOAD));
+			mContext.sendBroadcast(newTaskIntent(task, DownloadCastReceiver.NOTIFICATIONI_ERROR_DOWNLOAD));
 		}
 		
 	};
