@@ -8,19 +8,19 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.StatFs;
 import android.util.Log;
 
-public class DownloadTask extends AsyncTask<Void, Integer, Long> {
+public class DownloadTask extends AsyncTask<Void, Integer, Long> implements Parcelable {
 
 	public final static int ERROR_NONE = 0;
 	public final static int ERROR_SD_NO_MEMORY = 1;
@@ -114,7 +114,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Long> {
 	protected void onPreExecute() {
 		previousTime = System.currentTimeMillis();
 		if (listener != null)
-			listener.preDownload();
+			listener.preDownload(this);
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Long> {
 			totalSize = progress[1];
 			if (totalSize == -1) {
 				if (listener != null)
-					listener.errorDownload(ERROR_UNKONW);
+					listener.errorDownload(this, ERROR_UNKONW);
 			} else {
 
 			}
@@ -157,7 +157,7 @@ public class DownloadTask extends AsyncTask<Void, Integer, Long> {
 		if (interrupt) {
 			if (errStausCode != ERROR_NONE) {
 				if (listener != null)
-					listener.errorDownload(errStausCode);
+					listener.errorDownload(this, errStausCode);
 			}
 
 			return;
@@ -331,6 +331,69 @@ public class DownloadTask extends AsyncTask<Void, Integer, Long> {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	public DownloadTask(Parcel in) {
+		downloadSize = in.readLong();
+		previousFileSize = in.readLong();
+		totalSize = in.readLong();
+		downloadPercent = in.readLong();
+		networkSpeed = in.readLong();
+		previousTime = in.readLong();
+		totalTime = in.readLong();
+		errStausCode = in.readInt();
+		
+		int flag = in.readInt();
+		if (flag == 1) {
+			url = in.readString();
+		}
+		
+		byte value = in.readByte();
+		if (value > 0) {
+			interrupt = true;
+		} else {
+			interrupt = false;
+		}
+	}
+	
+	public static final Parcelable.Creator<DownloadTask> CREATOR = new Parcelable.Creator<DownloadTask>() {
+		 public DownloadTask createFromParcel(Parcel in) {
+		     return new DownloadTask(in);
+		 }
+		
+		 public DownloadTask[] newArray(int size) {
+		     return new DownloadTask[size];
+		 }
+	};
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(downloadSize);
+		dest.writeLong(previousFileSize);
+		dest.writeLong(totalSize);
+		dest.writeLong(downloadPercent);
+		dest.writeLong(networkSpeed);
+		dest.writeLong(previousTime);
+		dest.writeLong(totalTime);
+		dest.writeInt(errStausCode);
+		
+		if (url != null) {
+			dest.writeInt(1);
+			dest.writeString(url);
+		} else {
+			dest.writeInt(0);
+		}
+		
+		if (interrupt) {
+			dest.writeByte((byte)1);
+		} else {
+			dest.writeByte((byte)0);
 		}
 	}
 }

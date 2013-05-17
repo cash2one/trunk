@@ -1,6 +1,7 @@
 package com.shandagames.android.download;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,10 +10,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observer;
 import java.util.Queue;
-
-import com.shandagames.android.download.DownloadObservable.ObservableData;
 
 public class DownloadManager extends Thread {
 	public static final String SDCARD_ROOT = 
@@ -29,15 +27,12 @@ public class DownloadManager extends Thread {
 	
 	private boolean isRunning = false;
 	
-	private DownloadObservable mObservable;
-	
 	public DownloadManager(Context context) {
 		mContext = context;
 		mTaskQueue = new TaskQueue();
 		mDownloadingTasks = new ArrayList<DownloadTask>();
 		mPausingTasks = new ArrayList<DownloadTask>();
 		mFileRoot = SDCARD_ROOT + "";
-		mObservable = new DownloadObservable();
 	}
 	
 	public void startManage() {
@@ -216,18 +211,6 @@ public class DownloadManager extends Thread {
 		}
 	}
 
-	public void addObserver(Observer observer) {
-		if (mObservable != null) {
-			mObservable.addObserver(observer);
-		}
-	}
-	
-	public void deleteObserver(Observer observer) {
-		if (mObservable != null) {
-			mObservable.deleteObserver(observer);
-		}
-	}
-	
 	/**
 	 * Create a new download task with default config
 	 */
@@ -268,38 +251,34 @@ public class DownloadManager extends Thread {
 		}
 	}
 	
+	private Intent newTaskIntent(DownloadTask task, String type) {
+		Intent intent = new Intent(DownloadObservable.INTENT_ACTION_DOWNLOAD_NOTIFICATION);
+		intent.putExtra(DownloadObservable.INTENT_EXTRAS_DOWNLOAD_VALUE, task);
+		intent.putExtra(DownloadObservable.INTENT_EXTRAS_DOWNLOAD_TYPE, type);
+		return intent;
+	}
+	
 	private DownloadTaskListener downloadTaskListener = new DownloadTaskListener() {
-
+		
 		@Override
 		public void updateProcess(DownloadTask task) {
-			ObservableData data = new ObservableData();
-			data.setKey(DownloadObservable.NOTIFICATIONI_UPDATE_PROGRESS);
-			data.setDownloadTask(task);
-			mObservable.notifyObservers(data);
+			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_UPDATE_PROGRESS));
 		}
 
 		@Override
 		public void finishDownload(DownloadTask task) {
 			completeTask(task);
-			
-			ObservableData data = new ObservableData();
-			data.setKey(DownloadObservable.NOTIFICATIONI_FINISHED_DOWNLOAD);
-			data.setDownloadTask(task);
-			mObservable.notifyObservers(data);
+			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_FINISHED_DOWNLOAD));
 		}
 
 		@Override
-		public void preDownload() {
-			ObservableData data = new ObservableData();
-			data.setKey(DownloadObservable.NOTIFICATIONI_PREPARE_DOWNLOAD);
-			mObservable.notifyObservers(data);
+		public void preDownload(DownloadTask task) {
+			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_PREPARE_DOWNLOAD));
 		}
 
 		@Override
-		public void errorDownload(int error) {
-			ObservableData data = new ObservableData();
-			data.setKey(DownloadObservable.NOTIFICATIONI_ERROR_DOWNLOAD);
-			mObservable.notifyObservers(data);
+		public void errorDownload(DownloadTask task, int error) {
+			mContext.sendBroadcast(newTaskIntent(task, DownloadObservable.NOTIFICATIONI_ERROR_DOWNLOAD));
 		}
 		
 	};

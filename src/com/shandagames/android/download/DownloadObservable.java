@@ -1,52 +1,38 @@
 package com.shandagames.android.download;
 
-import java.util.Observable;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
-public class DownloadObservable extends Observable {
+public class DownloadObservable extends BroadcastReceiver {
 
+	public static final String INTENT_EXTRAS_DOWNLOAD_TYPE  = "_type";
+	public static final String INTENT_EXTRAS_DOWNLOAD_VALUE = "_value";
+	
 	public static final String NOTIFICATIONI_PREPARE_DOWNLOAD = "NOTIFICATIONI_PREPARE_DOWNLOAD";
 	public static final String NOTIFICATIONI_UPDATE_PROGRESS = "NOTIFICATIONI_UPDATE_PROGRESS";
 	public static final String NOTIFICATIONI_FINISHED_DOWNLOAD = "NOTIFICATIONI_FINISHED_DOWNLOAD";
 	public static final String NOTIFICATIONI_ERROR_DOWNLOAD = "NOTIFICATIONI_ERROR_DOWNLOAD";
 	
+	public static final String INTENT_ACTION_DOWNLOAD_NOTIFICATION = "com.shandagames.android.intent.action.download";
+	
 	@Override
-	public void notifyObservers(Object data) {
-		setChanged();
-		super.notifyObservers(data);
+	public void onReceive(Context context, Intent intent) {
+		if (INTENT_ACTION_DOWNLOAD_NOTIFICATION.equals(intent.getAction())) {
+			
+		}
 	}
 
-	public static class ObservableData {
+	/** 注册广播接收者 */
+	public void bind(Context context) {
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(INTENT_ACTION_DOWNLOAD_NOTIFICATION);
+		context.registerReceiver(this, intentFilter);
+	}
 
-		private String key;
-		private DownloadTask downloadTask;
-
-		public ObservableData() {
-		}
-		
-		public ObservableData(String _key, DownloadTask task) {
-			this.key = _key;
-			this.downloadTask = task;
-		}
-		
-		public String getKey() {
-			return key;
-		}
-
-		public void setKey(String key) {
-			this.key = key;
-		}
-
-		public DownloadTask getDownloadTask() {
-			return downloadTask;
-		}
-
-		public void setDownloadTask(DownloadTask downloadTask) {
-			this.downloadTask = downloadTask;
-		}
-
-		@Override
-		public String toString() {
-			return this.key;
-		}
+	/** 解绑广播接收者 */
+	public void unbind(Context context) {
+		context.unregisterReceiver(this);
 	}
 }
