@@ -6,6 +6,7 @@ import com.shandagames.android.cache.lib.ImageFetcher;
 import com.shandagames.android.cache.lib.Images;
 import com.shandagames.android.fragment.ImageDetailFragment;
 import com.shandagames.android.log.Log;
+import com.shandagames.android.photoview.PhotoViewAttacher.OnViewTapListener;
 import com.shandagames.android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,7 @@ import android.view.Window;
  * @author lilong
  * @description TODO
  */
-public class StartActivity extends BaseActivity  implements OnClickListener {
+public class StartActivity extends BaseActivity  implements OnViewTapListener {
 
 	private ViewPager viewPager;
 	private ImageFetcher mImageFetcher;
@@ -66,10 +67,9 @@ public class StartActivity extends BaseActivity  implements OnClickListener {
     }
 	
 	@Override
-	public void onClick(View v) {
+	public void onViewTap(View view, float x, float y) {
 		// TODO Auto-generated method stub
-		Fragment fragment = registeredFragments.get(viewPager.getCurrentItem());
-		Log.d("onClick >>> " + ((ImageDetailFragment)fragment).getImageUrl());
+		Log.v("onViewTap");
 		finish();
 	}
 	

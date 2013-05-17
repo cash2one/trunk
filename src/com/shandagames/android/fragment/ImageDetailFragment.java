@@ -5,6 +5,7 @@ import com.shandagames.android.base.BaseFragment;
 import com.shandagames.android.cache.lib.ImageFetcher;
 import com.shandagames.android.cache.lib.Images;
 import com.shandagames.android.photoview.PhotoView;
+import com.shandagames.android.photoview.PhotoViewAttacher.OnViewTapListener;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -76,8 +77,8 @@ public class ImageDetailFragment extends BaseFragment {
         	mImageFetcher.loadImage(Images.imageUrls[mImageNum], mImageView);
         }
         // Pass clicks on the ImageView to the parent activity to handle
-        if (OnClickListener.class.isInstance(getActivity())) {
-            mImageView.setOnClickListener((OnClickListener) getActivity());
+        if (OnViewTapListener.class.isInstance(getActivity())) {
+        	((PhotoView)mImageView).setOnViewTapListener((OnViewTapListener)getActivity());
         }
     }
 	
