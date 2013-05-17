@@ -33,7 +33,6 @@ public class StartActivity extends BaseActivity  implements OnClickListener {
 	
 	@Override
 	protected void _onCreate(Bundle bundle) {
-		// TODO Auto-generated method stub
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.start_user_guide);
 		

@@ -74,7 +74,7 @@ public abstract class ImageWorker {
 
     // Dual thread executor for main AsyncTask
     public static final Executor DUAL_THREAD_EXECUTOR =
-            Executors.newFixedThreadPool(2, sThreadFactory);
+            Executors.newFixedThreadPool(5, sThreadFactory);
 
     protected ImageWorker(Context context) {
         mResources = context.getResources();

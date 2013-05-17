@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class RequestExecutor {
 
-	private static final int THREAD_NUMBER = 5;
+	private static final int THREAD_NUMBER = 10;
 	
 	private static ExecutorService threadPool;
 	

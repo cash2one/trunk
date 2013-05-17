@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_zoom_toggle"
+        android:title=""/>
+    <item
+        android:id="@+id/menu_scale_fit_center"
+        android:showAsAction="never"
+        android:title="Change to FIT_CENTER"/>
+    <item
+        android:id="@+id/menu_scale_fit_start"
+        android:showAsAction="never"
+        android:title="Change to FIT_START"/>
+    <item
+        android:id="@+id/menu_scale_fit_end"
+        android:showAsAction="never"
+        android:title="Change to FIT_END"/>
+    <item
+        android:id="@+id/menu_scale_fit_xy"
+        android:showAsAction="never"
+        android:title="Change to FIT_XY"/>
+    <item
+        android:id="@+id/menu_scale_scale_center"
+        android:showAsAction="never"
+        android:title="Change to CENTER"/>
+    <item
+        android:id="@+id/menu_scale_scale_center_crop"
+        android:showAsAction="never"
+        android:title="Change to CENTER_INSIDE"/>
+    <item
+        android:id="@+id/menu_scale_scale_center_inside"
+        android:showAsAction="never"
+        android:title="Change to CENTER_CROP"/>
+
+</menu>

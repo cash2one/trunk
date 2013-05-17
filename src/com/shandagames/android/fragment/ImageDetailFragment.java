@@ -4,6 +4,8 @@ import com.shandagames.android.StartActivity;
 import com.shandagames.android.base.BaseFragment;
 import com.shandagames.android.cache.lib.ImageFetcher;
 import com.shandagames.android.cache.lib.Images;
+import com.shandagames.android.photoview.PhotoView;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +57,7 @@ public class ImageDetailFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		mImageView = new ImageView(getActivity());
+		mImageView = new PhotoView(getActivity());
 		mImageView.setScaleType(ScaleType.FIT_XY);
 		return mImageView;
 	}

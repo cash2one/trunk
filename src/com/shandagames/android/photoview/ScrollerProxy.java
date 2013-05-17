@@ -15,18 +15,21 @@
  *******************************************************************************/
 package com.shandagames.android.photoview;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+import android.widget.OverScroller;
 import android.widget.Scroller;
 
 public abstract class ScrollerProxy {
 
 	public static ScrollerProxy getScroller(Context context) {
-		return new PreGingerScroller(context);
-		/*if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
+		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
 			return new PreGingerScroller(context);
 		} else {
 			return new GingerScroller(context);
-		}*/
+		}
 	}
 
 	public abstract boolean computeScrollOffset();
@@ -40,7 +43,7 @@ public abstract class ScrollerProxy {
 
 	public abstract int getCurrY();
 
-	/*@TargetApi(9)
+	@TargetApi(9)
 	private static class GingerScroller extends ScrollerProxy {
 
 		private OverScroller mScroller;
@@ -74,7 +77,7 @@ public abstract class ScrollerProxy {
 		public int getCurrY() {
 			return mScroller.getCurrY();
 		}
-	}*/
+	}
 
 	private static class PreGingerScroller extends ScrollerProxy {
 
