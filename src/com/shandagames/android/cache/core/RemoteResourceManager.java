@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.BaseAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +15,7 @@ import java.util.Observer;
  */
 public class RemoteResourceManager {
     private static final String TAG = "RemoteResourceManager";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private DiskCache mDiskCache;
     private RemoteResourceFetcher mRemoteResourceFetcher;
@@ -38,39 +37,42 @@ public class RemoteResourceManager {
     	mRemoteResourceFetcher.deleteObserver(observer);
     }
     
-    public boolean exists(Uri uri) {
-        return mDiskCache.exists(Uri.encode(uri.toString()));
+    public boolean exists(String uri) {
+        return mDiskCache.exists(Uri.encode(uri));
     }
 
     /**
      * If IOException is thrown, we don't have the resource available.
      */
-    public File getFile(Uri uri) {
-        if (DEBUG) Log.d(TAG, "getInputStream(): " + uri);
-        return mDiskCache.getFile(Uri.encode(uri.toString()));
+    public File getFile(String uri) {
+        return mDiskCache.getFile(Uri.encode(uri));
     }
 
     /**
      * If IOException is thrown, we don't have the resource available.
      */
-    public InputStream getInputStream(Uri uri) throws IOException {
-        if (DEBUG) Log.d(TAG, "getInputStream(): " + uri);
-        return mDiskCache.getInputStream(Uri.encode(uri.toString()));
+    public InputStream getInputStream(String uri) {
+    	try {
+	        return mDiskCache.getInputStream(Uri.encode(uri));
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+    		return null;
+    	}
     }
 
     /**
      * Request a resource be downloaded. Useful to call after a IOException from getInputStream.
      */
-    public void request(Uri uri) {
+    public void request(String uri) {
         if (DEBUG) Log.d(TAG, "request(): " + uri);
-        mRemoteResourceFetcher.fetch(uri, Uri.encode(uri.toString()));
+        mRemoteResourceFetcher.fetch(uri, Uri.encode(uri));
     }
     
     /**
      * Explicitly expire an individual item.
      */
-    public void invalidate(Uri uri) {
-        mDiskCache.invalidate(Uri.encode(uri.toString()));
+    public void invalidate(String uri) {
+        mDiskCache.invalidate(Uri.encode(uri));
     }
 
     public void shutdown() {
@@ -85,20 +87,19 @@ public class RemoteResourceManager {
 
     public static abstract class ResourceRequestObserver implements Observer {
 
-        private Uri mRequestUri;
+        private String mRequestUri;
 
-        abstract public void requestReceived(Observable observable, Uri uri);
+        abstract public void requestReceived(Observable observable, String uri);
 
-        public ResourceRequestObserver(Uri requestUri) {
+        public ResourceRequestObserver(String requestUri) {
             mRequestUri = requestUri;
         }
 
         @Override
         public void update(Observable observable, Object data) {
             if (DEBUG) Log.d(TAG, "Recieved update: " + data);
-            Uri dataUri = (Uri)data;
-            if (dataUri == mRequestUri) {
-                if (DEBUG) Log.d(TAG, "requestReceived: " + dataUri);
+            String dataUri = data.toString();
+            if (dataUri.equals(mRequestUri)) {
                 requestReceived(observable, dataUri);
             }
         }
@@ -107,28 +108,21 @@ public class RemoteResourceManager {
     public static class RemoteResourceManagerObserver implements Observer {
 
     	private Handler mHandler;
-    	private BaseAdapter mListAdapter;
+    	private Runnable mRunnable;
     	
-    	public RemoteResourceManagerObserver(BaseAdapter mAdapter) {
-    		mListAdapter = mAdapter;
+    	public RemoteResourceManagerObserver(Runnable mUpdatePhotos) {
     		mHandler = new Handler(Looper.getMainLooper());
+    		mRunnable = mUpdatePhotos;
     	}
     	
 		@Override
 		public void update(Observable observable, Object data) {
 			if (DEBUG) Log.d(TAG, "Recieved update: " + data);
-			mHandler.post(mUpdatePhotos);
+			mHandler.post(mRunnable);
 		}
     	
 		public void removeCallbacks() {
-			mHandler.removeCallbacks(mUpdatePhotos);
+			mHandler.removeCallbacks(mRunnable);
 		}
-		
-		private Runnable mUpdatePhotos = new Runnable() {
-	        @Override
-	        public void run() {
-	        	mListAdapter.notifyDataSetChanged();
-	        }
-	    };
     }
 }

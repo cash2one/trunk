@@ -1,5 +1,9 @@
 package com.shandagames.android.constant;
 
+import java.io.File;
+
+import android.os.Environment;
+
 /**
  * @file Constants.java
  * @create 2012-10-9 上午9:54:22
@@ -23,6 +27,13 @@ public final class Constants {
 	public static final String DEBUG_SERVER = "www.gameplus.com/test";
 	
 	public static final String RELEASE_SERVER = "www.gameplus.com/release";
+	
+	public static final File SDCARD_ROOT = Environment.getExternalStorageDirectory();
+	
+	public static final File CAMERA_IMAGE_BUCKET_DIR = new File(SDCARD_ROOT, "DCIM/Camera");
+	
+	public static final File BASE_DIR = new File(SDCARD_ROOT, APP_NAME); 
+	
 	
 	
 	public static final String[] MONTHS_EN = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};

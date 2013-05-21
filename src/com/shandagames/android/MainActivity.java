@@ -10,12 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,7 +102,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private ExtendOptionsMenu mOptionsMenu;
 	private ProgressDialog waitingDialog;
 	private NotificationManager mNotificationManager;
-	
 	private DownloadFileFromURL downloadFileTask;
 	
 	private boolean mIsNightMode;
@@ -266,7 +259,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				startActivity(new Intent(this, BallonsActivity.class));
 				break;
 			case 23:
-				convertPinyin('李');
 				changeBrightNess();
 				break;
 			case 24:
@@ -308,6 +300,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				break;
 			case 34:
 				startActivity(new Intent(this, FileDownloadActivity.class));
+				break;
+			case 35:
+				startActivity(new Intent(this, PhotoViewerActivity.class));
 				break;
 		}
 	}
@@ -364,28 +359,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				findViewById(R.id.main).setBackgroundColor(context.getResources().getColor(resId));
 			}
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	/** convert single chinese to pinyin with open source project pinyin4j */
-	private void convertPinyin(char chinese) {
-		HanyuPinyinOutputFormat hpof = new HanyuPinyinOutputFormat(); //格式化输出
-		hpof.setToneType(HanyuPinyinToneType.WITHOUT_TONE); //不需要声调
-		hpof.setCaseType(HanyuPinyinCaseType.UPPERCASE); //所有拼音大写
-		hpof.setVCharType(HanyuPinyinVCharType.WITH_V); //遇到"ü" 显示成V
-		
-		try {
-			String[] arrData = PinyinHelper.toHanyuPinyinStringArray(chinese, hpof);
-			if (arrData != null) {
-				StringBuilder sb = new StringBuilder();
-				for (String str : arrData) {
-					sb.append(str+"\n");
-				}
-				Log.d("Pinyin4j", sb.toString());
-			}
-		} catch (BadHanyuPinyinOutputFormatCombination e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

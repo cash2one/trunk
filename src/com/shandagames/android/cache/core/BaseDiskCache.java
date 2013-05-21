@@ -16,7 +16,7 @@ import java.io.OutputStream;
  */
 public class BaseDiskCache implements DiskCache {
     private static final String TAG = "BaseDiskCache";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static final String NOMEDIA = ".nomedia";
     private static final int MIN_FILE_SIZE_IN_BYTES = 100;

@@ -93,6 +93,7 @@
         <activity android:name="WheelViewActivity" />
         <activity android:name="BarCodeActivity" />
         <activity android:name="FileDownloadActivity" />
+        <activity android:name="PhotoViewerActivity"/>
         
         <activity android:name="SlideMenuActivity" android:label="@string/slideBar_navigatioin" />
         <activity android:name="WebPlayerActivity" android:configChanges="orientation|keyboardHidden" />

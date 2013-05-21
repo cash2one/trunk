@@ -5,9 +5,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.media.ExifInterface;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
-import com.tencent.mm.sdk.platformtools.Log;
 
 
 @TargetApi(5)

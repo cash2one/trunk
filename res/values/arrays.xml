@@ -83,5 +83,6 @@
         <item>日期控件</item>
         <item>时间控件</item>
         <item>多线程下载</item>
+        <item>多点触摸</item>
     </string-array>
 </resources>

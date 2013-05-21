@@ -23,6 +23,7 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Shader.TileMode;
@@ -93,34 +94,40 @@ public class ImageHelper {
 		}
 	}
 
+	/** 旋转图片  */
+	public static Bitmap rotateBitmap(Bitmap bitmap, int rotation){
+		Matrix matrix = new Matrix();
+		if(rotation != 0){
+			matrix.postRotate(rotation);
+		}
+		int width=bitmap.getWidth();
+		int height=bitmap.getHeight();
+		Bitmap destBitmap=Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+		return destBitmap;
+	}
+	
 	/** 保存图片到文件 */
-	public static void writeBitmapToFile(String path, Bitmap bitmap) {
-		File file = new File(path);
-		File parent = file.getParentFile();
-		if (file.isDirectory() || !file.canWrite()) {
-			return;
-		}
-		if (!parent.exists() && !parent.mkdirs()) {
-			return;
-		}
-		FileOutputStream fos = null;
+	public static boolean saveBitmapAs(Bitmap bitmap, String path){
+		FileOutputStream fos=null;
+		boolean successed=false;
 		try {
-			fos = new FileOutputStream(file);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			File targetFile = new File(path);
+			fos = new FileOutputStream(targetFile);
+			successed=bitmap.compress(CompressFormat.JPEG, 100, fos);
 			fos.flush();
-		} catch (Exception ex) {
-			Log.e("ImageHelper--writeBitmapToFile", "Error save the bitmap to sdcard " + ex.getMessage());
-		} finally {
-			try {
-				if (fos != null) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			if(fos!=null){
+				try {
 					fos.close();
+				} catch (Exception e2) {
 				}
-			} catch (IOException e) {
 			}
 		}
-
+		return successed;
 	}
-
+	
 	/* 返回灰度图片 */
 	public static Bitmap toGrayscale(Bitmap bmpOriginal) {
 		int width, height;
@@ -180,8 +187,40 @@ public class ImageHelper {
 		} finally {
 			try {
 				if (is != null) is.close();
-			} catch (IOException ex){}
+			} catch (IOException ex){
+			}
 		}
+	}
+	
+	public static Bitmap decodeFile(File f) {
+		try {
+			BitmapFactory.Options o = new BitmapFactory.Options();
+			o.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(new FileInputStream(f), null, o);
+
+			final int REQUIRED_SIZE = 240;
+
+			int width_tmp = o.outWidth, height_tmp = o.outHeight;
+			int scale = 1;
+			while (true) {
+				if (width_tmp / 2 < REQUIRED_SIZE
+						|| height_tmp / 2 < REQUIRED_SIZE)
+					break;
+				width_tmp /= 2;
+				height_tmp /= 2;
+				scale *= 2;
+			}
+			BitmapFactory.Options o2 = new BitmapFactory.Options();
+			o2.inSampleSize = scale;
+			o2.inPurgeable=true;
+			o2.inJustDecodeBounds=false;
+			return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+		} catch (OutOfMemoryError e) {
+			System.gc();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	 /*
@@ -401,6 +440,7 @@ public class ImageHelper {
 		return bitmapWithReflection;
 	}
 
+	
 	/** 视频取第一帧作为缩略图 */
 	@SuppressLint("NewApi")
 	public static Bitmap createVideoThumbnail(String filePath) {

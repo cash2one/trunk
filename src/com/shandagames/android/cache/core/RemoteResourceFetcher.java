@@ -16,13 +16,9 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-
 import com.shandagames.android.http.ssl.EasySSLSocketFactory;
-
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Observable;
@@ -59,7 +55,7 @@ class RemoteResourceFetcher extends Observable {
         super.notifyObservers(data);
     }
 
-    public Future<Request> fetch(Uri uri, String hash) {
+    public Future<Request> fetch(String uri, String hash) {
         Request request = new Request(uri, hash);
         synchronized (mActiveRequestsMap) {
             Callable<Request> fetcher = newRequestCall(request);
@@ -173,10 +169,10 @@ class RemoteResourceFetcher extends Observable {
     }
 
     private static class Request {
-        Uri uri;
+        String uri;
         String hash;
 
-        public Request(Uri requestUri, String requestHash) {
+        public Request(String requestUri, String requestHash) {
             uri = requestUri;
             hash = requestHash;
         }

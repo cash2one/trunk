@@ -28,6 +28,8 @@ import android.widget.ImageView;
 //https://github.com/chrisbanes/PhotoView
 public class PhotoView extends ImageView implements IPhotoView {
 
+	static final float SCALE_RATE = 1.25F;
+	
 	private final PhotoViewAttacher mAttacher;
 
 	private ScaleType mPendingScaleType;
@@ -176,4 +178,23 @@ public class PhotoView extends ImageView implements IPhotoView {
 		super.onDetachedFromWindow();
 	}
 
+	public void update() {
+		mAttacher.update();
+	}
+	
+	public void zoomIn() {
+		mAttacher.zoomIn(SCALE_RATE);
+	}
+	
+	public void zoomOut() {
+		mAttacher.zoomOut(SCALE_RATE);
+	}
+	
+	public boolean IsZoomInEnabled() {
+		return Math.round(getScale()) < getMaxScale();
+	}
+	
+	public boolean IsZoomOutEnabled() {
+		return getScale() >= getMinScale();
+	}
 }

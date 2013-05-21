@@ -229,9 +229,38 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		return mMaxScale;
 	}
 
+	public float getScale(Matrix matrix) {
+		return getValue(matrix, Matrix.MSCALE_X);
+	}
+
+	public void zoomIn(float rate) {
+		if (getScale() < mMaxScale) {
+			RectF rectF = getDisplayRect();;
+			float cx = rectF.centerX();
+			float cy = rectF.centerY();
+			zoomTo(rate * getScale(), cx, cy);
+		}
+	}
+	
+	public void zoomOut(float rate) {
+		RectF rectF = getDisplayRect();
+		float cx = rectF.centerX();
+		float cy = rectF.centerY();
+		float cRate = getScale() / rate;
+		
+		Matrix tmp = new Matrix(mSuppMatrix);
+		tmp.postScale(cRate, cRate, cx, cy);
+		
+		if (getScale(tmp) < mMinScale) {
+			zoomTo(mMinScale, cx, cy);
+		} else {
+			zoomTo(cRate, cx, cy);
+		}
+	}
+	
 	@Override
 	public final float getScale() {
-		return getValue(mSuppMatrix, Matrix.MSCALE_X);
+		return getScale(mSuppMatrix);
 	}
 
 	@Override
