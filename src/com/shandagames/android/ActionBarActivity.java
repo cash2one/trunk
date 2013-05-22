@@ -11,8 +11,6 @@ import android.widget.FrameLayout;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.shandagames.android.fragment.DetailFragment;
 
 public class ActionBarActivity extends SherlockFragmentActivity {

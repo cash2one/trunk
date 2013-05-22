@@ -19,22 +19,25 @@ public final class Constants {
 	
 	// TODO Turn off when deploying your app.
 	public static final boolean DEVELOPER_MODE = true;
-	
+	public static final boolean SUPPORT_CACHE = true;
 	public static final boolean LOCATION_DEBUG = DEVELOPER_MODE;
 	
-	public static final boolean SUPPORT_CACHE = true;
-	
 	public static final String DEBUG_SERVER = "www.gameplus.com/test";
-	
 	public static final String RELEASE_SERVER = "www.gameplus.com/release";
 	
 	public static final File SDCARD_ROOT = Environment.getExternalStorageDirectory();
-	
 	public static final File CAMERA_IMAGE_BUCKET_DIR = new File(SDCARD_ROOT, "DCIM/Camera");
-	
 	public static final File BASE_DIR = new File(SDCARD_ROOT, APP_NAME); 
 	
+	public static final String TEMP_DIR 	=	"temp";
+	public static final String CACHE_DIR 	= 	"cache";
+	public static final String DATA_DIR 	= 	"cache/data";
+	public static final String AUDIO_DIR 	= 	"cache/audio";
+	public static final String AVATAR_DIR	= 	"cache/avatar";
+	public static final String PHOTO_DIR 	= 	"cache/photo";
 	
+	
+	/*#########################################################################################################################################################*/
 	
 	public static final String[] MONTHS_EN = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	
@@ -78,6 +81,8 @@ public final class Constants {
 		new String[]{"花地玛堂", "圣安多尼堂", "大堂", "望德堂", "风顺堂", "氹仔", "路环"},
 		new String[]{"台北", "高雄", "台中", "台南", "基隆", "新竹", "嘉义", "宜兰", "桃园", "苗栗", "彰化", "南投", "云林", "屏东", "台东", "花莲", "澎湖"},
 		new String[]{"其它"}};
+	
+	/*#########################################################################################################################################################*/
 	
 	
 }

@@ -36,7 +36,7 @@ public class LoggedInOutBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	/** 注册广播接收者 */
-	public void bind(Context context) {
+	public void register(Context context) {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(INTENT_ACTION_LOGGED_IN);
 		intentFilter.addAction(INTENT_ACTION_LOGGED_OUT);
@@ -44,7 +44,7 @@ public class LoggedInOutBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	/** 解绑广播接收者 */
-	public void unbind(Context context) {
+	public void unregister(Context context) {
 		context.unregisterReceiver(this);
 	}
 

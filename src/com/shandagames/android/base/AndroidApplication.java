@@ -1,22 +1,33 @@
 package com.shandagames.android.base;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import com.shandagames.android.bean.User;
 import com.shandagames.android.cache.core.NullDiskCache;
 import com.shandagames.android.cache.core.RemoteResourceManager;
 import com.shandagames.android.cache.lib.ImageFetcher;
 import com.shandagames.android.constant.Constants;
 import com.shandagames.android.constant.PreferenceSettings;
-import com.shandagames.android.crash.CrashHandler;
 import com.shandagames.android.http.BetterHttpApiV1;
 import com.shandagames.android.location.BestLocationListener;
 import com.shandagames.android.location.LocationException;
@@ -24,7 +35,6 @@ import com.shandagames.android.log.Log;
 import com.shandagames.android.log.LoggingHandler;
 import com.shandagames.android.receiver.LoggedInOutBroadcastReceiver;
 import com.shandagames.android.receiver.MediaCardStateBroadcastReceiver;
-import com.shandagames.android.support.ManifestSupport;
 import com.shandagames.android.util.SmileyParser;
 
 /**
@@ -32,39 +42,64 @@ import com.shandagames.android.util.SmileyParser;
  * @file AndroidApplication.java
  * @create 2012-8-15 下午5:08:28
  * @author lilong
- * @description TODO
+ * @description TODO Application基类，存储全局数据
  */
 public class AndroidApplication extends Application implements
 		MediaCardStateBroadcastReceiver.OnMediaCardAvailableListener,
 		LoggedInOutBroadcastReceiver.OnLoggedInOutStateListener {
 
+	private static final String TAG = "AndroidApplication";
 	private static final boolean DEBUG = Constants.DEVELOPER_MODE;
 	
 	public static int mVersion;
-	public static String mPackageName;
+	public static String mToken;
 	public static SharedPreferences mPrefs;
-
-	private boolean isReady = false;
+	public static SharedPreferences mUserPrefs;
 	private static AndroidApplication instance;
+	
+	private User self;
+	private boolean ready = true;
+	private TaskHandler mTaskHandler;
+	private HandlerThread mTaskThread;
+	
 	private RemoteResourceManager mRemoteResourceManager;
-	private BestLocationListener mBestLocationListener;
+	private LoggedInOutBroadcastReceiver mLoggedInOutReceiver;
+	private MediaCardStateBroadcastReceiver mMediaStateReceiver;
+	private BestLocationListener mBestLocationListener = new BestLocationListener();
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		isReady = true;
 		Log.setLevel(DEBUG);
-		
-		mPackageName = getPackageName();
-		mVersion = ManifestSupport.getApplicationForVersionCode(this);
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mBestLocationListener = new BestLocationListener();
+
+        inital();
+        register();
+        sendCrashReports();
         
-		// 收集异常日志
-		if (!DEBUG) {
-			CrashHandler crashHandler = CrashHandler.getInstance();
-			crashHandler.init(this);
+        // 应用需要后台执行数据处理，开启新的线程处理
+        mTaskThread = new HandlerThread(TAG + "-AsyncThread");
+        mTaskThread.start();
+        mTaskHandler = new TaskHandler(mTaskThread.getLooper()); 
+	}
+
+	private void inital() {
+		loadResourceManagers();
+		mVersion = getVersionCode(this);
+		SmileyParser.init(getApplicationContext()); 
+		BetterHttpApiV1.init(getApplicationContext(), null, false);
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		// 读取存储个人信息
+		self = PreferenceSettings.getUser(this);
+		String token = PreferenceSettings.getToken(this);
+		// 是否自动登陆
+		if (token.length()!=0 && self.getId()!=0) {
+			// 1. 注册推送服务
+			// 2. 存储用户信息
+			// 3. 自动清除缓存
+			mToken = token;
+			setReady(true); 
+			setUserPreferences(self.getId());
 		}
 		
 		// FIXME: StrictMode类在1.6以下的版本中没有，会导致类加载失败。因此将这些代码设成关闭状态，仅在做性能调试时才打开。
@@ -73,19 +108,18 @@ public class AndroidApplication extends Application implements
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
 		    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build()); 
 		}*/
-
-		// Set up storage cache.
-		loadResourceManagers();
-		// Set up emoticons
-		SmileyParser.init(getApplicationContext());
-		 // Set up http request operation
-        BetterHttpApiV1.init(getApplicationContext(), null, false);
-		// Catch sdcard state changes
-		new MediaCardStateBroadcastReceiver().bind(this);
-		 // Catch logins or logouts.
-        new LoggedInOutBroadcastReceiver().bind(this);
 	}
-
+	
+	private void register() {
+		mLoggedInOutReceiver = new LoggedInOutBroadcastReceiver();
+        mLoggedInOutReceiver.register(getApplicationContext());
+        mLoggedInOutReceiver.setOnLoggedInOutListener(this);
+        
+        mMediaStateReceiver = new MediaCardStateBroadcastReceiver();
+        mMediaStateReceiver.register(getApplicationContext());
+        mMediaStateReceiver.setOnMediaCardAvailableListener(this);
+	}
+	
 	@Override
 	public void onTerminate() {
 		// FIXME: 根据android文档，onTerminate不会在真实机器上被执行到
@@ -96,12 +130,35 @@ public class AndroidApplication extends Application implements
 
 	public void buildPrintTrace() {
 		/** initiaize java logging */
-		Logger.getLogger(mPackageName).addHandler(new LoggingHandler());
-        Logger.getLogger(mPackageName).setLevel(Level.ALL);
+		String PACKAGE_NAME = getPackageName();
+		Logger.getLogger(PACKAGE_NAME).addHandler(new LoggingHandler());
+        Logger.getLogger(PACKAGE_NAME).setLevel(Level.ALL);
 	}
 	
 	public boolean isReady() {
-		return isReady;
+		return ready;
+	}
+	
+	public void setReady(boolean ready) {
+		this.ready = ready;
+	}
+	
+	public User getUser() {
+		return self;
+	}
+
+	public void setUser(User user) {
+		this.self = user;
+	}
+	
+	public boolean hasToken() {
+    	return (mToken != null);
+	}
+	
+	/** 登陆成功重新调用此方法更新对象  */
+	public void setUserPreferences(long userId) {
+		String PREFERENCE_NAME = userId + "_preferences";
+		mUserPrefs = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
 	}
 	
 	public static AndroidApplication getInstance() {
@@ -120,14 +177,9 @@ public class AndroidApplication extends Application implements
     }
 	
 	private void loadResourceManagers() {
-        // We probably don't have SD card access if we get an
-        // IllegalStateException. If it did, lets
-        // at least have some sort of disk cache so that things don't npe when
-        // trying to access the
-        // resource managers.
         try {
             Log.d("Attempting to load RemoteResourceManager(cache)");
-            mRemoteResourceManager = new RemoteResourceManager("project", "cache/images");
+            mRemoteResourceManager = new RemoteResourceManager(Constants.APP_NAME, Constants.PHOTO_DIR);
         } catch (IllegalStateException e) {
             Log.d("Falling back to NullDiskCache for RemoteResourceManager");
             mRemoteResourceManager = new RemoteResourceManager(new NullDiskCache());
@@ -179,14 +231,14 @@ public class AndroidApplication extends Application implements
 	
 	private void loadCredentials() {
 		// Try logging in and setting up server oauth, then user credentials.
-        String userName = mPrefs.getString(PreferenceSettings.PREFERENCE_USERNAME, null);
+        /*String userName = mPrefs.getString(PreferenceSettings.PREFERENCE_USERNAME, null);
         String password = mPrefs.getString(PreferenceSettings.PREFERENCE_PASSWORD, null);
         BetterHttpApiV1.getInstance().setCredentials(userName, password);
         if (BetterHttpApiV1.getInstance().hasCredentials()) {
         	 sendBroadcast(new Intent(LoggedInOutBroadcastReceiver.INTENT_ACTION_LOGGED_IN));
         } else {
         	 sendBroadcast(new Intent(LoggedInOutBroadcastReceiver.INTENT_ACTION_LOGGED_OUT));
-        }
+        }*/
 	}
 	
 	
@@ -195,6 +247,7 @@ public class AndroidApplication extends Application implements
 		// TODO Auto-generated method stub
 		Log.d("Media state changed, reloading resource managers");
 		loadResourceManagers();
+		mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_INIT_DIR);
 	}
 
 	@Override
@@ -204,14 +257,96 @@ public class AndroidApplication extends Application implements
         loadResourceManagers();
 	}
 
+	private class TaskHandler extends Handler {
+		private static final int MESSAGE_INIT_DIR = 0;
+        private static final int MESSAGE_UPDATE_USER = 1;
+        private static final int MESSAGE_START_SERVICE = 2;
+
+        
+        public TaskHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (DEBUG) Log.d(TAG, "handleMessage: " + msg.what);
+            
+            switch (msg.what) {
+	            case MESSAGE_INIT_DIR:
+	            	setupDefaults();
+	            	break;
+	            case MESSAGE_UPDATE_USER:
+	            	break;
+	            case MESSAGE_START_SERVICE:
+	            	break;
+            }
+        }
+	}
+	
+	private void setupDefaults() {
+		try { //创建默认文件目录
+			File root=new File(Environment.getExternalStorageDirectory(), Constants.APP_NAME);
+			String[] dirs = { Constants.TEMP_DIR, Constants.CACHE_DIR, Constants.AUDIO_DIR, 
+							  Constants.AVATAR_DIR, Constants.DATA_DIR, Constants.PHOTO_DIR };
+			for(String dir : dirs){
+				File directory=new File(root, dir);
+				if(!directory.exists()){
+					directory.mkdirs();
+				}
+				File file=new File(directory, ".nomedia");
+				if(!file.exists()){
+					file.createNewFile();
+				}
+				
+			}
+		} catch (Exception e) {
+		}
+	}
+	
+	 private int getVersionCode(Context context) {
+	        try {
+	            PackageManager pm = context.getPackageManager();
+	            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+	            return pi.versionCode;
+	        } catch (NameNotFoundException e) {
+	            if (DEBUG) Log.d(TAG, "Could not retrieve package info", e);
+	            throw new RuntimeException(e);
+	        }
+    }
+	
+	private void sendCrashReports() {
+		if (!DEBUG) { // 非调试状态，收集异常日志 
+			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+				@Override
+				public void uncaughtException(Thread t, Throwable e) {
+					try {
+						ByteArrayOutputStream bos=new ByteArrayOutputStream(1024);
+						PrintWriter writer=new PrintWriter(bos);
+						e.printStackTrace(writer);
+						writer.flush();
+						bos.flush();
+						String error=new String(bos.toByteArray());
+						bos.close();
+						writer.close();
+					} catch (Exception ex) {
+						Log.e(ex.getMessage());
+					}
+					System.exit(-1);
+				}
+			});
+		}
+	}
+
 	@Override
 	public void onLoggedIn() {
-		// TODO Auto-generated method stub
+		// TODO 登陆成功
+		 mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_UPDATE_USER);
 	}
 
 	@Override
 	public void onLoggedOut() {
-		// TODO Auto-generated method stub
+		// TODO 登出成功
+		PreferenceSettings.clearAll(this);
 	}
-
 }

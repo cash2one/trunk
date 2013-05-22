@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,14 +14,12 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class SampleSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable, GestureDetector.OnGestureListener {
+public class SampleSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 	private static final String TAG = "SampleSurfaceView";
 	
-	private int DIRECTION = 0;
-	private boolean isFlag = true; //标识中断线程
-	private int bitmapX = 150;
-	private int bitmapY = 150;
-	
+	//标识中断线程
+	private boolean isFlag = true; 
+
 	private int mWidth;
 	private int mHeight;
 	
@@ -29,7 +28,6 @@ public class SampleSurfaceView extends SurfaceView implements SurfaceHolder.Call
 	private Canvas canvas;
 	private Bitmap bitmap;
 	private SurfaceHolder mHolder;
-	private GestureDetector mDetector;
 	
 	public SampleSurfaceView(Context context) {
 		super(context);
@@ -46,15 +44,12 @@ public class SampleSurfaceView extends SurfaceView implements SurfaceHolder.Call
 		paint.setColor(Color.RED);
 		paint.setAntiAlias(true);
 		
-		mDetector = new GestureDetector(context, this);
 		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gender_boy_selected);
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(TAG, "surfaceCreated");
-		bitmapX = getWidth() / 2;
-		bitmapY = getHeight() / 2;
 		
 		mWidth = getWidth();
 		mHeight = getHeight(); 
@@ -94,26 +89,12 @@ public class SampleSurfaceView extends SurfaceView implements SurfaceHolder.Call
 	}
 
 	private void draw() {
-		Log.d(TAG, "draw");
-		
 		try {
 			canvas = mHolder.lockCanvas();
-			canvas.drawColor(Color.WHITE);
 			
-			if (bitmapX >= (mWidth-20)) {
-				bitmapX = 0;
-			} else if (bitmapX <= 0) {
-				bitmapX = (mWidth-20);
-			}
-			
-			switch (DIRECTION) {
-			case 1:
-				canvas.drawBitmap(bitmap, bitmapX-=5, bitmapY, paint);
-				break;
-			case 2:
-				canvas.drawBitmap(bitmap, bitmapX+=5, bitmapY, paint);
-				break;
-			}
+			//canvas.save();
+			canvas.drawRect(0, 0, bitmap.getWidth(), bitmap.getHeight(), paint);
+			canvas.drawBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), paint);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,52 +105,4 @@ public class SampleSurfaceView extends SurfaceView implements SurfaceHolder.Call
 		}
 	}
 
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-		return mDetector.onTouchEvent(event);
-	}
-
-	@Override
-	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		if (e1.getX() > e2.getX() && Math.abs(velocityX) > 0) {
-			// 向左滑动
-			DIRECTION = 1;
-		} else if (e2.getX() > e1.getX() && Math.abs(velocityX) > 0) {
-			// 向右滑动
-			DIRECTION = 2;
-		} 
-		return true;
-	}
-	
 }

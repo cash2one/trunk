@@ -58,15 +58,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity" android:alwaysRetainTaskState="true" android:launchMode="singleTask" >
+        <activity android:name=".MainActivity" android:screenOrientation="portrait" android:alwaysRetainTaskState="true"
+                android:label="@string/app_name"  android:configChanges="keyboardHidden|orientation|screenSize" android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
+                <category android:name="android.intent.action.CREATE_SHORTCUT" />
+            <intent-filter android:label="@string/share_in_app" >
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
-                <data android:mimeType="video/*" />
+            </intent-filter>
+            <intent-filter android:label="@string/share_in_app" >
+                <action android:name="android.intent.action.SEND" />
+                <data android:mimeType="text/plain" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             </intent-filter>
         </activity>
         <activity android:name="StartActivity" />

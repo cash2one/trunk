@@ -8,7 +8,12 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-
+/**
+ * @file SettingUtils.java
+ * @create 2013-5-22 下午05:48:12
+ * @author lilong
+ * @description TODO dreamxsky@gmail.com
+ */
 public final class SettingUtils {
 	
 	private SettingUtils() {

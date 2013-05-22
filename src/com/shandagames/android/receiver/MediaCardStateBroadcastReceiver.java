@@ -38,7 +38,7 @@ public class MediaCardStateBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	/** 注册广播接收者 */
-	public void bind(Context context) {
+	public void register(Context context) {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
 		intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
@@ -47,7 +47,7 @@ public class MediaCardStateBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	/** 解绑广播接收者 */
-	public void unbind(Context context) {
+	public void unregister(Context context) {
 		context.unregisterReceiver(this);
 	}
 

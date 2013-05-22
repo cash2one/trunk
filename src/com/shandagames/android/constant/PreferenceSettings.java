@@ -1,8 +1,10 @@
 package com.shandagames.android.constant;
 
 import java.util.UUID;
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import com.shandagames.android.bean.User;
+import com.shandagames.android.preferences.SettingUtils;
 
 /**
  * @file PreferenceSettings.java
@@ -13,58 +15,68 @@ import android.content.SharedPreferences.Editor;
 public final class PreferenceSettings {
 
 	private static final String PREFERENCE_IS_FIRST_RUN = "is_first_run";
+	private static final String PREFERENCE_UNIQUE_IDENTIFIER = "unique";
 	private static final String PREFERENCE_CREDENTIAL_TOKEN = "token";
-	private static final String PREFERENCE_UNIQUE_IDENTIFIER = "unique_identifier";
-	
-	public static final String PREFERENCE_USERNAME = "userName";
-	public static final String PREFERENCE_PASSWORD = "password";
+
+	public static final String PREFERENCE_USER_ID = "userId";
+	public static final String PREFERENCE_USER_NAME = "userName";
+	public static final String PREFERENCE_NICK_NAME = "nickName";
+	public static final String PREFERENCE_USER_AVATAR = "photo";
+	public static final String PREFERENCE_USER_GENDER = "gender";
 	
 	
 	private PreferenceSettings() {
 	}
 	
-	// Check if this is a new install client.
-	public static boolean isFisrtRun(SharedPreferences preferences) {
-		return preferences.getBoolean(PREFERENCE_IS_FIRST_RUN, false);
+	public static boolean isFisrtRun(Context context) {
+		return SettingUtils.contains(context, PREFERENCE_IS_FIRST_RUN);
 	}
 
-	// Sign current user is first run client.
-	public static void storeIsFirstRun(SharedPreferences preferences) {
-		Editor editor = preferences.edit();
-		editor.putBoolean(PREFERENCE_IS_FIRST_RUN, true);
-		editor.commit();
+	public static void storeIsFirstRun(Context context) {
+		SettingUtils.set(context, PREFERENCE_IS_FIRST_RUN, true);
 	}
 
-	public static String createUniqueId(SharedPreferences preferences) {
-		String uniqueId = preferences.getString(PREFERENCE_UNIQUE_IDENTIFIER,
-				null);
+	public static String createUniqueId(Context context) {
+		String uniqueId = SettingUtils.get(context, PREFERENCE_UNIQUE_IDENTIFIER, null);
 		if (uniqueId == null) {
 			uniqueId = UUID.randomUUID().toString();
-			Editor editor = preferences.edit();
-			editor.putString(PREFERENCE_UNIQUE_IDENTIFIER, uniqueId);
-			editor.commit();
+			SettingUtils.set(context, PREFERENCE_UNIQUE_IDENTIFIER, uniqueId);
 		}
 		return uniqueId;
 	}
 
-	public static String getUserToken(SharedPreferences preferences) {
-		return preferences.getString(PREFERENCE_CREDENTIAL_TOKEN, null);
+	public static void storeToken(Context context, String mToken) {
+		SettingUtils.set(context, PREFERENCE_CREDENTIAL_TOKEN, mToken);
 	}
 
-	public static void storeUserToken(SharedPreferences preferences,
-			String mToken) {
-		if (mToken != null) {
-			Editor editor = preferences.edit();
-			editor.putString(PREFERENCE_CREDENTIAL_TOKEN, mToken);
-			editor.commit();
-		}
+	public static String getToken(Context context) {
+		return SettingUtils.get(context, PREFERENCE_CREDENTIAL_TOKEN, null);
 	}
-
-	public static void storeLoginAndPassword(SharedPreferences preferences, 
-			String userName, String password) {
-		Editor editor = preferences.edit();
-		editor.putString(PREFERENCE_USERNAME, userName);
-		editor.putString(PREFERENCE_PASSWORD, password);
-		editor.commit();
+	
+	public static void storeUser(Context context, User user) {
+		Editor editor = SettingUtils.getEditor(context);
+		editor.putLong(PREFERENCE_USER_ID, user.getId());
+		editor.putString(PREFERENCE_USER_NAME, user.getUserName());
+		editor.putString(PREFERENCE_NICK_NAME, user.getNickName());
+		editor.putString(PREFERENCE_USER_AVATAR, user.getPhoto());
+		editor.putString(PREFERENCE_USER_GENDER, user.getGender());
+		SettingUtils.commitOrApply(editor);
+	}
+	
+	public static User getUser(Context context) {
+		User user = new User();
+		user.setId(SettingUtils.get(context, PREFERENCE_USER_ID, 0L));
+		user.setUserName(SettingUtils.get(context, PREFERENCE_USER_NAME, null));
+		user.setNickName(SettingUtils.get(context, PREFERENCE_NICK_NAME, null));
+		user.setPhoto(SettingUtils.get(context, PREFERENCE_USER_AVATAR, null));
+		user.setGender(SettingUtils.get(context, PREFERENCE_USER_GENDER, null));
+		return user;
+	}
+	
+	/** 清空所有存储值   */
+	public static void clearAll(Context context) {
+		Editor editor = SettingUtils.getEditor(context);
+		editor.clear();
+		SettingUtils.commitOrApply(editor);
 	}
 }
