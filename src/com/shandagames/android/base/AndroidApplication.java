@@ -62,10 +62,8 @@ public class AndroidApplication extends Application implements
 	private TaskHandler mTaskHandler;
 	private HandlerThread mTaskThread;
 	
+	private BestLocationListener mBestLocationListener;
 	private RemoteResourceManager mRemoteResourceManager;
-	private LoggedInOutBroadcastReceiver mLoggedInOutReceiver;
-	private MediaCardStateBroadcastReceiver mMediaStateReceiver;
-	private BestLocationListener mBestLocationListener = new BestLocationListener();
 
 	@Override
 	public void onCreate() {
@@ -80,7 +78,9 @@ public class AndroidApplication extends Application implements
         // 应用需要后台执行数据处理，开启新的线程处理
         mTaskThread = new HandlerThread(TAG + "-AsyncThread");
         mTaskThread.start();
-        mTaskHandler = new TaskHandler(mTaskThread.getLooper()); 
+        mTaskHandler = new TaskHandler(mTaskThread.getLooper());
+        
+        mBestLocationListener = new BestLocationListener();
 	}
 
 	private void inital() {
@@ -111,11 +111,11 @@ public class AndroidApplication extends Application implements
 	}
 	
 	private void register() {
-		mLoggedInOutReceiver = new LoggedInOutBroadcastReceiver();
+		LoggedInOutBroadcastReceiver mLoggedInOutReceiver = new LoggedInOutBroadcastReceiver();
         mLoggedInOutReceiver.register(getApplicationContext());
         mLoggedInOutReceiver.setOnLoggedInOutListener(this);
         
-        mMediaStateReceiver = new MediaCardStateBroadcastReceiver();
+        MediaCardStateBroadcastReceiver mMediaStateReceiver = new MediaCardStateBroadcastReceiver();
         mMediaStateReceiver.register(getApplicationContext());
         mMediaStateReceiver.setOnMediaCardAvailableListener(this);
 	}
