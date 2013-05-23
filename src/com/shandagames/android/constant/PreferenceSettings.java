@@ -2,6 +2,7 @@ package com.shandagames.android.constant;
 
 import java.util.UUID;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.shandagames.android.bean.User;
 import com.shandagames.android.preferences.SettingUtils;
@@ -28,14 +29,6 @@ public final class PreferenceSettings {
 	private PreferenceSettings() {
 	}
 	
-	public static boolean isFisrtRun(Context context) {
-		return SettingUtils.contains(context, PREFERENCE_IS_FIRST_RUN);
-	}
-
-	public static void storeIsFirstRun(Context context) {
-		SettingUtils.set(context, PREFERENCE_IS_FIRST_RUN, true);
-	}
-
 	public static String createUniqueId(Context context) {
 		String uniqueId = SettingUtils.get(context, PREFERENCE_UNIQUE_IDENTIFIER, null);
 		if (uniqueId == null) {
@@ -50,7 +43,7 @@ public final class PreferenceSettings {
 	}
 
 	public static String getToken(Context context) {
-		return SettingUtils.get(context, PREFERENCE_CREDENTIAL_TOKEN, null);
+		return SettingUtils.get(context, PREFERENCE_CREDENTIAL_TOKEN, "");
 	}
 	
 	public static void storeUser(Context context, User user) {
@@ -73,9 +66,25 @@ public final class PreferenceSettings {
 		return user;
 	}
 	
+	public static boolean isFisrtRun(SharedPreferences mPref) {
+		return mPref.getBoolean(PREFERENCE_IS_FIRST_RUN, false);
+	}
+
+	public static void storeIsFirstRun(SharedPreferences mPref) {
+		Editor editor = mPref.edit();
+		editor.putBoolean(PREFERENCE_IS_FIRST_RUN, true);
+		SettingUtils.commitOrApply(editor);
+	}
+	
 	/** 清空所有存储值   */
 	public static void clearAll(Context context) {
 		Editor editor = SettingUtils.getEditor(context);
+		editor.clear();
+		SettingUtils.commitOrApply(editor);
+	}
+	
+	public static void clearUserPrefs(SharedPreferences mPref) {
+		Editor editor = mPref.edit();
 		editor.clear();
 		SettingUtils.commitOrApply(editor);
 	}

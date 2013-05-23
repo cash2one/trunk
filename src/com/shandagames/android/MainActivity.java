@@ -50,16 +50,19 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.UiModeManager;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -111,6 +114,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	protected void _onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
+		initialize();
+		
 		mMediaPicker = new ExtendMediaPicker(this);
 		mMediaPicker.setOnMediaPickerListener(this);
 		
@@ -122,11 +127,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		mMinute = c.get(Calendar.MINUTE);
 	}
 	
-	@Override
-	protected void onStart() {
-		shareAppMessage();
-		showUserGuide();
-		super.onStart();
+	private void initialize() {
+		if (AndroidApplication.getInstance().isReady()) {
+			setContentView(R.layout.main);
+			ensureUi();
+			shareMessage();
+			// 更新升级
+		} else {
+			// 注册登录
+			//finish();
+		}
 	}
 	
 	protected void onResume() {
@@ -140,14 +150,42 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		super.onNewIntent(intent);
 	}
 	
-	private void showUserGuide() {
-		if (!PreferenceSettings.isFisrtRun(this)) {
+	public void showUserGuide() {
+		if (!PreferenceSettings.isFisrtRun(AndroidApplication.mUserPrefs)) {
 	        startActivity(new Intent(this, StartActivity.class));
-			PreferenceSettings.storeIsFirstRun(this);
-		} else {
-			setContentView(R.layout.main);
-			ensureUi();
-		}
+			PreferenceSettings.storeIsFirstRun(AndroidApplication.mUserPrefs);
+		} 
+	}
+	
+	public void shareMessage() {
+		Intent intent = getIntent();
+    	if(Intent.ACTION_SEND.equals(intent.getAction())){
+    		String text=null;
+    		String imagePath=null;
+    		if(intent.hasExtra(Intent.EXTRA_TEXT)){
+    			text = intent.getStringExtra(Intent.EXTRA_TEXT);
+    		}
+    		if(intent.hasExtra(Intent.EXTRA_STREAM)){
+    			Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        		if(uri!=null){
+        			 String scheme = uri.getScheme();
+                     if (scheme.equals("content")) {
+                         ContentResolver contentResolver = getContentResolver();
+                         Cursor cursor = contentResolver.query(uri, null, null, null, null);
+                         cursor.moveToFirst();
+                         imagePath = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.DATA));
+                     }else if(scheme.equals("file")){
+                    	 imagePath=uri.getPath();
+                     }
+        		}
+    		}
+    		if(text!=null){
+    			Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    		}
+    		if(imagePath!=null){
+    			Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    		}
+    	}
 	}
 	
 	private void ensureUi() {

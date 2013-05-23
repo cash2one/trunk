@@ -89,10 +89,10 @@ public class AndroidApplication extends Application implements
 		SmileyParser.init(getApplicationContext()); 
 		BetterHttpApiV1.init(getApplicationContext(), null, false);
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		// 读取存储个人信息
+		
 		self = PreferenceSettings.getUser(this);
 		String token = PreferenceSettings.getToken(this);
-		// 是否自动登陆
+
 		if (token.length()!=0 && self.getId()!=0) {
 			// 1. 注册推送服务
 			// 2. 存储用户信息
@@ -228,20 +228,6 @@ public class AndroidApplication extends Application implements
 		mBestLocationListener.clearLastKnownLocation();
 	}
 
-	
-	private void loadCredentials() {
-		// Try logging in and setting up server oauth, then user credentials.
-        /*String userName = mPrefs.getString(PreferenceSettings.PREFERENCE_USERNAME, null);
-        String password = mPrefs.getString(PreferenceSettings.PREFERENCE_PASSWORD, null);
-        BetterHttpApiV1.getInstance().setCredentials(userName, password);
-        if (BetterHttpApiV1.getInstance().hasCredentials()) {
-        	 sendBroadcast(new Intent(LoggedInOutBroadcastReceiver.INTENT_ACTION_LOGGED_IN));
-        } else {
-        	 sendBroadcast(new Intent(LoggedInOutBroadcastReceiver.INTENT_ACTION_LOGGED_OUT));
-        }*/
-	}
-	
-	
 	@Override
 	public void onMediaCardAvailable() {
 		// TODO Auto-generated method stub
