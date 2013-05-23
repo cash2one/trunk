@@ -8,11 +8,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import com.shandagames.android.bean.Person;
 import com.shandagames.android.dao.PersonDao;
-import com.shandagames.android.preferences.ObscuredSharedPreferences;
 import com.shandagames.android.util.DateHelper;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.SystemClock;
 import android.test.AndroidTestCase;
 import android.util.Xml;
@@ -53,16 +50,6 @@ public class SampleTest extends AndroidTestCase {
 		SystemClock.sleep(5000);
 		long time = SystemClock.uptimeMillis() - lasttime;
 		System.out.println("currenttime:"+date+","+lasttime+","+time);
-	}
-	
-	public void encrypt() throws Throwable {
-		SharedPreferences preference = new ObscuredSharedPreferences(getContext(), "selience");
-		Editor editor = preference.edit();
-		editor.putString("a", "qqqqq");
-		editor.commit();
-		
-		String str = preference.getString("a", null);
-		System.out.println("DES:"+str);
 	}
 	
 	public void parseXml() throws XmlPullParserException, IOException {

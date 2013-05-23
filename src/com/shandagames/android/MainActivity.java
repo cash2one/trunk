@@ -141,9 +141,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	private void showUserGuide() {
-		if (!PreferenceSettings.isFisrtRun(AndroidApplication.mPrefs)) {
+		if (!PreferenceSettings.isFisrtRun(this)) {
 	        startActivity(new Intent(this, StartActivity.class));
-			PreferenceSettings.storeIsFirstRun(AndroidApplication.mPrefs);
+			PreferenceSettings.storeIsFirstRun(this);
 		} else {
 			setContentView(R.layout.main);
 			ensureUi();
