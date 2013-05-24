@@ -62,6 +62,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore.Images;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -236,7 +237,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				mMediaPicker.showImagePicker();
 				break;
 			case 8:
-				String url="http://3gsoft.gtimg.com/sd/mqqgame_online/client/hall/1213621180/17001/qqgamehall1.70.01_android_build0028.apk";
+				String url="http://shouji.baidu.com/download/1426l/AppSearch_Android_1426l.apk";
 				downloadFileTask = new DownloadFileFromURL(DOWNLOAD_FILE_TASK_ID, this);
 				downloadFileTask.execute(url);
 				break;
@@ -712,18 +713,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	
 	
 	class DownloadFileFromURL extends GenericTask<Result> {
-
+		private File file;
+		
 		protected DownloadFileFromURL(String taskName, TaskListener taskListener) {
 			super(taskName, taskListener);
 			// TODO Auto-generated constructor stub
+			this.file = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".apk");
 		}
 
 		@Override
 		protected Result doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			BetterHttpApiV1 httpRequest = BetterHttpApiV1.getInstance();
-			String filePath = "/mnt/sdcard/" + File.separator + System.currentTimeMillis() + ".apk";
-			httpRequest.getRequest().downloadFileToDisk(params[0], filePath, new Progress() {
+			httpRequest.getRequest().downloadFileToDisk(params[0], file.getAbsolutePath(), new Progress() {
 				@Override
 				public void transferred(long num, long totalSize) {
 					// TODO Auto-generated method stub
@@ -738,6 +740,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			// TODO Auto-generated method stub
 			waitingDialog.setProgress((int)values[0]);
 		}
+
+		@Override
+		protected void onPostExecute(Result result) {
+			// TODO Auto-generated method stub
+			waitingDialog.dismiss();
+			startActivity(IntentSupport.newInstallApkIntent(file));
+		}
+		
 	}
 
 }

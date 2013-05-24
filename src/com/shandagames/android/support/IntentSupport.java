@@ -265,10 +265,9 @@ public class IntentSupport {
 	}
 	
 	/** 安装应用: 指定安装应用路径 */
-	public static Intent newInstallApkIntent(File tempFile) {
-		Intent intent = new Intent(Intent.ACTION_VIEW); 
-		intent.setData(Uri.fromFile(tempFile));
-		intent.setType("application/vnd.android.package-archive");
+	public static Intent newInstallApkIntent(File apkFile) {
+		Intent intent=new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.parse("file://"+apkFile.toString()), "application/vnd.android.package-archive");
 		return intent;
 	}
 	
