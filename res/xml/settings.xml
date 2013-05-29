@@ -1,37 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:title="settings"
->
-	<PreferenceCategory
-		android:summary="settings about emotions"
-		android:title="Emotions"
-	>
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="category_loveme_key"
-			android:summaryOff="No,I am sorry."
-			android:summaryOn="Yes,I love you!"
-			android:title="Love me?"/>
-		<CheckBoxPreference
-			android:defaultValue="false"
-			android:summaryOff="No,you are a good person."
-			android:summaryOn="Yes,I hate you!"
-			android:title="Hate me?"/>
-	</PreferenceCategory>
-	<PreferenceCategory
-		android:summary="settings about relations"
-		android:title="Relations"
-	>
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:summaryOff="No,I am sorry."
-			android:summaryOn="Yes,we are family!"
-			android:title="Family?"/>
-		<CheckBoxPreference
-			android:defaultValue="false"
-			android:summaryOff="No,I am sorry."
-			android:summaryOn="Yes,we are friends!"
-			android:title="Friends?"/>
-	</PreferenceCategory>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="settings" >
+    <PreferenceCategory
+        android:summary="settings about relations"
+        android:title="Relations" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="releation_family"
+            android:summaryOff="No,I am sorry."
+            android:summaryOn="Yes,we are family!"
+            android:title="Family?" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="releation_friend"
+            android:summaryOff="No,I am sorry."
+            android:summaryOn="Yes,we are friends!"
+            android:title="Friends?" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            android:key="network"
+            android:summary="select network type"
+            android:title="Network" />
+    </PreferenceCategory>
 </PreferenceScreen>

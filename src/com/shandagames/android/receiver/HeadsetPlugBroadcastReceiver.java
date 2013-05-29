@@ -10,8 +10,8 @@ import android.content.IntentFilter;
  * @create 2012-8-31 上午10:11:29
  * @author lilong
  * @description 广播接收者监测耳机插入和拔出;
- * 				此广播在AndroidManifest.xml中注册无效，需要在具体的Activity中注册和销毁，
- * 				后台监测可采用service方式启动
+ * 此广播在AndroidManifest.xml中注册无效，需要在具体的Activity中注册和销毁，
+ * 后台监测可采用service方式启动
  */
 public class HeadsetPlugBroadcastReceiver extends BroadcastReceiver {
 
