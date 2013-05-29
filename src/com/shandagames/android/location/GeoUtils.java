@@ -5,11 +5,13 @@
 package com.shandagames.android.location;
 
 import com.google.android.maps.GeoPoint;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,16 +33,14 @@ public class GeoUtils {
      * all providers and returns the most accurate result.
      */
     public static Location getBestLastGeolocation(Context context) {
-        LocationManager manager = (LocationManager)context.getSystemService(
-                Context.LOCATION_SERVICE);
+        LocationManager manager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = manager.getAllProviders();
          
         Location bestLocation = null;
         for (String it : providers) {
             Location location = manager.getLastKnownLocation(it);
             if (location != null) {
-                if (bestLocation == null || 
-                        location.getAccuracy() < bestLocation.getAccuracy()) {
+                if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
                     bestLocation = location;
                 }
             }
@@ -95,8 +95,19 @@ public class GeoUtils {
 	    return 6366000*tt;
 	}
 	
-	public static void ReverseGeocodingTask(final Context ctx, 
-		final Location location, final Handler h) {
+	@SuppressLint("NewApi")
+	public void onLocationChanged(Context ctx, Location location, Handler h) {
+	    // Bypass reverse-geocoding if the Geocoder service is not available on the
+	    // device. The isPresent() convenient method is only available on Gingerbread or above.
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && Geocoder.isPresent()) {
+	        // Since the geocoding API is synchronous and may take a while.  You don't want to lock
+	        // up the UI thread.  Invoking reverse geocoding in an AsyncTask.
+	    	ReverseGeocodingTask(ctx, location, h);
+	    }
+	}
+	
+	public static void ReverseGeocodingTask(final Context ctx, final Location location, 
+			final Handler h) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -129,4 +140,6 @@ public class GeoUtils {
 			}
 		}).start();
 	}
+	
+	
 }

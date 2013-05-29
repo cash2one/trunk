@@ -42,6 +42,16 @@ public final class FileHelper {
 		return isSuccess;
     }
 	
+    public static void createNomedia(File storageDirectory) {
+    	File nomediaFile = new File(storageDirectory, ".nomedia");
+    	if (!nomediaFile.exists()) {
+            try {
+            	nomediaFile.createNewFile();
+            } catch (IOException e) {
+                Log.d("createDirectory", "Unable to create .nomedia file for some reason.", e);
+            }
+        }
+    }
     
     /** 压缩数据 */
     public static byte[] gzip(String content) {

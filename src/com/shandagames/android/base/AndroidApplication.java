@@ -2,6 +2,7 @@ package com.shandagames.android.base;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Observer;
@@ -284,9 +285,8 @@ public class AndroidApplication extends Application implements
 				if(!file.exists()){
 					file.createNewFile();
 				}
-				
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 		}
 	}
 	

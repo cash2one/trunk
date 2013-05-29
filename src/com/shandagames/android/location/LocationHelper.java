@@ -18,8 +18,12 @@ import android.util.Log;
 public class LocationHelper extends Observable implements LocationListener {
 	private static final boolean DEBUG = true;
 	private static final String TAG = "LocationHelper";
+	
 	private static final int CHECK_INTERVAL = 1000 * 30;
 	
+	private static final long LOCATION_UPDATE_MIN_TIME = 10 * 1000; // 间隔时间
+	private static final long LOCATION_UPDATE_MIN_DISTANCE = 10; // 间隔最小距离
+	    
 	private Location mLastLocation;
 	private LocationManager locationManager;
 	
@@ -91,7 +95,7 @@ public class LocationHelper extends Observable implements LocationListener {
     		String providerName = providers.get(i);
     		if (locationManager.isProviderEnabled(providerName)) {
     			updateLocation(locationManager.getLastKnownLocation(providerName));
-    			locationManager.requestLocationUpdates(providerName, 0, 0, this);
+    			locationManager.requestLocationUpdates(providerName, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
     		}
     	}
     }

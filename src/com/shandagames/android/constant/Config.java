@@ -19,5 +19,6 @@ public final class Config {
 
 	/** 是否发送异常日志 */
 	public static final boolean sendReportWhenCrash = true;
+
 	
 }

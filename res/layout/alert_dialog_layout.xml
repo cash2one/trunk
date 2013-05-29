@@ -18,6 +18,7 @@
             android:layout_marginLeft="6dip"
             android:layout_marginRight="4dip"
             android:layout_marginTop="3dip"
+            android:contentDescription="@string/empty"
             android:src="@drawable/alert_dialog_icon" />
 
         <TextView
@@ -31,7 +32,6 @@
             android:gravity="center_vertical"
             android:paddingTop="5dip"
             android:singleLine="true"
-            android:text="title"
             android:textColor="#858585"
             android:textSize="16sp" />
     </RelativeLayout>
