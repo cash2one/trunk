@@ -4,13 +4,16 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.widget.Toast;
 
 /** 封装常用的Intent操作  */
 public class IntentSupport {
@@ -191,6 +194,10 @@ public class IntentSupport {
         return new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber.replace(" ", "")));
     }
 
+    /** 拍摄视频   */
+    public static Intent newTakeVideoIntent() {
+    	return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+    }
     
     /** 发送短信  */
     public static Intent newSmsIntent(String phoneNumber, String message) {
@@ -241,18 +248,25 @@ public class IntentSupport {
 	}
 	
 	/** 截取图像部分区域 ;魅族的机器没有返回data字段，但是返回了filePath */
-	public static Intent newCropBitmapIntent(File tempFile) {
+	public static Intent newCropImageUri(Uri uri, int outputX, int outputY){
+		//android1.6以后只能传图库中图片
+		//http://www.linuxidc.com/Linux/2012-11/73940.htm
 		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setType("image/*");
-		//intent.setClassName("com.android.camera", "com.android.camera.CropImage");   
-		intent.setData(Uri.fromFile(tempFile));    //data是图库选取文件传回的参数
+		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true"); //发送裁剪信号
 		intent.putExtra("aspectX", 1); 	//X方向上的比例
 		intent.putExtra("aspectY", 1); 	//Y方向上的比例
-		intent.putExtra("outputX", 200); //裁剪区的宽
-		intent.putExtra("outputY", 200); //裁剪区的高
+		intent.putExtra("outputX", outputX); //裁剪区的宽
+		intent.putExtra("outputY", outputY); //裁剪区的高
 		intent.putExtra("scale", true);//是否保留比例
-		intent.putExtra("return-data", true);  //是否返回数据     
+		//拍摄的照片像素较大，建议直接保存URI，否则内存溢出，较小图片可以直接返回Bitmap
+		/*Bundle extras = data.getExtras();
+		if (extras != null) {	
+			Bitmap bitmap = extras.getParcelable("data");
+	    }*/
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+		intent.putExtra("return-data", false);  //是否返回数据     
+		intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); // 图片格式
 		intent.putExtra("noFaceDetection", true); //关闭人脸检测
 		return intent;
 	}

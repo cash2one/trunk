@@ -17,6 +17,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -130,6 +131,14 @@ public final class ManifestSupport {
 		PackageManager pm = context.getPackageManager();
 		Intent launchIntent = pm.getLaunchIntentForPackage(PACKAGE_NAME);
 		context.startActivity(launchIntent);
+	}
+	
+	/** 扫描文件到媒体库  */
+	public static void scanFile(Context context, File filePath) {
+		Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+	    Uri contentUri = Uri.fromFile(filePath);
+	    mediaScanIntent.setData(contentUri);
+	    context.sendBroadcast(mediaScanIntent);
 	}
 	
 	/**

@@ -21,6 +21,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
+
+import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import com.shandagames.android.network.CountingOutputStream.Progress;
 
@@ -52,6 +55,8 @@ public class BetterHttp {
 	/** 创建HttpURLConnection连接 */
 	public HttpURLConnection createHttpURLConnection(String actionUrl, String method) 
 			throws IOException {
+		
+		 disableConnectionReuseIfNecessary();
 		 HttpURLConnection httpConnection = null;
 		 // 请求实例对象Url
 		 URL url = new URL(actionUrl);
@@ -74,34 +79,6 @@ public class BetterHttp {
 		 httpConnection.setRequestProperty("Accept-Encoding", "gzip,deflate");  // 响应Gzip,Deflate压缩数据
 	     
 	     return httpConnection;
-	}
-	
-	/**
-	 * 信任所有请求站点
-	 */
-	private void trustAllHttpsCertificates() {
-		try {
-			javax.net.ssl.X509TrustManager tm = new javax.net.ssl.X509TrustManager() {
-				@Override
-				public X509Certificate[] getAcceptedIssuers() {return null;}
-				@Override
-				public void checkServerTrusted(X509Certificate[] chain,String authType) throws CertificateException {}
-				@Override
-				public void checkClientTrusted(X509Certificate[] chain,String authType) throws CertificateException {}
-			};
-			// Create a trust manager that does not validate certificate chains:
-			javax.net.ssl.TrustManager[] trustAllCerts = { tm };
-			javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLS"); 
-			sc.init(null, trustAllCerts, null);
-			javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-			javax.net.ssl.HostnameVerifier hv = new javax.net.ssl.HostnameVerifier() {
-				@Override
-				public boolean verify(String hostname, SSLSession session) {return true;}
-			};
-			HttpsURLConnection.setDefaultHostnameVerifier(hv);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 	}
 	
 	/**
@@ -283,6 +260,9 @@ public class BetterHttp {
 			if (DEBUG) Log.d(TAG, "BetterHttp httpRequest [2] StatusLine : "+ responseCode);
 			// 200返回码表示成功，其余的表示失败
 			if (responseCode == HttpURLConnection.HTTP_OK) {
+				// 在Gingerbread这个版本中, 添加了自动压缩数据的功能gzip
+				// Content-Length返回的是压缩后的数据长度,所以使用 getContentLength()函数得到的Buffer数据大小是不正确的;
+				// 要使用从响应中一直读取字节流直到InputStream.read()函数返回-1为止;
 				InputStream inputStream = getUngzippedContent(connection);
 				// 解析响应数据
 		        StringBuilder sb = new StringBuilder();
@@ -441,5 +421,57 @@ public class BetterHttp {
 		
 		return inputStream;
 	}
+
+	/** 通过反射机制使用HTTP response caching，4.0版本有效  */
+	public static void enableHttpResponseCache(Context ctx){
+		try {
+		    long httpCacheSize = 10 *  1024 *  1024; // 10 MiB
+		    File httpCacheDir = new File(ctx.getCacheDir(), "http");
+		    Class.forName("android.net.http.HttpResponseCache")
+		         .getMethod("install", File.class, long.class)
+		         .invoke(null, httpCacheDir, httpCacheSize);
+		} catch (Exception httpResponseCacheNotAvailable) {
+			Log.d(TAG, "HTTP response cache is unavailable.");
+		}
+	}
 	
+	 /**
+     * Workaround for bug pre-Froyo, see here for more info:
+     * http://blog.chengyunfeng.com/?p=196
+     * http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+     */
+    private void disableConnectionReuseIfNecessary() {
+        // HTTP connection reuse which was buggy pre-froyo
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            System.setProperty("http.keepAlive", "false");
+        }
+    }
+
+    /**
+	 * 信任所有请求站点
+	 */
+	private void trustAllHttpsCertificates() {
+		try {
+			javax.net.ssl.X509TrustManager tm = new javax.net.ssl.X509TrustManager() {
+				@Override
+				public X509Certificate[] getAcceptedIssuers() {return null;}
+				@Override
+				public void checkServerTrusted(X509Certificate[] chain,String authType) throws CertificateException {}
+				@Override
+				public void checkClientTrusted(X509Certificate[] chain,String authType) throws CertificateException {}
+			};
+			// Create a trust manager that does not validate certificate chains:
+			javax.net.ssl.TrustManager[] trustAllCerts = { tm };
+			javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("TLS"); 
+			sc.init(null, trustAllCerts, null);
+			javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			javax.net.ssl.HostnameVerifier hv = new javax.net.ssl.HostnameVerifier() {
+				@Override
+				public boolean verify(String hostname, SSLSession session) {return true;}
+			};
+			HttpsURLConnection.setDefaultHostnameVerifier(hv);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }
