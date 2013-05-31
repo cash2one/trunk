@@ -1,4 +1,4 @@
-package com.shandagames.android.common;
+package com.shandagames.android.jni;
 
 //http://blog.csdn.net/furongkang/article/details/6857610
 public class NativeSample {

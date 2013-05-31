@@ -18,9 +18,11 @@ import com.shandagames.android.ballons.BallonsActivity;
 import com.shandagames.android.base.AndroidApplication;
 import com.shandagames.android.base.BaseActivity;
 import com.shandagames.android.common.ExtendOptionsMenu;
-import com.shandagames.android.common.NativeSample;
 import com.shandagames.android.constant.PreferenceSettings;
 import com.shandagames.android.http.BetterHttpApiV1;
+import com.shandagames.android.jni.NativeSample;
+import com.shandagames.android.jni.NativeSample01;
+import com.shandagames.android.jni.NativeSample02;
 import com.shandagames.android.log.Log;
 import com.shandagames.android.network.Request;
 import com.shandagames.android.network.RequestExecutor;
@@ -293,6 +295,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			case 21:
 				NativeSample mNative = new NativeSample();
 				ToastUtil.showMessage(this, mNative.sayHi());
+				
+				NativeSample01 mNative01 = new NativeSample01();
+				Log.i("NativeSample", mNative01.add(100, 120)+"");
+				Log.i("NativeSample", mNative01.sayHelloInC("Hello World"));
+				int[] number = mNative01.intMethod(new int[]{1,2,3,4,5});
+				Log.i("NativeSample", number[0]+"");
+				
+				NativeSample02 mNateve02 = new NativeSample02();
+				mNateve02.callCcode();
+				mNateve02.callCcode1();
+				mNateve02.callCcode2();
 				break;
 			case 22:
 				startActivity(new Intent(this, BallonsActivity.class));
