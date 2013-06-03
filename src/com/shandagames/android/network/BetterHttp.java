@@ -16,6 +16,7 @@ import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
@@ -61,7 +62,7 @@ public class BetterHttp {
 		 // 请求实例对象Url
 		 URL url = new URL(actionUrl);
 		 // 判断验证数据类型
-		 if (url.getProtocol().toLowerCase().equals("https")) {
+		 if (url.getProtocol().toLowerCase(Locale.getDefault()).equals("https")) {
 			trustAllHttpsCertificates();
 			httpConnection = (HttpsURLConnection) url.openConnection();
 		 } else {

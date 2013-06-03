@@ -1,16 +1,11 @@
 package com.shandagames.android;
 
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.DoubanApi;
-import org.scribe.builder.api.QWeiboApi;
-import org.scribe.builder.api.QzoneApi;
-import org.scribe.builder.api.SinaWeiboApi20;
-import org.scribe.model.Oauth2AccessToken;
-import org.scribe.model.SignatureType;
-import org.scribe.model.Token;
-import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
 import com.shandagames.android.R;
+import com.shandagames.android.oauth.Api;
+import com.shandagames.android.oauth.QzoneApi;
+import com.shandagames.android.oauth.SinaWeiboApi20;
+import com.shandagames.android.oauth.TencentApi;
+import com.shandagames.android.oauth.Token;
 import com.shandagames.android.oauth.Utility;
 import com.shandagames.android.task.GenericTask;
 import com.shandagames.android.task.TaskListener;
@@ -25,7 +20,6 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 /**
  * @file WeiboViewActivity.java
@@ -36,18 +30,10 @@ import android.widget.Toast;
 public class WeiboViewActivity extends Activity implements TaskListener {
 	private static final String TAG = "WeiboViewActivity.class";
 	
-	private static final String OAUTH2_SINA_TOKEN_TASK = "OAUTH2_SINA_TOKEN_TASK";
-	private static final String OAUTH2_REQUEST_TOKEN_TASK = "OAUTH2_REQUEST_TOKEN_TASK";
-	
 	private WebView mWebView;
 	private ProgressBar mProgressBar;
 	
-	private String type;
-	
-	private OAuthService service;
-	private Token requestToken;
-	
-	private GetAccessTokenTask mAccessTokenTask;
+	private Api api;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,75 +50,42 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 		mWebView.requestFocus();
 		mWebView.setWebViewClient(new WeiboWebViewClient());
 		
-		ensureUi();
-		
-		
 		//http://www.douban.com/service/apidoc/auth#认证流程及访问资源流程
-		mAccessTokenTask = new GetAccessTokenTask(OAUTH2_SINA_TOKEN_TASK, this);
+		
+		Token token = new Token();
+		String type = getIntent().getStringExtra("type");
+		if (type.equals("sina")) {
+			token.setApiKey(Utility.SINA_APP_KEY);
+			token.setApiSecret(Utility.SINA_APP_SECRET);
+			token.setRedirectUrl(Utility.SINA_REDIRECT_URL);
+			api = new SinaWeiboApi20(token);
+		} else if (type.equals("tencent")) {
+			token.setApiKey(Utility.TENCENT_APP_KEY);
+			token.setApiSecret(Utility.TENCENT_APP_SECRET);
+			token.setRedirectUrl(Utility.TENCENT_REDIRECT_URL);
+			api = new TencentApi(token);
+		} else if (type.equals("qq")) {
+			token.setApiKey(Utility.QQ_APP_KEY);
+			token.setApiSecret(Utility.QQ_APP_SECRET);
+			token.setRedirectUrl(Utility.QQ_REDIRECT_URL);
+			api = new QzoneApi(token);
+		}
+		
+		mWebView.loadUrl(api.getAuthorizationUrl());
 	}
 	
-	private void ensureUi() {
-		type = getIntent().getStringExtra("type");
-		if (type.equals(Utility.SINA)) { 
-			service = new ServiceBuilder().provider(SinaWeiboApi20.class)
-	        .apiKey(Utility.SINA_APP_KEY).apiSecret(Utility.SINA_APP_SECRET)
-	        .callback(Utility.SINA_REDIRECT_URL).debug().build();
-			String authorizationUrl = service.getAuthorizationUrl(requestToken);
-			mWebView.loadUrl(authorizationUrl);
-		} else if (type.equals(Utility.TENCENT)) {
-			service = new ServiceBuilder().provider(QWeiboApi.class)
-	        .apiKey(Utility.TENCENT_APP_KEY).apiSecret(Utility.TENCENT_APP_SECRET)
-	        .callback(Utility.TENCENT_REDIRECT_URL)
-	        .signatureType(SignatureType.QueryString)
-	        .debug().build();
-			new GetAccessTokenTask(OAUTH2_REQUEST_TOKEN_TASK, this).execute();
-		} else if (type.equals(Utility.QQ)) {
-			service = new ServiceBuilder().provider(QzoneApi.class)
-	        .apiKey(Utility.QQ_APP_KEY).apiSecret(Utility.QQ_APP_SECRET)
-	        .callback(Utility.QQ_REDIRECT_URL).debug().build();
-			new GetAccessTokenTask(OAUTH2_REQUEST_TOKEN_TASK, this).execute();
-		}else if (type.equals(Utility.DOUBAN)) {
-			service = new ServiceBuilder()
-			.provider(DoubanApi.class)
-	        .apiKey(Utility.DOUBAN_APP_KEY)
-	        .apiSecret(Utility.DOUBAN_APP_SECRET)
-	        .callback(Utility.SINA_REDIRECT_URL)
-	        .signatureType(SignatureType.Header)
-	        .debug().build();
-			new GetAccessTokenTask(OAUTH2_REQUEST_TOKEN_TASK, this).execute();
-		}
-	}
 	
 	@Override
 	public void onTaskStart(String taskName) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onTaskFinished(String taskName, Object result) {
-		Token token = (Token) result;
-		if (taskName.equals(OAUTH2_REQUEST_TOKEN_TASK)) {
-			// 根据requestToken请求授权界面
-			requestToken = token;
-			String authorizationUrl = service.getAuthorizationUrl(requestToken); 
-			mWebView.loadUrl(authorizationUrl);
-		} else {
-			// 获取到accessToken界面
-			if (token != null) {
-				//腾讯微博默认过期时间7天
-	    		Toast.makeText(this, token.getRawResponse(), Toast.LENGTH_LONG).show();
-	    		Log.d(TAG, "access token::"+token.getRawResponse());
-	    		setResult(RESULT_OK);
-	    		finish();
-	    	}
-		}
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mAccessTokenTask.cancelTask(true);
-		mAccessTokenTask=null;
 	}
 
 	private class WeiboWebViewClient extends WebViewClient {
@@ -143,15 +96,8 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 			Log.w("onPageStarted", url);
 			
 			//如果授权成功url中包含之前设置的callbackurl包含：授权成功
-			if (url.startsWith(Utility.SINA_REDIRECT_URL)) {
-				Bundle bundle = Utility.parseUrl(url);
-				mAccessTokenTask.execute(bundle.getString("code"));
-				view.stopLoading();
-			}
-			
-			if (url.startsWith(Utility.TENCENT_REDIRECT_URL)) {
-				Bundle bundle = Utility.parseUrl(url);
-				mAccessTokenTask.execute(bundle.getString("oauth_verifier"));
+			if (url.startsWith(api.getToken().getRedirectUrl())) {
+				new GetAccessTokenTask("", WeiboViewActivity.this).execute(url);
 				view.stopLoading();
 			}
 		}
@@ -183,24 +129,15 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 	}
 
 	
-	private class GetAccessTokenTask extends GenericTask<Token> {
+	private class GetAccessTokenTask extends GenericTask<String> {
 
 		public GetAccessTokenTask(String taskName, TaskListener taskListener) {
 			super(taskName, taskListener);
 		}
 		
 		@Override
-		protected Token doInBackground(String... params) {
-			Token token = null;
-			if (getTaskName().equals(OAUTH2_REQUEST_TOKEN_TASK)) {
-				//请求requestToken,新浪微博除外
-				token = service.getRequestToken();
-			} else { 
-				//请求accessToken
-				Verifier verifier = new Verifier(params[0]);
-	        	token = service.getAccessToken(requestToken, verifier);
-			}
-			return token;
+		protected String doInBackground(String... params) {
+			return api.retrieveAccessToken(params[0]);
 		}
 		
 	}

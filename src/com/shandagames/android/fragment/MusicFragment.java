@@ -21,9 +21,6 @@ public class MusicFragment extends BaseFragment {
 		return musicFragment;
 	}
 	
-	private MusicFragment() {
-	}
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

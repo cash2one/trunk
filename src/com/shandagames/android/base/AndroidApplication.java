@@ -36,6 +36,7 @@ import com.shandagames.android.log.Log;
 import com.shandagames.android.log.LoggingHandler;
 import com.shandagames.android.receiver.LoggedInOutBroadcastReceiver;
 import com.shandagames.android.receiver.MediaCardStateBroadcastReceiver;
+import com.shandagames.android.util.ImageCache;
 import com.shandagames.android.util.SmileyParser;
 
 /**
@@ -85,6 +86,7 @@ public class AndroidApplication extends Application implements
 	}
 
 	private void inital() {
+		ImageCache.initInstance("project");
 		loadResourceManagers();
 		mVersion = getVersionCode(this);
 		SmileyParser.init(getApplicationContext()); 
@@ -244,7 +246,7 @@ public class AndroidApplication extends Application implements
         loadResourceManagers();
 	}
 
-	private class TaskHandler extends Handler {
+	static class TaskHandler extends Handler {
 		private static final int MESSAGE_INIT_DIR = 0;
         private static final int MESSAGE_UPDATE_USER = 1;
         private static final int MESSAGE_START_SERVICE = 2;
@@ -271,7 +273,7 @@ public class AndroidApplication extends Application implements
         }
 	}
 	
-	private void setupDefaults() {
+	private static void setupDefaults() {
 		try { //创建默认文件目录
 			File root=new File(Environment.getExternalStorageDirectory(), Constants.APP_NAME);
 			String[] dirs = { Constants.TEMP_DIR, Constants.CACHE_DIR, Constants.AUDIO_DIR, 

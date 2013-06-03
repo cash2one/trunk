@@ -23,9 +23,6 @@ public class DetailFragment extends Fragment {
 		return fragment;
 	}
 	
-	private DetailFragment() {
-	}
-
 	//创建Fragment
 	@Override
 	public void onAttach(Activity activity) {

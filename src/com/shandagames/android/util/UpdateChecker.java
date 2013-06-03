@@ -210,7 +210,7 @@ public class UpdateChecker {
                 int lenghtOfFile = c.getContentLength();
                 
                 //this is where the file will be seen after the download
-                OutputStream out = context.openFileOutput(outFileName, Context.MODE_WORLD_READABLE); //
+                OutputStream out = context.openFileOutput(outFileName, Context.MODE_PRIVATE); //
                 //file input is from the url
                 InputStream in = c.getInputStream();
 

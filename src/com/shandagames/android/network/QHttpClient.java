@@ -7,8 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -17,11 +20,14 @@ import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -139,107 +145,78 @@ public class QHttpClient {
 		};
 	}
     
-    /**
-     * Get方法传送消息
-     * 
-     * @param url  连接的URL
-     * @param queryString  请求参数串
-     * @return 服务器返回的信息
-     * @throws Exception
-     */
-    public String doHttpGet(String url, String queryString) {
-        String responseData = null;
+    private String executeHttpRequest(HttpRequestBase httpRequest)  {
+    	String responseData = null;
+        if (DEBUG) Log.d(TAG, "doHttpRequest [1] url = " + httpRequest.getURI()); 
         
-        if (queryString != null && !queryString.equals("")) {
-    		url += "?" + queryString;
-    	}
-    	if (DEBUG) Log.i(TAG, "HttpClient httpGet [1] url = "+url);
-
-    	HttpGet httpGet = new HttpGet(url);
-    	httpGet.getParams().setParameter("http.socket.timeout", 
-    			new Integer(CONNECTION_TIMEOUT));
-    	 
         try {
-        	//关闭所有过期的QHttpClient连接
         	httpClient.getConnectionManager().closeExpiredConnections();
-        	//执行GET请求操作
-            HttpResponse response=httpClient.execute(httpGet);
-            // 读取响应状态码
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (DEBUG) Log.i(TAG, "HttpClient httpGet [2] StatusLine : "+ statusCode);
-            // 200返回码表示成功，其余的表示失败
-            if (statusCode == HttpStatus.SC_OK) {
-                // 解析响应数据
-            	responseData =EntityUtils.toString(response.getEntity());
-                if (DEBUG) Log.i(TAG, "HttpClient httpGet [3] Response = "+ responseData);
-            }
+        	
+        	long start=System.currentTimeMillis();
+	        HttpResponse response = httpClient.execute(httpRequest);
+	        long end=System.currentTimeMillis();
+	        if (DEBUG) Log.d(TAG, "doHttpRequest [2] time = " + (end - start));
+	
+	        int statusCode = response.getStatusLine().getStatusCode();
+	        if (DEBUG) Log.d(TAG, "doHttpRequest [3] statusLine = " + statusCode);
+	        if (statusCode == HttpStatus.SC_OK) {
+	        	responseData = EntityUtils.toString(response.getEntity());
+                response.getEntity().consumeContent();
+                if (DEBUG) Log.d(TAG, "doHttpRequest [4] responseData = " + responseData);
+	        }
         } catch (IOException ex) {
-        	if (DEBUG) {
-        		ex.printStackTrace();
-        	}
+        	ex.printStackTrace();
         } finally {
-        	if (httpGet != null) {
-        		httpGet.abort();
-        	}
+        	httpRequest.abort();
         }
-
+        
         return responseData;
     }
+    
+    public String doHttpGet(String url, NameValuePair... nameValuePairs) {
+    	if (nameValuePairs.length > 0) {
+    		//注意URLEncodedUtils会对参数中的特殊字符加密，包含空格。
+    		url = url + "?" + URLEncodedUtils.format(Arrays.asList(nameValuePairs), HTTP.UTF_8);
+    	}
+    	HttpGet httpGet = new HttpGet(url);
+    	return executeHttpRequest(httpGet);
+    }
+    
+    public String doHttpGet(String url, String queryString) {
+    	if (queryString != null && !queryString.equals("")) {
+    		url += "?" + queryString;
+    	}
+    	HttpGet httpGet = new HttpGet(url);
+    	return executeHttpRequest(httpGet);
+    }
 
-    /**
-     * Post方法传送消息
-     * 
-     * @param url  连接的URL
-     * @param queryString 请求参数串
-     * @return 服务器返回的信息
-     * @throws Exception
-     */
-    public String doHttpPost(String url, String queryString) {
-        String responseData = null;
-        HttpPost httpPost = null;
-        
-        try {
-        	URI tmpUri=new URI(url);
-        	URI uri = URIUtils.createURI(tmpUri.getScheme(), tmpUri.getHost(), tmpUri.getPort(), tmpUri.getPath(), 
-                 queryString, null);
-        	if (DEBUG) Log.d(TAG, "HttpClient httpPost [1] url = "+uri.toURL());
-         
-        	httpPost = new HttpPost(uri);
-        	httpPost.getParams().setParameter("http.socket.timeout",
-                     new Integer(CONNECTION_TIMEOUT));
-        	
-        	if (queryString != null && !queryString.equals("")) {
-        		StringEntity reqEntity = new StringEntity(queryString);   
-        		// 设置类型   
-        		reqEntity.setContentType("application/x-www-form-urlencoded");   
-        		// 设置请求的数据   
-             	httpPost.setEntity(reqEntity);
-        	}
-        	
-        	//关闭所有过期的QHttpClient连接
-        	httpClient.getConnectionManager().closeExpiredConnections();
-        	//执行POST请求操作
-            HttpResponse response=httpClient.execute(httpPost);
-            // 读取响应状态码
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (DEBUG) Log.d(TAG, "HttpClient httpPost [2] StatusLine = "+ statusCode);
-            // 200返回码表示成功，其余的表示失败
-            if (statusCode == HttpStatus.SC_OK) {
-                // 解析响应数据
-            	responseData =EntityUtils.toString(response.getEntity());
-    			if (DEBUG) Log.d(TAG, "HttpClient httpPost [3] Response = "+ responseData);
-            }
-        } catch (Exception ex) {
-        	if (DEBUG) {
-        		ex.printStackTrace();
-        	}
-        } finally{ 
-        	if (httpPost != null) {
-        		httpPost.abort();
-        	}
-        }
+    public String doHttpPost(String url, NameValuePair... nameValuePairs) {
+    	 HttpPost httpPost = new HttpPost(url);
+         try {
+             httpPost.setEntity(new UrlEncodedFormEntity(Arrays.asList(nameValuePairs), HTTP.UTF_8));
+         } catch (UnsupportedEncodingException ex) {
+             throw new IllegalArgumentException("Unable to encode http parameters.");
+         }
+         return executeHttpRequest(httpPost);
+    }
 
-        return responseData;
+    public String doHttpPost(String url, String queryString) { 
+    	try {
+	    	URI tmpUri=new URI(url);
+	    	URI uri = URIUtils.createURI(tmpUri.getScheme(), tmpUri.getHost(), tmpUri.getPort(), tmpUri.getPath(), queryString, null);
+	    	HttpPost httpPost = new HttpPost(uri);
+	    	if (queryString != null && queryString.length()==0) {
+	    		StringEntity reqEntity = new StringEntity(queryString);   
+	    		reqEntity.setContentType("application/x-www-form-urlencoded");  // 设置类型    
+	         	httpPost.setEntity(reqEntity); // 设置请求的数据   
+	    	}
+	    	return executeHttpRequest(httpPost);
+    	} catch (URISyntaxException e) {
+    		e.printStackTrace();
+    	} catch (UnsupportedEncodingException e) {
+    		e.printStackTrace();
+    	}
+    	return null;
     }
     
     /**
