@@ -1,7 +1,7 @@
 package com.shandagames.android;
 
 import com.shandagames.android.R;
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.log.Log;
 import com.shandagames.android.photoview.PhotoViewAttacher;
 import com.shandagames.android.photoview.PhotoViewAttacher.OnMatrixChangedListener;

@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import com.shandagames.android.base.BaseFragment;
+
+import com.shandagames.android.app.BaseFragment;
 
 
 public class MusicFragment extends BaseFragment {

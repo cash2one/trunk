@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import com.shandagames.android.R;
-import com.shandagames.android.base.AndroidApplication;
-import com.shandagames.android.base.BaseGroupAdapter;
+import com.shandagames.android.app.AndroidApplication;
+import com.shandagames.android.app.BaseGroupAdapter;
 import com.shandagames.android.cache.core.RemoteResourceManager;
 import com.shandagames.android.cache.core.RemoteResourceManager.RemoteResourceManagerObserver;
 

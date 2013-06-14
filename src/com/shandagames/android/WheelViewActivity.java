@@ -8,7 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.shandagames.android.base.BaseActivity;
+
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.constant.Constants;
 import com.shandagames.android.widget.wheel.OnWheelChangedListener;
 import com.shandagames.android.widget.wheel.OnWheelScrollListener;

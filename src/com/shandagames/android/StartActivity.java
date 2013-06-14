@@ -1,7 +1,7 @@
 package com.shandagames.android;
 
-import com.shandagames.android.base.AndroidApplication;
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.AndroidApplication;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.cache.lib.ImageFetcher;
 import com.shandagames.android.cache.lib.Images;
 import com.shandagames.android.fragment.ImageDetailFragment;

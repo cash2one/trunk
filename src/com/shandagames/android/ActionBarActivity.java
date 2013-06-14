@@ -1,11 +1,13 @@
 package com.shandagames.android;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ViewConfiguration;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import com.actionbarsherlock.app.ActionBar;
@@ -33,17 +35,22 @@ public class ActionBarActivity extends SherlockFragmentActivity {
 		container.setBackgroundColor(getResources().getColor(android.R.color.white));
 		setContentView(container);
 		
+		forceShowActionBarOverflowMenu();
+		
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
-		//setNavigationModeTab();
-		setNavigationModeList();
+		setNavigationModeTab();
+		//setNavigationModeList();
 	}
 
 	private void setNavigationModeTab() {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.addTab(actionBar.newTab().setText("Tab1").setTabListener(new FragmentTabListener(DetailFragment.newInstance("Tab1"))), true);
 		actionBar.addTab(actionBar.newTab().setText("Tab2").setTabListener(new FragmentTabListener(DetailFragment.newInstance("Tab2"))));
+		actionBar.addTab(actionBar.newTab().setText("Tab3").setTabListener(new FragmentTabListener(DetailFragment.newInstance("Tab3"))));
+		actionBar.addTab(actionBar.newTab().setText("Tab4").setTabListener(new FragmentTabListener(DetailFragment.newInstance("Tab4"))));
+		actionBar.addTab(actionBar.newTab().setText("Tab5").setTabListener(new FragmentTabListener(DetailFragment.newInstance("Tab5"))));
 	}
 	
 	private void setNavigationModeList() {
@@ -55,6 +62,20 @@ public class ActionBarActivity extends SherlockFragmentActivity {
 		// 为ActionBar设置下拉菜单和监听器
 		actionBar.setListNavigationCallbacks(adapter, new FragmentListListener(data));
 	}
+	
+	/** 在有 menu按键的手机上面，ActionBar 上的 overflow menu 默认不会出现，只有当点击了 menu按键时才会显示 */
+	private void forceShowActionBarOverflowMenu() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ignored) {
+
+        }
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {

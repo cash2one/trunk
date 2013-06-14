@@ -14,41 +14,49 @@ import android.widget.Toast;
  */
 public final class ToastUtil {
 
-	private static Handler handler = new Handler(Looper.getMainLooper());
+	private static Toast toast;
+	
+	private static Handler handler;
 
-	private ToastUtil() {
+	static {
+		handler = new Handler(Looper.getMainLooper());
 	}
 
-	public static void showMessage(Context act, String msg) {
-		showMessage(act, msg, Toast.LENGTH_LONG);
+	public static void showMessage(Context ctx, String msg) {
+		showMessage(ctx, msg, Toast.LENGTH_SHORT);
 	}
 
-	public static void showMessage(Context act, int msg) {
-		showMessage(act, act.getString(msg), Toast.LENGTH_LONG);
+	public static void showMessage(Context ctx, int msg) {
+		showMessage(ctx, ctx.getString(msg), Toast.LENGTH_SHORT);
 	}
 
-	public static void showMessage(Context act, View view) {
-		showMessage(act, view, Toast.LENGTH_LONG);
-	}
-
-	public static void showMessage(final Context act, final String msg,
+	public static void showMessage(final Context ctx, final String text,
 			final int len) {
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				Toast.makeText(act, msg, len).show();
+				if (toast == null) {
+					toast = Toast.makeText(ctx, text, len);
+				} else {
+					toast.setText(text);
+					toast.setDuration(len);
+				}
+				toast.show();
 			}
 		});
 	}
 
-	public static void showMessage(final Context act, final View view,
+	public static void showMessage(final Context ctx, final View view,
 			final int len) {
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				Toast toast = new Toast(act);
-				toast.setView(view);
-				toast.setDuration(len);
+				if (toast == null) {
+					toast = new Toast(ctx);
+				} else {
+					toast.setDuration(len);
+					toast.setView(view);
+				}
 				// 设置文本显示位置,默认Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM
 				// toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM, 0,  0);
 				// 使用setMargin对位置大幅度调整,参数为：横向和纵向的百分比

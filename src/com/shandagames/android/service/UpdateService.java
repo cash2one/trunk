@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 import com.shandagames.android.provider.AppWidgetProviderHelper;
-import com.shandagames.android.support.StringSupport;
 import com.shandagames.android.util.DateHelper;
 
 /**

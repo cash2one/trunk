@@ -21,7 +21,7 @@ public class AccessTokenKeeper {
 	 * @param context Activity 上下文环境
 	 * @param token Oauth2AccessToken
 	 */
-	public static void keepSinaAccessToken(Context context, Oauth2AccessToken token) {
+	public static void keepSinaAccessToken(Context context, AccessToken token) {
 		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
 		Editor editor = pref.edit();
 		editor.putString(SINA_ACCESS_TOKEN, token.getToken());
@@ -34,15 +34,15 @@ public class AccessTokenKeeper {
 	 * @param context
 	 * @return Oauth2AccessToken
 	 */
-	public static Oauth2AccessToken readSinaAccessToken(Context context){
-		Oauth2AccessToken token = new Oauth2AccessToken();
+	public static AccessToken readSinaAccessToken(Context context){
+		AccessToken token = new AccessToken();
 		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
 		token.setToken(pref.getString(SINA_ACCESS_TOKEN, ""));
 		token.setExpiresTime(pref.getLong(SINA_EXPIRE_TIME, 0));
 		return token;
 	}
 	
-	public static void keepTencentAccessToken(Context context, Oauth2AccessToken token) {
+	public static void keepTencentAccessToken(Context context, AccessToken token) {
 		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
 		Editor editor = pref.edit();
 		editor.putString(TENCENT_ACCESS_TOKEN, token.getToken());
@@ -50,8 +50,8 @@ public class AccessTokenKeeper {
 		editor.commit();
 	}
 	
-	public static Oauth2AccessToken readTencentAccessToken(Context context){
-		Oauth2AccessToken token = new Oauth2AccessToken();
+	public static AccessToken readTencentAccessToken(Context context){
+		AccessToken token = new AccessToken();
 		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
 		token.setToken(pref.getString(TENCENT_ACCESS_TOKEN, ""));
 		token.setExpiresTime(pref.getLong(TENCENT_EXPIRE_TIME, 0));

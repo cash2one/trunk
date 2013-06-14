@@ -1,6 +1,6 @@
 package com.shandagames.android;
 
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.BaseActivity;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;

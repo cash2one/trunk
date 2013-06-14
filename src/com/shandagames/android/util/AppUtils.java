@@ -1,6 +1,6 @@
 package com.shandagames.android.util;
 
-import com.shandagames.android.base.AndroidApplication;
+import com.shandagames.android.app.AndroidApplication;
 
 import android.content.Context;
 

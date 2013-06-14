@@ -1,12 +1,16 @@
 package com.shandagames.android;
 
 import com.shandagames.android.R;
-import com.shandagames.android.oauth.Api;
-import com.shandagames.android.oauth.QzoneApi;
-import com.shandagames.android.oauth.SinaWeiboApi20;
-import com.shandagames.android.oauth.TencentApi;
-import com.shandagames.android.oauth.Token;
+import com.shandagames.android.oauth.OAuth;
+import com.shandagames.android.oauth.OAuthV1;
 import com.shandagames.android.oauth.Utility;
+import com.shandagames.android.oauth.api.Api;
+import com.shandagames.android.oauth.api.DefaultApi10;
+import com.shandagames.android.oauth.api.DoubanApi;
+import com.shandagames.android.oauth.api.QzoneApi;
+import com.shandagames.android.oauth.api.RenrenApi;
+import com.shandagames.android.oauth.api.SinaWeiboApi20;
+import com.shandagames.android.oauth.api.TencentApi;
 import com.shandagames.android.task.GenericTask;
 import com.shandagames.android.task.TaskListener;
 import android.annotation.SuppressLint;
@@ -20,6 +24,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 /**
  * @file WeiboViewActivity.java
@@ -29,6 +34,9 @@ import android.widget.ProgressBar;
  */
 public class WeiboViewActivity extends Activity implements TaskListener {
 	private static final String TAG = "WeiboViewActivity.class";
+	
+	private static final String REQUEST_TOKEN_TASK = "REQUEST_TOKEN_TASK";
+	private static final String ACCESS_TOKEN_TASK = "ACCESS_TOKEN_TASK";
 	
 	private WebView mWebView;
 	private ProgressBar mProgressBar;
@@ -52,24 +60,39 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 		
 		//http://www.douban.com/service/apidoc/auth#认证流程及访问资源流程
 		
-		Token token = new Token();
+		OAuth mOauth = new OAuth();
 		String type = getIntent().getStringExtra("type");
 		if (type.equals("sina")) {
-			token.setApiKey(Utility.SINA_APP_KEY);
-			token.setApiSecret(Utility.SINA_APP_SECRET);
-			token.setRedirectUrl(Utility.SINA_REDIRECT_URL);
-			api = new SinaWeiboApi20(token);
+			mOauth.setOauthConsumerKey(Utility.SINA_APP_KEY);
+			mOauth.setOauthConsumerSecret(Utility.SINA_APP_SECRET);
+			mOauth.setOauthCallback(Utility.SINA_REDIRECT_URL);
+			api = new SinaWeiboApi20(mOauth);
 		} else if (type.equals("tencent")) {
-			token.setApiKey(Utility.TENCENT_APP_KEY);
-			token.setApiSecret(Utility.TENCENT_APP_SECRET);
-			token.setRedirectUrl(Utility.TENCENT_REDIRECT_URL);
-			api = new TencentApi(token);
+			mOauth.setOauthConsumerKey(Utility.TENCENT_APP_KEY);
+			mOauth.setOauthConsumerSecret(Utility.TENCENT_APP_SECRET);
+			mOauth.setOauthCallback(Utility.TENCENT_REDIRECT_URL);
+			api = new TencentApi(mOauth);
 		} else if (type.equals("qq")) {
-			token.setApiKey(Utility.QQ_APP_KEY);
-			token.setApiSecret(Utility.QQ_APP_SECRET);
-			token.setRedirectUrl(Utility.QQ_REDIRECT_URL);
-			api = new QzoneApi(token);
-		}
+			mOauth.setOauthConsumerKey(Utility.QQ_APP_KEY);
+			mOauth.setOauthConsumerSecret(Utility.QQ_APP_SECRET);
+			mOauth.setOauthCallback(Utility.QQ_REDIRECT_URL);
+			api = new QzoneApi(mOauth);
+		} else if (type.equals("renren")) {
+			mOauth.setOauthConsumerKey(Utility.RENREN_APP_KEY);
+			mOauth.setOauthConsumerSecret(Utility.RENREN_APP_SECRET);
+			mOauth.setOauthCallback(Utility.RENREN_REDIRECT_URL);
+			api = new RenrenApi(mOauth);
+		} else if (type.equals("douban")) {
+			mOauth = new OAuthV1();
+			mOauth.setOauthConsumerKey(Utility.DOUBAN_APP_KEY);
+			mOauth.setOauthConsumerSecret(Utility.DOUBAN_APP_SECRET);
+			mOauth.setOauthCallback(Utility.DOUBAN_REDIRECT_URL);
+			api = new DoubanApi((OAuthV1)mOauth);
+			
+			new GetAccessTokenTask(REQUEST_TOKEN_TASK, this).execute();
+			
+			return;
+		} 
 		
 		mWebView.loadUrl(api.getAuthorizationUrl());
 	}
@@ -81,12 +104,15 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 
 	@Override
 	public void onTaskFinished(String taskName, Object result) {
+		if (taskName.equals(REQUEST_TOKEN_TASK)) {
+			// 根据requestToken请求授权页面
+			mWebView.loadUrl(api.getAuthorizationUrl());
+		} else if (taskName.equals(ACCESS_TOKEN_TASK)) {
+			// 获取授权成功的accessToken
+			Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT).show();
+		}
 	}
 	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
 
 	private class WeiboWebViewClient extends WebViewClient {
 
@@ -96,8 +122,8 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 			Log.w("onPageStarted", url);
 			
 			//如果授权成功url中包含之前设置的callbackurl包含：授权成功
-			if (url.startsWith(api.getToken().getRedirectUrl())) {
-				new GetAccessTokenTask("", WeiboViewActivity.this).execute(url);
+			if (url.startsWith(api.getOAuth().getOauthCallback())) {
+				new GetAccessTokenTask(ACCESS_TOKEN_TASK, WeiboViewActivity.this).execute(url);
 				view.stopLoading();
 			}
 		}
@@ -137,7 +163,12 @@ public class WeiboViewActivity extends Activity implements TaskListener {
 		
 		@Override
 		protected String doInBackground(String... params) {
-			return api.retrieveAccessToken(params[0]);
+			if (taskName.equals(REQUEST_TOKEN_TASK)) {
+				return api.retrieveRequestToken().getOauthToken();
+			} else if (taskName.equals(ACCESS_TOKEN_TASK)) {
+				return api.retrieveAccessToken(params[0]);
+			}
+			return null;
 		}
 		
 	}

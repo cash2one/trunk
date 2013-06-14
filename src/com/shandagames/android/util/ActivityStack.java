@@ -4,7 +4,8 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Stack;
 
-import com.shandagames.android.base.BaseAlertDialog;
+import com.shandagames.android.app.BaseAlertDialog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,7 +60,7 @@ public class ActivityStack implements Serializable {
 	public Activity peekActivity() {
 		synchronized (lock) {
 			Activity activity = null;
-			if (!activitystack.empty()) {
+			if (activitystack != null) {
 				activity = activitystack.lastElement();
 			}
 			return activity;

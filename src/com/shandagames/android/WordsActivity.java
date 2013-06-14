@@ -1,6 +1,6 @@
 package com.shandagames.android;
 
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.util.ImageHelper;
 import com.shandagames.android.util.SmileyParser;
 import com.shandagames.android.util.ToastUtil;

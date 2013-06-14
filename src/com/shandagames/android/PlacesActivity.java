@@ -17,7 +17,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-import com.shandagames.android.base.BaseActivity;
+
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.bean.Place;
 import com.shandagames.android.http.BetterHttpApiV1;
 import com.shandagames.android.local.CacheManager;

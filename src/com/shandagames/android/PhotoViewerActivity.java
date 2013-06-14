@@ -24,8 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
-import com.shandagames.android.base.AndroidApplication;
-import com.shandagames.android.base.BaseActivity;
+
+import com.shandagames.android.app.AndroidApplication;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.cache.core.RemoteResourceManager;
 import com.shandagames.android.cache.lib.Images;
 import com.shandagames.android.constant.Constants;

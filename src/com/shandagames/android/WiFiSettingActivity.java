@@ -36,7 +36,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.shandagames.android.base.BaseActivity;
+
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.util.ToastUtil;
 
 public class WiFiSettingActivity extends BaseActivity implements View.OnClickListener {

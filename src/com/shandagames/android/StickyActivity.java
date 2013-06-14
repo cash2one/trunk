@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.R;
 
 /**

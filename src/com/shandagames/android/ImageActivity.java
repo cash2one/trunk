@@ -5,7 +5,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
-import com.shandagames.android.base.BaseActivity;
+
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.support.DisplaySupport;
 import com.shandagames.android.view.SampleSurfaceView;
 import com.shandagames.android.view.WPEditText;

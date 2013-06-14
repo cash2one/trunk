@@ -1,7 +1,7 @@
 package com.shandagames.android.fragment;
 
 import com.shandagames.android.StartActivity;
-import com.shandagames.android.base.BaseFragment;
+import com.shandagames.android.app.BaseFragment;
 import com.shandagames.android.cache.lib.ImageFetcher;
 import com.shandagames.android.cache.lib.Images;
 import com.shandagames.android.photoview.PhotoView;

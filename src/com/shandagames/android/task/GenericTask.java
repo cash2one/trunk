@@ -8,7 +8,7 @@ package com.shandagames.android.task;
  */
 public abstract class GenericTask<Result> extends AsyncTaskEx<String, Integer, Result> {
 
-	private String taskName;
+	protected String taskName;
 	private TaskListener mListener = null;
 
 	protected GenericTask(String taskName, TaskListener taskListener) {

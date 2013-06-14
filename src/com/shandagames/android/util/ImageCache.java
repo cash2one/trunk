@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -93,7 +94,9 @@ public final class ImageCache extends Observable {
 		if (file!=null && file.isFile() 
 				&& file.exists()) {
 			Bitmap bitmap = decodeFile(file);
-			lruCache.put(url, bitmap);
+			if (bitmap != null) {
+				lruCache.put(url, bitmap);
+			}
 			return bitmap;
 		}
 
@@ -164,41 +167,6 @@ public final class ImageCache extends Observable {
 		clearCache();
 	}
 	
-	public void store(String url, InputStream is) {
-		BufferedInputStream bis = new BufferedInputStream(is, 8 * 1024);
-		FileOutputStream fos = null;
-		BufferedOutputStream os = null;
-		try {
-			File cacheDirectory = createDirectory();
-			String filePath = hashKeyForDisk(url);
-			fos = new FileOutputStream(new File(cacheDirectory, filePath));
-			os = new BufferedOutputStream(fos, 8 * 1024);
-			byte[] b = new byte[2048];
-			int count = 0;
-			while ((count = bis.read(b)) > 0) {
-				os.write(b, 0, count);
-			}
-			os.flush();
-			fos.flush();
-		} catch (IOException e) {
-			Log.e(TAG, "store ex=" + e.toString(), e);
-		} finally {
-			try {
-				if (bis != null) {
-					bis.close();
-				}
-				if (os != null) {
-					os.close();
-				}
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-		}
-	}
-
 	private boolean isExternalStorageMounted() {
 		return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
 	}
@@ -276,6 +244,42 @@ public final class ImageCache extends Observable {
 		};
     }
 	
+	public void store(String url, InputStream is) {
+		BufferedInputStream bis = null;
+		FileOutputStream fos = null;
+		BufferedOutputStream os = null;
+		try {
+			String filePath = hashKeyForDisk(url);
+			File targetFile = new File(createDirectory(), filePath);
+			bis = new BufferedInputStream(new FlushedInputStream(is), 8 * 1024);
+			fos = new FileOutputStream(targetFile);
+			os = new BufferedOutputStream(fos, 8 * 1024);
+			byte[] b = new byte[2048];
+			int count = 0;
+			while ((count = bis.read(b)) > 0) {
+				os.write(b, 0, count);
+			}
+			os.flush();
+			fos.flush();
+		} catch (IOException e) {
+			Log.e(TAG, "store ex=" + e.toString(), e);
+		} finally {
+			try {
+				if (bis != null) {
+					bis.close();
+				}
+				if (os != null) {
+					os.close();
+				}
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+	}
+	
 	/** decodes image and scales it to reduce memory consumption */
 	public Bitmap decodeFile(File f) {
 		try {
@@ -335,8 +339,8 @@ public final class ImageCache extends Observable {
 	private final DefaultHttpClient createHttpClient() {
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setStaleCheckingEnabled(params, false);
-		HttpConnectionParams.setConnectionTimeout(params, 10 * 1000);
-		HttpConnectionParams.setSoTimeout(params, 10 * 1000);
+		HttpConnectionParams.setConnectionTimeout(params, 60 * 1000);
+		HttpConnectionParams.setSoTimeout(params, 60 * 1000);
 		HttpConnectionParams.setSocketBufferSize(params, 8192);
 		final SchemeRegistry supportedSchemes = new SchemeRegistry();
 		final SocketFactory sf = PlainSocketFactory.getSocketFactory();
@@ -352,6 +356,30 @@ public final class ImageCache extends Observable {
 		super.notifyObservers(data);
 	}
 
+	class FlushedInputStream extends FilterInputStream {
+        public FlushedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long totalBytesSkipped = 0L;
+            while (totalBytesSkipped < n) {
+                long bytesSkipped = in.skip(n - totalBytesSkipped);
+                if (bytesSkipped == 0L) {
+                    int b = read();
+                    if (b < 0) {
+                        break;  // we reached EOF
+                    } else {
+                        bytesSkipped = 1; // we read one byte
+                    }
+                }
+                totalBytesSkipped += bytesSkipped;
+            }
+            return totalBytesSkipped;
+        }
+    }
+	
 	public static abstract class ResourceRequestObserver implements Observer {
 
         private String mRequestUri;

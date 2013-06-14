@@ -22,7 +22,7 @@ import com.shandagames.android.constant.Constants;
 import com.shandagames.android.network.CountingOutputStream;
 import com.shandagames.android.network.CountingOutputStream.Progress;
 import com.shandagames.android.network.FlushedInputStream;
-import com.shandagames.android.parser.JSONUtils;
+import com.shandagames.android.parser.JSONUtil;
 import com.shandagames.android.parser.Parser;
 import com.shandagames.android.parser.Result;
 import com.shandagames.android.parser.ResultType;
@@ -88,7 +88,7 @@ abstract public class AbstractHttpApi implements HttpApi {
 	            case 200:
 	                String content = EntityUtils.toString(response.getEntity());
 	                if (DEBUG) Log.d(TAG, "doHttpRequest [4] responseData = " + content);
-	                return JSONUtils.consume(parser, content, DEBUG);
+	                return JSONUtil.consume(parser, content, DEBUG);
 	            default:
 	            	String message = "Default case for status code reached: " + response.getStatusLine().toString();
 	                if (DEBUG) Log.d(TAG, "doHttpRequest [4] exception = " + message);

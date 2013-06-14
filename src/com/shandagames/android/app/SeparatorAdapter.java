@@ -1,4 +1,4 @@
-package com.shandagames.android.base;
+package com.shandagames.android.app;
 
 import java.util.TreeSet;
 import android.content.Context;

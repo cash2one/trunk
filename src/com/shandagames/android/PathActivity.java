@@ -10,7 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.shandagames.android.base.BaseActivity;
+
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.widget.arcmenu.MenuRightAnimations;
 import com.shandagames.android.widget.arcmenu.SatelliteMenu;
 import com.shandagames.android.widget.arcmenu.SatelliteMenuItem;

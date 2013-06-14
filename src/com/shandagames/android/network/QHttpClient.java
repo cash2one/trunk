@@ -51,7 +51,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import android.util.Log;
 import com.shandagames.android.network.CountingOutputStream.Progress;
-import com.shandagames.android.support.StringSupport;
+import com.shandagames.android.support.StrOperate;
 
 /**
  * 自定义参数的Httpclient <br>
@@ -245,7 +245,7 @@ public class QHttpClient {
              File targetFile;
              FormBodyPart fbp;
              
-             List<NameValuePair> queryParamList=StringSupport.getQueryParamsList(queryString);
+             List<NameValuePair> queryParamList=StrOperate.getQueryParamsList(queryString);
              for(NameValuePair queryParam:queryParamList){
                  stringBody=new StringBody(queryParam.getValue(),Charset.forName("UTF-8"));
                  fbp= new FormBodyPart(queryParam.getName(), stringBody);

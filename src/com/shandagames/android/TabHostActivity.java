@@ -7,8 +7,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.LocalActivityManagerActivity;
 import com.shandagames.android.R;
 import com.shandagames.android.util.UIUtils;
 
@@ -18,7 +17,7 @@ import com.shandagames.android.util.UIUtils;
  * @author lilong
  * @description TODO
  */
-public class TabHostActivity extends BaseActivity implements OnCheckedChangeListener {
+public class TabHostActivity extends LocalActivityManagerActivity implements OnCheckedChangeListener {
 
 	private TabHost tabHost;
 	private RadioGroup radioGroup;
@@ -29,13 +28,14 @@ public class TabHostActivity extends BaseActivity implements OnCheckedChangeList
 	@Override
 	protected void _onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		super._onCreate(savedInstanceState);
 		setContentView(R.layout.tabhost);
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		moveImage = (ImageView) findViewById(R.id.iv_move);
         radioGroup = (RadioGroup) findViewById(R.id.radiogroup);
         radioGroup.setOnCheckedChangeListener(this);
 		
-        tabHost.setup(mLocalActivityManager);
+        tabHost.setup(getLocalActivityManager());
 		
 		TabSpec recentContactSpec=tabHost.newTabSpec("RecentContact");
 	    recentContactSpec.setIndicator("News");

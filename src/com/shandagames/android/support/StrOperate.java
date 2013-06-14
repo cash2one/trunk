@@ -3,83 +3,37 @@ package com.shandagames.android.support;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 
-/** 字符串处理相关的工具类  */
-public class StringSupport {
+/**
+ * 字符串处理相关的工具类
+ */
+public class StrOperate {
 
-	private StringSupport() {
-	}
-	
-	
-	 /**
+    // 禁止调用构造方法
+    private StrOperate() {
+    }
+
+    /**
      * 检查字符串是否存在值
      * 
      * @param str 待检验的字符串
      * @return 当 str 不为 null 或 "" 就返回 true
      */
-    public static boolean isNullOrEmpty(CharSequence str) {
-        return (str == null || str.equals("") || str.equals("null") || str.equals("NULL"));
+    public static boolean hasValue(String str) {
+        return (str != null && !"".equals(str));
     }
-	
-    /** 是否包含空格  */
-    public static boolean isSpace(String str) {
-		for(int i=0;i<str.length();i++){
-			int chr = (int)str.charAt(i);
-			if(chr!=32)
-				return false;
-		}
-		return true;
-	}
-    
-    /** 是否为Url */
-    public static boolean isUrl(String str) {
-		if (isNullOrEmpty(str))
-			return false;
-		return str.matches("^http://(\\w+(-\\w+)*)(\\.(\\w+(-\\w+)*))*(\\?\\S*)?$");
-	}
-    
-    /** 是否为科学计数法显示  */
-    public static boolean isENum(String str) {
-    	if (isNullOrEmpty(str))
-			return false;
-    	return str.matches("^((-?\\d+.?\\d*)[Ee]{1}(-?\\d+))$");
-    }
-    
-    /** 检测字符串中只能包含：中文、数字、下划线(_)、横线(-) */
-    public static boolean checkNickname(String sequence) {
-        final String format = "[^\\u4E00-\\u9FA5\\uF900-\\uFA2D\\w-_]";
-        Pattern pattern = Pattern.compile(format);
-        Matcher matcher = pattern.matcher(sequence);
-        return !matcher.find();
-    } 
-    
-    /** 显示为中文  */
-    public static boolean isChinese(char c) {
-		return (int) c >= 0x4E00 && (int) c <= 0x9FA5;
-	}
-    
-    /** 字符串转换布尔型  */
-    public static boolean str2Boolean(String str, boolean defaultV) {
-		if (isNullOrEmpty(str))
-			return defaultV;
-		if (str.equalsIgnoreCase("true")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-    
+
     /**
      * 对参数进行UTF-8编码，并替换特殊字符
      * 
@@ -87,7 +41,7 @@ public class StringSupport {
      * @return 完成编码转换的字符串
      */
     public static String paramEncode(String paramDecString) {
-        if (isNullOrEmpty(paramDecString)) {
+        if (!hasValue(paramDecString)) {
             return "";
         }
         try {
@@ -142,21 +96,38 @@ public class StringSupport {
      * @param queryString 查询字符串
      * @return 以Bundle格式存储的参数队列.
      */
-    public static Bundle parseUrl(String queryString) {
+    public static Bundle parseUrl(String url) {
         try {
-            URL url = new URL(queryString);
-            Bundle params = new Bundle();
-            if (url.getQuery() != null) {
-                String array[] = url.getQuery().split("&");
-                for (String parameter : array) {
-                    String v[] = parameter.split("=");
-                    params.putString(URLDecoder.decode(v[0]), paramDecode(v[1]));
-                }
-            }
-            return params;
+            URL u = new URL(url);
+            Bundle b = decodeUrl(u.getQuery());
+            b.putAll(decodeUrl(u.getRef()));
+            return b;
         } catch (MalformedURLException e) {
             return new Bundle();
+        } 
+    }
+    
+    /**
+     * 解析queryString，取得Bundle格式存储的参数队列
+     * @param str 查询字符串附件参数
+     * @return 以Bundle格式存储的参数队列.
+     */
+    public static Bundle decodeUrl(String str) {
+        Bundle params = new Bundle();
+        if (str != null && !str.equals("")) {
+        	String array[] = str.split("&");
+        	for (String s : array) {
+                if (s != null && !s.equals("")) {
+                    if (s.indexOf('=') > -1) {
+                        String[] v = s.split("=");
+                        if (v.length > 1) {
+                        	 params.putString(v[0], paramDecode(v[1]));
+                        }
+                    }
+                }
+            }
         }
+        return params;
     }
     
     /**
@@ -182,10 +153,10 @@ public class StringSupport {
     }
     
     /**
-     * 分割queryString，取得List<NameValuePair>格式存储的参数队列.
+     * 分割queryString，取得List&#60NameValuePair&#62格式存储的参数队列.
      * 
      * @param queryString 查询字符串
-     * @return 以List<NameValuePair>格式存储的参数队列.
+     * @return 以List&#60NameValuePair&#62格式存储的参数队列.
      */
     public static List<NameValuePair> getQueryParamsList(String queryString) {
         if (queryString.startsWith("?")) {
@@ -216,70 +187,65 @@ public class StringSupport {
      * @return 不包括？的queryString
      */
     public static String getQueryString(List<NameValuePair> QueryParamsList){
-    	if (QueryParamsList != null && !QueryParamsList.isEmpty()) {
-	        StringBuilder queryString=new StringBuilder();
-	        for(NameValuePair param : QueryParamsList){
-	            queryString.append('&');
-	            queryString.append(param.getName());
-	            queryString.append('=');
-	            queryString.append(paramEncode(param.getValue()));
-	        }
-	        //去掉第一个&号
-	        return queryString.substring(1);
-    	}
-    	return null;
+        StringBuilder queryString=new StringBuilder();
+        for(NameValuePair param:QueryParamsList){
+                queryString.append('&');
+            queryString.append(param.getName());
+            queryString.append('=');
+            queryString.append(paramEncode(param.getValue()));
+        }
+        //去掉第一个&号
+        return queryString.toString().substring(1);
     }
     
     /**
-	 * 将中文字符串转换十六进制Unicode编码字符串
-	 * @param s 转换字符串
-	 * @return Unicode编码字符串
-	 */
-	public static String str2Unicode(String s) {
-		String str = "";
-		for (int i = 0; i < s.length(); i++) {
-			int ch = (int) s.charAt(i);
-			if (ch > 255) {
-				str += "\\u" + Integer.toHexString(ch);
-			} else {
-				str += "\\" + Integer.toHexString(ch);
-			}
-		}
-		return str;
-	}
+     * 根据 timestamp 生成各类时间状态串
+     * 
+     * @param timestamp 距1970 00:00:00 GMT的秒数
+     * @return 时间状态串(如：刚刚5分钟前)
+     */
+    public static String getTimeState(String timestamp) {
+        if (timestamp == null || "".equals(timestamp)) {
+            return "";
+        }
 
-	/**
-	 * 将十六进制Unicode编码字符串转换中文字符串
-	 * 
-	 * @param str Unicode编码字符串
-	 * @return 中文字符串
-	 */
-	public static String unicode2Str(String str) {
-		Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");
-		Matcher matcher = pattern.matcher(str);
-		char ch;
-		while (matcher.find()) {
-			ch = (char) Integer.parseInt(matcher.group(2), 16);
-			str = str.replace(matcher.group(1), String.valueOf(ch));
-		}
-		return str;
-	}
-	
-	
-	public static String bytes2Hex(byte[] bts) {
-		String des = "";
-		String tmp = null;
+        try {
+            long _timestamp = Long.parseLong(timestamp) * 1000;
+            if (System.currentTimeMillis() - _timestamp < 1 * 60 * 1000) {
+                return "刚刚";
+            } else if (System.currentTimeMillis() - _timestamp < 30 * 60 * 1000) {
+                return ((System.currentTimeMillis() - _timestamp) / 1000 / 60)
+                        + "分钟前";
+            } else {
+                Calendar now = Calendar.getInstance();
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(_timestamp);
+                if (c.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                        && c.get(Calendar.MONTH) == now.get(Calendar.MONTH)
+                        && c.get(Calendar.DATE) == now.get(Calendar.DATE)) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("今天 HH:mm");
+                    return sdf.format(c.getTime());
+                }
+                if (c.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                        && c.get(Calendar.MONTH) == now.get(Calendar.MONTH)
+                        && c.get(Calendar.DATE) == now.get(Calendar.DATE) - 1) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("昨天 HH:mm");
+                    return sdf.format(c.getTime());
+                } else if (c.get(Calendar.YEAR) == now.get(Calendar.YEAR)) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("M月d日 HH:mm:ss");
+                    return sdf.format(c.getTime());
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat(
+                            "yyyy年M月d日 HH:mm:ss");
+                    return sdf.format(c.getTime());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 
-		for (int i = 0; i < bts.length; i++) {
-			tmp = (Integer.toHexString(bts[i] & 0xFF));
-			if (tmp.length() == 1) {
-				des += "0";
-			}
-			des += tmp;
-		}
-		return des;
-	}
-    
     /**
      * Turns a camel case string into an underscored one, e.g. "HelloWorld"
      * becomes "hello_world".

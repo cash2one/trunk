@@ -16,8 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import com.shandagames.android.base.BaseActivity;
-import com.shandagames.android.base.BaseGroupAdapter;
+
+import com.shandagames.android.app.BaseActivity;
+import com.shandagames.android.app.BaseGroupAdapter;
 import com.shandagames.android.fragment.DetailFragment;
 import com.shandagames.android.R;
 import com.shandagames.android.slidingmenu.lib.SlidingMenu;

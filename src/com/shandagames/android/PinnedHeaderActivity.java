@@ -18,7 +18,7 @@ package com.shandagames.android;
 
 import java.util.Arrays;
 
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.R;
 import com.shandagames.android.indexer.StringArrayAlphabetIndexer;
 import com.shandagames.android.widget.PinnedHeaderListView;

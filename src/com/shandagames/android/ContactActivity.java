@@ -1,6 +1,6 @@
 package com.shandagames.android;
 
-import com.shandagames.android.base.BaseActivity;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.widget.LetterView;
 import com.shandagames.android.widget.LetterView.OnTouchChangedListener;
 import com.shandagames.android.R;

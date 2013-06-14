@@ -12,7 +12,7 @@ import android.text.TextUtils;
  *并提供了他们的管理功能
  * @author luopeng (luopeng@staff.sina.com.cn)
  */
-public class Oauth2AccessToken implements Parcelable {
+public class AccessToken implements Parcelable {
 	private String mAccessToken = "";
 	private String mRefreshToken = "";
 	private long mExpiresTime = 0;
@@ -20,11 +20,11 @@ public class Oauth2AccessToken implements Parcelable {
 	/**
 	 * Oauth2AccessToken 的构造函数
 	 */
-	public Oauth2AccessToken() {
+	public AccessToken() {
 	}
 	
 	
-	public Oauth2AccessToken(Parcel in) {
+	public AccessToken(Parcel in) {
 		this.mAccessToken = in.readString();
 		this.mRefreshToken = in.readString();
 		this.mExpiresTime = in.readLong();
@@ -35,7 +35,7 @@ public class Oauth2AccessToken implements Parcelable {
 	 * 此方法会将responsetext里的“access_token”，“expires_in”，"refresh_token"解析出来
 	 * @param responsetext 服务器返回的responsetext
 	 */
-	public Oauth2AccessToken(String responsetext) {
+	public AccessToken(String responsetext) {
 		if (responsetext != null) {
 			if (responsetext.indexOf("{") >= 0) {
 				try {
@@ -49,7 +49,7 @@ public class Oauth2AccessToken implements Parcelable {
 		}
 	}
 	
-	public Oauth2AccessToken(Bundle values) {
+	public AccessToken(Bundle values) {
 		if (values != null) {
 			setToken(values.getString("access_token"));
 			setExpiresTime(Long.valueOf(values.getString("expires_in")));
@@ -62,7 +62,7 @@ public class Oauth2AccessToken implements Parcelable {
 	 * @param accessToken  访问令牌
 	 * @param expires_in 有效期，单位：毫秒；仅当从服务器获取到expires_in时适用，表示距离超过认证时间还有多少秒
 	 */
-	public Oauth2AccessToken(String accessToken, String expires_in) {
+	public AccessToken(String accessToken, String expires_in) {
 		mAccessToken = accessToken;
 		mExpiresTime = System.currentTimeMillis() + Long.parseLong(expires_in)*1000;
 	}
@@ -151,13 +151,13 @@ public class Oauth2AccessToken implements Parcelable {
 		dest.writeLong(mExpiresTime);
 	}
 	
-	public static final Parcelable.Creator<Oauth2AccessToken> CREATOR = new Parcelable.Creator<Oauth2AccessToken>() {
-		public Oauth2AccessToken createFromParcel(Parcel in) {
-		    return new Oauth2AccessToken(in);
+	public static final Parcelable.Creator<AccessToken> CREATOR = new Parcelable.Creator<AccessToken>() {
+		public AccessToken createFromParcel(Parcel in) {
+		    return new AccessToken(in);
 		}
 		
-		public Oauth2AccessToken[] newArray(int size) {
-		    return new Oauth2AccessToken[size];
+		public AccessToken[] newArray(int size) {
+		    return new AccessToken[size];
 		}
 	};
 

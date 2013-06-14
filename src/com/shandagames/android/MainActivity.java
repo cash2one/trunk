@@ -14,9 +14,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.shandagames.android.adapter.MenuAdapter;
+import com.shandagames.android.app.AndroidApplication;
+import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.ballons.BallonsActivity;
-import com.shandagames.android.base.AndroidApplication;
-import com.shandagames.android.base.BaseActivity;
 import com.shandagames.android.common.ExtendOptionsMenu;
 import com.shandagames.android.constant.PreferenceSettings;
 import com.shandagames.android.http.BetterHttpApiV1;
@@ -30,7 +30,7 @@ import com.shandagames.android.network.CountingOutputStream.Progress;
 import com.shandagames.android.parser.Result;
 import com.shandagames.android.support.DisplaySupport;
 import com.shandagames.android.support.IntentSupport;
-import com.shandagames.android.support.StringSupport;
+import com.shandagames.android.support.StrOperate;
 import com.shandagames.android.task.GenericTask;
 import com.shandagames.android.task.TaskListener;
 import com.shandagames.android.util.ActivityStack;
@@ -133,6 +133,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private void initialize() {
 		if (AndroidApplication.getInstance().isReady()) {
 			setContentView(R.layout.main);
+			getWindow().setBackgroundDrawable(null);
 			ensureUi();
 			shareMessage();
 			// 更新升级
@@ -439,7 +440,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		if (intent.getAction()!=null && Intent.ACTION_SEND.equals(intent.getAction())) {
 			if(intent.hasExtra(Intent.EXTRA_TEXT)){
 				String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-				ToastUtil.showMessage(getBaseContext(), !StringSupport.isNullOrEmpty(text)?text:"may not share text message");
+				ToastUtil.showMessage(getBaseContext(), !StrOperate.hasValue(text)?text:"may not share text message");
     		}
 			if(intent.hasExtra(Intent.EXTRA_STREAM)){
 				Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
