@@ -1,11 +1,8 @@
 package com.shandagames.android.util;
 
 import java.io.ObjectStreamException;
-import java.io.Serializable;
 import java.util.Stack;
-
 import com.shandagames.android.app.BaseAlertDialog;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +16,7 @@ import android.util.DisplayMetrics;
  * 		实现Cloneable接口，调用clone()方法，复制一个对象副本，即反序列化会生成副本；
  * 		解决：实现序列化的类里添加方法：readResolve()
  */
-public class ActivityStack implements Serializable {
+public class ActivityStack {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -156,7 +153,7 @@ public class ActivityStack implements Serializable {
 
 	
 	/** 退出整个应用,带提示功能 */
-    public void showDialog(Context context) {   
+    public void showDialog(final Context context) {   
     	DisplayMetrics dm = context.getResources().getDisplayMetrics();
         BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(context);   
         builder.setTitle("温馨提示");   
@@ -166,7 +163,7 @@ public class ActivityStack implements Serializable {
                 new DialogInterface.OnClickListener() {   
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	dialog.dismiss();
-                    	clearActivity();
+                    	((Activity)context).finish();
                     }   
                 });   
         builder.setNegativeButton(android.R.string.cancel, null); 

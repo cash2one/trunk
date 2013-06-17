@@ -2,7 +2,6 @@ package com.shandagames.android.util;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.net.Inet4Address;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.shandagames.android.log.LogUtils;
@@ -17,7 +16,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.ResultReceiver;
@@ -99,30 +97,6 @@ public final class UIUtils {
 		return sbar;
 	}
 	
-	
-	/** 获取设备IP地址 */
-	// see http://androidsnippets.com/obtain-ip-address-of-current-device
-	public static String getIPAddress(Context context) {
-		WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-		String ip = ipIntToString(wifiInfo.getIpAddress());
-		return ip;
-	}
-	
-	public static String ipIntToString(int ip) {
-		try {
-			byte[] bytes = new byte[4];
-			bytes[0] = (byte)(0xff & ip);
-			bytes[1] = (byte)((0xff00 & ip) >> 8);
-			bytes[2] = (byte)((0xff0000 & ip) >> 16);
-			bytes[3] = (byte)((0xff000000 & ip) >> 24);
-			return Inet4Address.getByAddress(bytes).getHostAddress();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
-	
     /** 匹配手机号码  */
     public static boolean isMobileNum(String mobile) {
     	 Pattern p = Pattern.compile("^((13[0-9])|(15[^4,//D])|(18[0,5-9]))//d{8}$");        
@@ -196,6 +170,14 @@ public final class UIUtils {
 		});
 	}
 
+	/** 分辨率  */
+	public static String getDeviceForResolution(Context ctx) {
+		String s = "%s*%s";
+		int width = ctx.getResources().getDisplayMetrics().widthPixels;
+		int height = ctx.getResources().getDisplayMetrics().heightPixels;
+		return String.format(s, width, height);
+	}
+	
 	// And to convert the image URI to the direct file system path of the image file 
 	public static String getRealPathFromURI(Activity activity, Uri contentUri) {   
 		// can post image         
