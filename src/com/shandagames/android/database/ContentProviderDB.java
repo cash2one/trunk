@@ -1,4 +1,4 @@
-package com.shandagames.android.db;
+package com.shandagames.android.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,10 +7,8 @@ import android.net.Uri;
 
 
 public abstract class ContentProviderDB<T> implements ISQLiteDatabase {
-	private final Context context;
 
 	public ContentProviderDB(Context context) {
-		this.context = context;
 	}
 
 	public abstract Uri getUriFromTable(String paramString);

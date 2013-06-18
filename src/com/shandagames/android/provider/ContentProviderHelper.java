@@ -1,6 +1,6 @@
 package com.shandagames.android.provider;
 
-import com.shandagames.android.db.SQLiteHelper;
+import com.shandagames.android.database.SQLiteHelper;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;

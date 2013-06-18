@@ -8,6 +8,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,11 +17,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import com.shandagames.android.bean.User;
@@ -75,7 +78,6 @@ public class AndroidApplication extends Application implements
 
         inital();
         register();
-        sendCrashReports();
         
         // 应用需要后台执行数据处理，开启新的线程处理
         mTaskThread = new HandlerThread(TAG + "-AsyncThread");
@@ -83,6 +85,7 @@ public class AndroidApplication extends Application implements
         mTaskHandler = new TaskHandler(mTaskThread.getLooper());
         
         mBestLocationListener = new BestLocationListener();
+        
 	}
 
 	private void inital() {
@@ -105,12 +108,18 @@ public class AndroidApplication extends Application implements
 			setUserPreferences(self.getId());
 		}
 		
+		setStrictMode();
+		sendCrashReports();
+	}
+	
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	private void setStrictMode() {
 		// FIXME: StrictMode类在1.6以下的版本中没有，会导致类加载失败。因此将这些代码设成关闭状态，仅在做性能调试时才打开。
-		// NOTE: StrictMode模式需要2.3+ API支持。
-		/*if (DEBUG) { 
+		// NOTE: StrictMode模式需要2.3+ API支持。设置严苛模式；
+		if (DEBUG) { 
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
 		    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build()); 
-		}*/
+		}
 	}
 	
 	private void register() {

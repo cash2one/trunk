@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import com.shandagames.android.bean.User;
-import com.shandagames.android.preferences.SettingUtils;
+import com.shandagames.android.preference.SettingUtils;
 
 /**
  * @file PreferenceSettings.java

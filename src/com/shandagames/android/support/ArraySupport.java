@@ -8,6 +8,7 @@ import java.util.List;
 public class ArraySupport {
 
 	private ArraySupport() {
+		throw new AssertionError("You are trying to create an instance for this utility class!");
 	}
 	
 	public static <T> List<T> arrayToList(T[] array) {
@@ -80,4 +81,46 @@ public class ArraySupport {
         return -1;
     }
     
+
+	public static <T> boolean contains(final T[] array, final T value) {
+		if (array == null) return false;
+		for (final T item : array) {
+			if (item == value) return true;
+		}
+		return false;
+	}
+
+	public static <T> boolean contains(final T[] array, final T... values) {
+		if (array == null || values == null) return false;
+		for (final T item : array) {
+			for (final T value : values) {
+				if (item == null || value == null) {
+					if (item == value) return true;
+					continue;
+				}
+				if (item.equals(value)) return true;
+			}
+		}
+		return false;
+	}
+
+	/** 比较两个数组是否相匹配   */
+	public static <T> boolean contentMatch(final T[] array1, final T[] array2) {
+		if (array1 == null || array2 == null) return array1 == array2;
+		if (array1.length != array2.length) return false;
+		final int length = array1.length;
+		for (int i = 0; i < length; i++) {
+			if (!contains(array2, array1[i])) return false;
+		}
+		return true;
+	}
+	
+	public static <T> int indexOf(final T[] array, final T value) {
+		final int length = array.length;
+		for (int i = 0; i < length; i++) {
+			if (array[i] == value) return i;
+		}
+		return -1;
+	}
+
 }

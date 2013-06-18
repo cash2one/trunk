@@ -8,9 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import com.shandagames.android.bean.Person;
-import com.shandagames.android.db.SQLiteHelper;
-import com.shandagames.android.db.SQLiteHelper.PersonColumns;
-import com.shandagames.android.db.SQLiteHelper.TABLE;
+import com.shandagames.android.database.SQLiteHelper;
+import com.shandagames.android.database.SQLiteHelper.PersonColumns;
+import com.shandagames.android.database.SQLiteHelper.TABLE;
 
 /**
  * @file PersonDAO.java

@@ -10,9 +10,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.shandagames.android.bean.WebSite;
-import com.shandagames.android.db.SQLiteHelper;
-import com.shandagames.android.db.SQLiteHelper.RssColumns;
-import com.shandagames.android.db.SQLiteHelper.TABLE;
+import com.shandagames.android.database.SQLiteHelper;
+import com.shandagames.android.database.SQLiteHelper.RssColumns;
+import com.shandagames.android.database.SQLiteHelper.TABLE;
 
 /**
  * @file RssDao.java

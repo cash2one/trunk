@@ -1,9 +1,17 @@
 package com.shandagames.android.util;
 
 import java.net.Inet4Address;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.DefaultHttpClient;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
@@ -96,5 +104,54 @@ public final class NetworkUtils {
 			}
 		}
 		return NETTYPE_UNKNOWN;
+	}
+	
+	
+	/** 设置网络代理APN  */
+    public static void setProxy(Context context, DefaultHttpClient httpClient) {
+		try {
+			// APN网络的API是隐藏的,获取手机的APN设置,需要通过ContentProvider来进行数据库查询
+			// 取得全部的APN列表：content://telephony/carriers；
+			// 取得当前设置的APN：content://telephony/carriers/preferapn；
+			// 取得current=1的APN：content://telephony/carriers/current；
+			ContentValues values = new ContentValues();
+			Cursor cursor = context.getContentResolver().query(
+					Uri.parse("content://telephony/carriers/preferapn"), null, null, null, null);
+			if (cursor != null && cursor.getCount() > 0) {
+				if (cursor.moveToFirst()) {
+					int colCount = cursor.getColumnCount();
+					for (int i = 0; i < colCount; i++) {
+						values.put(cursor.getColumnName(i), cursor.getString(i));
+					}
+				}
+				cursor.close();
+			}
+            // 中国移动WAP设置：  APN：CMWAP；代理：10.0.0.172；端口：80;   
+            // 中国联通WAP设置：  APN：UNIWAP；代理：10.0.0.172；端口：80;   
+            // 中国联通3GWAP设置  APN：3GWAP；代理：10.0.0.172；端口：80; 
+			// 中国电信WAP设置：  APN: CTWAP；代理：10.0.0.200；端口：80;
+			String proxyHost = (String) values.get("proxy");
+			if (proxyHost!=null && proxyHost.length()>0 && !isWiFiConnected(context)) {
+				int prot = Integer.parseInt(String.valueOf(values.get("port")));
+				httpClient.getCredentialsProvider().setCredentials(
+						new AuthScope(proxyHost, prot),
+						new UsernamePasswordCredentials((String) values.get("user"), (String) values.get("password")));
+				HttpHost proxy = new HttpHost(proxyHost, prot);
+				httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+    /** 判断网络状态  */
+    public static boolean isWiFiConnected(Context context) {
+		boolean isWifiEnable = false;
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+		if (activeNetInfo!=null&&activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+			isWifiEnable = true;
+		}
+		return isWifiEnable;
 	}
 }

@@ -77,7 +77,7 @@ public class BaseAlertDialog extends Dialog {
 
 		public Dialog create() {
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-					minWidth, LayoutParams.FILL_PARENT);
+					minWidth, LayoutParams.MATCH_PARENT);
 			dialog.setContentView(dialogView, lp);
 			return dialog;
 		}

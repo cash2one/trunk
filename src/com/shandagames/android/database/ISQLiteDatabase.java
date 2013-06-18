@@ -1,4 +1,4 @@
-package com.shandagames.android.db;
+package com.shandagames.android.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
