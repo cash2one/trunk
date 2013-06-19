@@ -52,7 +52,7 @@ public class SplashActivity extends BaseActivity {
 		
 		@Override
 		public void run() {
-			startActivity(new Intent(SplashActivity.this, MainActivity.class));
+			startActivity(new Intent(SplashActivity.this, HomeActivity.class));
 			finish();
 		}
 	};

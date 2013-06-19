@@ -115,8 +115,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	@Override
 	protected void _onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
 		initialize();
 		
 		mMediaPicker = new ExtendMediaPicker(this);

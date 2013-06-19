@@ -33,8 +33,10 @@ import com.shandagames.android.support.DisplaySupport;
 public class SlideMenuActivity extends BaseActivity implements View.OnClickListener {
 
 	private SlidingMenu mSlideMenu;
+	private ListView listView;
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction trans;
+	private String[] mResData;
 
 	@Override
 	protected void _onCreate(Bundle savedInstanceState) {
@@ -50,35 +52,35 @@ public class SlideMenuActivity extends BaseActivity implements View.OnClickListe
 		mSlideMenu.setContent(R.layout.nav_slide_content);
 		mSlideMenu.setMenu(R.layout.nav_slide_menu);
 
-		final ListView listView = (ListView) findViewById(android.R.id.list);
-		final String[] mResData = getResources().getStringArray(R.array.simple_menu_list);
+		mFragmentManager = getSupportFragmentManager();
+		listView = (ListView) findViewById(android.R.id.list);
+		mResData = getResources().getStringArray(R.array.simple_menu_list);
 		
 		NavAdapter mAdapter = new NavAdapter(this);
 		mAdapter.addAll(Arrays.asList(mResData), false);
 		listView.setAdapter(mAdapter);
 		
-		mFragmentManager = getSupportFragmentManager();
-		addFragment(mResData[0], 0+"");
-		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				mSlideMenu.showContent();
-				String tag = String.valueOf(position);
-				String status = parent.getItemAtPosition(position).toString();
-				addFragment(status, tag);
-				view.setSelected(true);
+				selectItem(position);
 			}
 		});
+		
+		if (savedInstanceState == null) {
+			selectItem(0);
+		}
 	}
 
-	private void addFragment(String status, String tag) {
+	private void selectItem(int position) {
 		trans = mFragmentManager.beginTransaction();
 		trans.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		trans.replace(R.id.placeholder, DetailFragment.newInstance(status), tag);
+		trans.replace(R.id.placeholder, DetailFragment.newInstance(mResData[position]));
 		trans.commit();
+		
+		listView.setItemChecked(position, true);
+		mSlideMenu.toggle(true);
 	}
 	
 	@Override

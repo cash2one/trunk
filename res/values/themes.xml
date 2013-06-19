@@ -1,42 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="Theme" parent="@android:style/Theme">
+    <style name="BaseTheme" parent="android:Theme.Light" />
+    <style name="BaseDialogTheme" parent="android:Theme.Dialog" />
+    
+    <style name="Theme" parent="BaseTheme">
         <item name="android:windowContentOverlay">@null</item>
         <item name="@android:windowAnimationStyle">@style/Theme.Translucent</item>
-		<item name="android:checkboxStyle">@style/Theme.Checkbox</item>
-		<item name="android:radioButtonStyle">@style/Theme.RadioButton</item>
-		<item name="android:textViewStyle">@style/Theme.TextAppearance</item>
-    </style>
-
-  
-    <!-- Widget Style -->
-	<style name="Theme.Checkbox" parent="@android:style/Widget.CompoundButton.CheckBox">
-		<item name="android:button">@drawable/btn_checkbox_selector</item>
-	</style>
-	<style name="Theme.RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
-	    <item name="android:button">@drawable/btn_radio_selector</item>
-	</style>
-	<style name="Theme.TextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textColor">#FF464646</item>
-    </style>
-	
-	
-	<!-- Dialog Style  -->
-	<style name="Theme.PopDownMenu">
-		<item name="android:windowEnterAnimation">@anim/push_down_in</item>
-        <item name="android:windowExitAnimation">@anim/push_down_out</item>
-	</style>
-	
-	 <style name="Theme.Translucent">
-        <item name="android:windowEnterAnimation">@anim/slide_in_left</item>
-        <item name="android:windowExitAnimation">@anim/slide_out_right</item>
+        
+        <item name="android:checkboxStyle">@style/Theme.Checkbox</item>
+        <item name="android:radioButtonStyle">@style/Theme.RadioButton</item>
+        <item name="android:textViewStyle">@style/Theme.TextAppearance</item>
     </style>
     
-	<style name="Theme.Dialog" parent="@android:style/Theme.Dialog">
+     <style name="Theme.TranslucentActionBar" parent="@style/Theme.Sherlock.Light">
+         <item name="android:windowActionBarOverlay">true</item>
+    </style>
+    
+    <style name="Theme.Dialog" parent="BaseDialogTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item> 
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
-	
 </resources>

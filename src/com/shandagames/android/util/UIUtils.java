@@ -26,6 +26,7 @@ import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -96,6 +97,19 @@ public final class UIUtils {
 		}  
 		return sbar;
 	}
+	
+	/** 在有 menu按键的手机上面，ActionBar 上的 overflow menu 默认不会出现，只有当点击了 menu按键时才会显示 */
+	public static void forceShowActionBarOverflowMenu(Context context) {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(context);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ignored) {
+        }
+    }
 	
     /** 匹配手机号码  */
     public static boolean isMobileNum(String mobile) {

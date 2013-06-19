@@ -9,9 +9,14 @@
     <string name="slideBar_navigatioin">侧边栏导航</string>
     <string name="photo_viewer">图片查看器</string>
     <string name="share_in_app">分享到无线互联</string>
+    
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    
     <string name="pull_to_refresh_pull_label">下拉可以刷新</string>
     <string name="pull_to_refresh_release_label">松开可以刷新</string>
     <string name="pull_to_refresh_refreshing_label">正在加载数据&#8230;</string>
+    
     <string name="chronometer_start">Start</string>
     <string name="chronometer_stop">Stop</string>
     <string name="chronometer_reset">Set fixed date</string>
