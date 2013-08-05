@@ -49,6 +49,7 @@
     
     <string-array name="simple_menu_list">
         <item>主页</item>
+        <item>ActionTab</item>
         <item>Widget</item>
         <item>Flotr图表</item>
         <item>微博同步</item>

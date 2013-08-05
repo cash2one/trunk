@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,12 @@ public class BaseFragment extends Fragment implements FragmentCallback {
 		TAG = getClass().getSimpleName();
     }
 
+	public ActionBar getActionBar() {
+		final Activity activity = getActivity();
+		if (activity != null) return ((ActionBarActivity) activity).getSupportActionBar();
+		return null;
+	}
+	
     public AndroidApplication getApplication() {
     	final Activity activity = getActivity();
 		if (activity != null) return (AndroidApplication) activity.getApplication();
@@ -172,6 +180,7 @@ public class BaseFragment extends Fragment implements FragmentCallback {
 	public int getStackEntryCount() {
 		return getFragmentManager().getBackStackEntryCount();
 	}
+	
 	
 	public boolean isBackStack() {
 		return true;

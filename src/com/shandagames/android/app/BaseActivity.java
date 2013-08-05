@@ -13,7 +13,7 @@ import android.content.res.Configuration;
  * @file BaseActivity.java
  * @create 2012-8-20 上午11:23:16
  * @author lilong dreamxsky@gmail.com
- * @description Activity基类，对Activity的栈管理
+ * @description Activity基类
  */
 public class BaseActivity extends ActionBarActivity {
 

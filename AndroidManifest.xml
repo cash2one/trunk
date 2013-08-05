@@ -104,7 +104,7 @@
         <activity android:name="PlacesMapActivity" />
         <activity android:name="WordsActivity" />
         <activity android:name="PullToRefreshActivity" />
-        <activity android:name="com.shandagames.android.ActionActivity" android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name="ActionTabActivity"/>
         <activity android:name="SegmentedRadioActivity" />
         <activity android:name="WiFiSettingActivity" />
         <activity android:name="PathActivity" />

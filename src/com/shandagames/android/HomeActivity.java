@@ -5,26 +5,20 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.support.v7.widget.ShareActionProvider;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.shandagames.android.app.FragmentManagerActivity;
 import com.shandagames.android.fragment.HomeFragment;
 import com.shandagames.android.fragment.PlanetFragment;
 import com.shandagames.android.fragment.WebFlotr2Fragment;
 import com.shandagames.android.fragment.WidgetFragment;
 
-public class HomeActivity extends FragmentManagerActivity implements OnQueryTextListener {
+public class HomeActivity extends FragmentManagerActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -58,8 +52,6 @@ public class HomeActivity extends FragmentManagerActivity implements OnQueryText
 			}
 		});
         
-        initActionBar();
-        
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -87,14 +79,6 @@ public class HomeActivity extends FragmentManagerActivity implements OnQueryText
         }
 	}
 
-	private void initActionBar() {
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
-		forceShowActionBarOverflowMenu();
-	}
-
 	private void selectItem(int position) {
         // update the main content by replacing fragments
         onItemChanged(position);
@@ -111,17 +95,16 @@ public class HomeActivity extends FragmentManagerActivity implements OnQueryText
 				showFragment(resId, new HomeFragment());
 				break;
 			case 1:
-				showFragment(resId, new WidgetFragment());
+				startActivity(new Intent(this, ActionTabActivity.class));
 				break;
 			case 2:
+				showFragment(resId, new WidgetFragment());
+				break;
+			case 3:
 				showFragment(resId, new WebFlotr2Fragment());
 				break;
 			default:
-				PlanetFragment fragment = new PlanetFragment();
-				Bundle bundle = new Bundle();
-				bundle.putString(PlanetFragment.ARG_PLANET_EXTRAS, mPlanetTitles[position]);
-				fragment.setArguments(bundle);
-				showFragment(resId, fragment);
+				showFragment(resId, PlanetFragment.newInstance(mPlanetTitles[position]));
 				break;
 		}
 	}
@@ -159,48 +142,14 @@ public class HomeActivity extends FragmentManagerActivity implements OnQueryText
     }
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.action_bar_main_menu, menu);
-		((SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search))).setOnQueryTextListener(this);
-
-		// Initialize the share intent  
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);  
-        shareIntent.setType("text/plain");  
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Text I want to share");
-        ((ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.menu_share))).setShareIntent(shareIntent);
-        
-        return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				toggleDrawer();
-				return true;
-			case R.id.menu_share:
-			case R.id.menu_search:
-				return false;
-			case R.id.menu_about:
-				Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
-				return true;
+		if (item.getItemId() == android.R.id.home) {
+			toggleDrawer();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public boolean onQueryTextSubmit(String query) {
-		// TODO Auto-generated method stub
-		Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
-		return true;
-	}
-
-	@Override
-	public boolean onQueryTextChange(String newText) {
-		// TODO Auto-generated method stub
-		return true;
 	}
 }

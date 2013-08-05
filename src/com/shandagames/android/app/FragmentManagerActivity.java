@@ -1,12 +1,20 @@
 package com.shandagames.android.app;
 
+import com.shandagames.android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
-import android.widget.Toast;
+import android.view.MenuItem;
 
+/**
+ * @file FragmentManagerActivity.java
+ * @create 2013-8-5 下午05:01:09
+ * @author lilong
+ * @description TODO Activity基类，封装Fragment栈管理
+ */
 public abstract class FragmentManagerActivity extends BaseActivity {
 
 	// Fragment入栈的栈名
@@ -17,20 +25,25 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 	private FragmentStack fragmentStack;
 	// Fragment管理容器FragmentManger
 	private FragmentManager fragmentManager;
+	// ActionBar视图
+	public ActionBar actionBar;
 	
-	private boolean isExit = false;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		fragmentManager = getSupportFragmentManager();
 		fragmentStack = FragmentStack.getInstance();
+		
+		forceShowActionBarOverflowMenu();
+		actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 	}
 	
 	public final void showFragment(final int contentViewID, final Fragment fragment) {
-		final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		final FragmentTransaction ft = fragmentManager.beginTransaction();
 		if (((FragmentCallback) fragment).isCleanStack()) {
-			// 清空栈中存储的Fragment
-			fragmentStack.clearFragments(); 
+			fragmentStack.clearFragments();  // 清空栈中存储的Fragment
 			fragmentManager.popBackStack(STACK_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		} 
 		if (((FragmentCallback) fragment).isBackStack()) {
@@ -38,8 +51,7 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 			fragmentStack.pushFragment(fragment);
 		}
 		this.currentFragment = fragment;
-		ft.replace(contentViewID, fragment);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		ft.replace(contentViewID, fragment, fragment.getClass().getSimpleName());
 		ft.commit();
 	}
 	
@@ -56,17 +68,19 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 						fragmentManager.popBackStackImmediate();
 						currentFragment = fragmentStack.peekFragment();
 						return true;
-					} else { // 提示退出消息
-						if (!isExit) {
-							isExit = true;
-							Toast.makeText(this, "再按一次退出当前应用", Toast.LENGTH_SHORT).show();
-							return true;
-						} 
-					}
+					} 
 				}
 			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

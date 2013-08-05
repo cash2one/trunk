@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				startActivity(new Intent(this, BarCodeActivity.class));
 				break;
 			case 26:
-				startActivity(new Intent(this, ActionActivity.class));
+				startActivity(new Intent(this, ActionTabActivity.class));
 				break;
 			case 27:
 				startActivity(new Intent(this, SegmentedRadioActivity.class));
