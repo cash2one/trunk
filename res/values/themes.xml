@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="BaseTheme" parent="android:Theme.Light" />
-    <style name="BaseDialogTheme" parent="android:Theme.Dialog" />
+    <style name="BaseTheme" parent="@style/Theme.AppCompat" />
+    <style name="BaseDialogTheme" parent="@android:style/Theme.Dialog" />
     
     <style name="Theme" parent="BaseTheme">
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionBarOverlay">false</item>
         <item name="@android:windowAnimationStyle">@style/Theme.Translucent</item>
-        
         <item name="android:checkboxStyle">@style/Theme.Checkbox</item>
         <item name="android:radioButtonStyle">@style/Theme.RadioButton</item>
         <item name="android:textViewStyle">@style/Theme.TextAppearance</item>
     </style>
     
-     <style name="Theme.TranslucentActionBar" parent="@style/Theme.Sherlock.Light">
-         <item name="android:windowActionBarOverlay">false</item>
+     <style name="Theme.NoActionBar" parent="Theme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.NoActionBar.Fullscreen" parent="Theme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     
     <style name="Theme.Dialog" parent="BaseDialogTheme">

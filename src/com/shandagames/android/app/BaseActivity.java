@@ -2,10 +2,10 @@ package com.shandagames.android.app;
 
 import java.lang.reflect.Field;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewConfiguration;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.shandagames.android.debug.ViewServer;
 import android.content.res.Configuration;
 
@@ -15,14 +15,14 @@ import android.content.res.Configuration;
  * @author lilong dreamxsky@gmail.com
  * @description Activity基类，对Activity的栈管理
  */
-public class BaseActivity extends SherlockFragmentActivity {
+public class BaseActivity extends ActionBarActivity {
 
 	public String TAG = "BaseActivity.class";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		TAG = getClass().getSimpleName();
-		Log.v(TAG, getClass() + "++++++++->onCreate");
+		Log.v(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		
 		// 开启视图层次优化调试
@@ -33,19 +33,19 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onRestart() {
-		Log.v(TAG, getClass() + "++++++++->onRestart");
+		Log.v(TAG, "onRestart");
 		super.onRestart();
 	}
 
 	@Override
 	protected void onStart() {
-		Log.v(TAG, getClass() + "++++++++->onStart");
+		Log.v(TAG, "onStart");
 		super.onStart();
 	}
 
 	@Override
 	protected void onResume() {
-		Log.v(TAG, getClass() + "++++++++->onResume");
+		Log.v(TAG, "onResume");
 		super.onResume();
 		
 		// 视图层次优化：onResume
@@ -54,7 +54,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onPause() {
-		Log.v(TAG, getClass() + "++++++++->onPause");
+		Log.v(TAG, "onPause");
 		super.onPause();
 		
 		// 终止性能分析,调试代码会生成trace文件
@@ -63,13 +63,13 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onStop() {
-		Log.v(TAG, getClass() + "++++++++->onStop");
+		Log.v(TAG, "onStop");
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy() {
-		Log.v(TAG, getClass() + "++++++++->onDestroy");
+		Log.v(TAG, "onDestroy");
 		super.onDestroy();
 		
 		// 视图层次优化：onDestroy
@@ -78,7 +78,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.v(TAG, getClass() + "++++++++->onConfigurationChanged");
+		Log.v(TAG, "onConfigurationChanged");
 	    super.onConfigurationChanged(newConfig);
 	    
 	    // 在Manifest中声明android:configChanges="orientation|keyboard|keyboardHidden"之后
@@ -87,19 +87,19 @@ public class BaseActivity extends SherlockFragmentActivity {
 	
 	@Override
 	public void onBackPressed() {
-		Log.v(TAG, getClass() + "++++++++->onBackPressed");
+		Log.v(TAG, "onBackPressed");
 		super.onBackPressed();
 	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		Log.v(TAG, getClass() + "++++++++->onKeyDown");
+		Log.v(TAG, "onKeyDown");
 		return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		Log.v(TAG, getClass() + "++++++++->onSaveInstanceState");
+		Log.v(TAG, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 		
 		//应用遇到意外情况（如：内存不足、用户直接按Home键）由系统销毁一个Activity时，此方法会被调用;
@@ -108,7 +108,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected final void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.v(TAG, getClass() + "++++++++->onRestoreInstanceState");
+		Log.v(TAG, "onRestoreInstanceState");
 		super.onRestoreInstanceState(savedInstanceState);
 		
 		// Note: onSaveInstanceState方法和onRestoreInstanceState方法不一定是成对的被调用;
@@ -118,7 +118,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 	
 	@Override
 	public Object onRetainCustomNonConfigurationInstance() {
-		Log.v(TAG, getClass() + "++++++++->onRetainCustomNonConfigurationInstance");
+		Log.v(TAG, "onRetainCustomNonConfigurationInstance");
 		return super.onRetainCustomNonConfigurationInstance();
 		
 		// 通常在onSaveInstanceState()之后被调用，调用顺序同样介于onStop()和 onDestroy()之间，
@@ -127,7 +127,7 @@ public class BaseActivity extends SherlockFragmentActivity {
 
 	@Override
 	public Object getLastCustomNonConfigurationInstance() {
-		Log.v(TAG, getClass() + "++++++++->getLastNonConfigurationInstance");
+		Log.v(TAG, "getLastNonConfigurationInstance");
 		return super.getLastCustomNonConfigurationInstance();
 		
 		// 通常与onRetainCustomNonConfigurationInstance函数一起使用

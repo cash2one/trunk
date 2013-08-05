@@ -5,18 +5,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.shandagames.android.app.FragmentManagerActivity;
 import com.shandagames.android.fragment.HomeFragment;
 import com.shandagames.android.fragment.PlanetFragment;
@@ -159,19 +160,23 @@ public class HomeActivity extends FragmentManagerActivity implements OnQueryText
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.action_bar_main_menu, menu);
-	    ((SearchView)menu.findItem(R.id.menu_search).getActionView()).setOnQueryTextListener(this);
-	    
-	    // Initialize the share intent  
-        Intent intent = new Intent(Intent.ACTION_SEND);  
-        intent.setType("text/plain");  
-        intent.putExtra(Intent.EXTRA_TEXT, "Text I want to share");  
-        ((ShareActionProvider)menu.findItem(R.id.menu_share).getActionProvider()).setShareIntent(intent);
+		getMenuInflater().inflate(R.menu.action_bar_main_menu, menu);
+		((SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search))).setOnQueryTextListener(this);
+
+		// Initialize the share intent  
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);  
+        shareIntent.setType("text/plain");  
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Text I want to share");
+        ((ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.menu_share))).setShareIntent(shareIntent);
+        
         return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				toggleDrawer();
@@ -180,7 +185,6 @@ public class HomeActivity extends FragmentManagerActivity implements OnQueryText
 			case R.id.menu_search:
 				return false;
 			case R.id.menu_about:
-				showFragment(R.id.content_frame, new WidgetFragment());
 				Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
 				return true;
 		}

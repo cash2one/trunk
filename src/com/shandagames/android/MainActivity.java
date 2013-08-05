@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				startActivity(new Intent(this, BarCodeActivity.class));
 				break;
 			case 26:
-				startActivity(new Intent(this, ActionBarActivity.class));
+				startActivity(new Intent(this, ActionActivity.class));
 				break;
 			case 27:
 				startActivity(new Intent(this, SegmentedRadioActivity.class));
@@ -515,7 +515,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 		menu.add("menu");
 		return super.onCreateOptionsMenu(menu);

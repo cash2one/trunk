@@ -58,23 +58,23 @@ public class SplashActivity extends BaseActivity {
 	};
 	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		//getMenuInflater().inflate(R.menu.main_menu, menu);
-		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+		getMenuInflater().inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		//MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
-		com.actionbarsherlock.view.MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
+		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
 		zoomToggle.setTitle(mAttacher.canZoom() ? "Enable Zoom" : "Disable Zoom");
 
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_zoom_toggle:
 				mAttacher.setZoomable(!mAttacher.canZoom());
