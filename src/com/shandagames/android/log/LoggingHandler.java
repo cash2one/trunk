@@ -28,7 +28,6 @@ public class LoggingHandler extends Handler {
 
     @Override
     public void publish(LogRecord record) {
-    	System.out.println("###################publish init...");
         Integer level = sLoglevelMap.get(record.getLevel());
         if (level == null) {
             level = Log.VERBOSE;

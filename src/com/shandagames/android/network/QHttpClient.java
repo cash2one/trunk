@@ -152,10 +152,10 @@ public class QHttpClient {
         try {
         	httpClient.getConnectionManager().closeExpiredConnections();
         	
-        	long start=System.currentTimeMillis();
+        	double start=System.currentTimeMillis();
 	        HttpResponse response = httpClient.execute(httpRequest);
-	        long end=System.currentTimeMillis();
-	        if (DEBUG) Log.d(TAG, "doHttpRequest [2] time = " + (end - start));
+	        double end=System.currentTimeMillis();
+	        if (DEBUG) Log.d(TAG, "doHttpRequest [2] time = " + ((end - start) / 1000) + "s");
 	
 	        int statusCode = response.getStatusLine().getStatusCode();
 	        if (DEBUG) Log.d(TAG, "doHttpRequest [3] statusLine = " + statusCode);

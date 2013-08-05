@@ -35,7 +35,7 @@ import com.shandagames.android.task.TaskListener;
  * @author lilong
  * @description TODO
  */
-public class PlacesActivity extends BaseActivity {
+public class PlacesActivity extends BaseActivity implements TaskListener {
 
 	// KEY Strings
 	private static String KEY_REFERENCE = "reference"; // id of the place
@@ -55,8 +55,8 @@ public class PlacesActivity extends BaseActivity {
 	private Group<Place> places;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.places_layout);
 		// Getting listview
 		lv = (ListView) findViewById(R.id.list);

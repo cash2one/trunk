@@ -1,146 +1,148 @@
 package com.shandagames.android.app;
 
+import java.lang.reflect.Field;
 import android.os.Bundle;
-import com.shandagames.android.log.Log;
-import com.shandagames.android.task.TaskListener;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.ViewConfiguration;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.shandagames.android.debug.ViewServer;
 import android.content.res.Configuration;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
 
 /**
  * @file BaseActivity.java
  * @create 2012-8-20 上午11:23:16
- * @author lilong
- * @description 封装自定义Activity基类
+ * @author lilong dreamxsky@gmail.com
+ * @description Activity基类，对Activity的栈管理
  */
-public abstract class BaseActivity extends FragmentActivity implements TaskListener {
+public class BaseActivity extends SherlockFragmentActivity {
 
-	private String TAG = "BaseActivity.class";
+	public String TAG = "BaseActivity.class";
 	
 	@Override
-	protected final void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		TAG = getClass().getSimpleName();
+		Log.v(TAG, getClass() + "++++++++->onCreate");
 		super.onCreate(savedInstanceState);
-		TAG = this.getClass().getCanonicalName();
-		Log.d(TAG, "onCreate");
 		
-		_onCreate(savedInstanceState);
-		
+		// 开启视图层次优化调试
+		ViewServer.get(this).addWindow(this);
 		// 开始trace性能调试
 		//android.os.Debug.startMethodTracing(TAG);
 	}
 
-	// 因为onCreate方法无法返回状态，因此无法进行状态判断，
-	// 为了能对上层返回的信息进行判断处理，我们使用_onCreate代替真正的
-	// onCreate进行工作。onCreate仅在顶层调用_onCreate。
-	protected abstract void _onCreate(Bundle savedInstanceState);
-	
-	
 	@Override
 	protected void onRestart() {
-		Log.d(TAG, "onRestart");
+		Log.v(TAG, getClass() + "++++++++->onRestart");
 		super.onRestart();
 	}
 
 	@Override
-	protected final void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.d(TAG, "onRestoreInstanceState");
-		super.onRestoreInstanceState(savedInstanceState);
-	}
-
-	@Override
 	protected void onStart() {
-		Log.d(TAG, "onStart");
+		Log.v(TAG, getClass() + "++++++++->onStart");
 		super.onStart();
-		addNavagationAndStatus();
 	}
 
 	@Override
 	protected void onResume() {
-		Log.d(TAG, "onResume");
+		Log.v(TAG, getClass() + "++++++++->onResume");
 		super.onResume();
-	}
-
-	@Override
-	//应用遇到意外情况（如：内存不足、用户直接按Home键）由系统销毁一个Activity时，此方法会被调用;
-	//通常onSaveInstanceState()只适合于保存一些临时性的状态，而onPause()适合用于数据的持久化保存
-	protected void onSaveInstanceState(Bundle outState) {
-		Log.d(TAG, "onSaveInstanceState");
-		super.onSaveInstanceState(outState);
-	}
-
-	/** 可以返回一个包含有状态信息的Object，其中甚至可以包含Activity Instance本身 */
-	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
-		// onRetainNonConfigurationInstance()在onSaveInstanceState()之后被调用
-		// 调用顺序同样介于onStop()和 onDestroy()之间，横竖屏切换保存数据
-		Log.d(TAG, "onRetainCustomNonConfigurationInstance");
-		return super.onRetainCustomNonConfigurationInstance();
-	}
-
-	/** 恢复窗口时，可以直接使用该方法返回数据 */
-	@Override
-	public Object getLastCustomNonConfigurationInstance() {
-		// TODO Auto-generated method stub
-		Log.d(TAG, "getLastNonConfigurationInstance");
-		return super.getLastCustomNonConfigurationInstance();
+		
+		// 视图层次优化：onResume
+		ViewServer.get(this).setFocusedWindow(this);
 	}
 
 	@Override
 	protected void onPause() {
-		Log.d(TAG, "onPause");
+		Log.v(TAG, getClass() + "++++++++->onPause");
 		super.onPause();
-		// 终止性能分析,调试代码会在SDcard中生成追踪文件
+		
+		// 终止性能分析,调试代码会生成trace文件
 		//android.os.Debug.stopMethodTracing();
 	}
 
 	@Override
 	protected void onStop() {
-		Log.d(TAG, "onStop");
+		Log.v(TAG, getClass() + "++++++++->onStop");
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy() {
-		Log.d(TAG, "onDestroy");
+		Log.v(TAG, getClass() + "++++++++->onDestroy");
 		super.onDestroy();
+		
+		// 视图层次优化：onDestroy
+		ViewServer.get(this).removeWindow(this);
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		Log.v(TAG, getClass() + "++++++++->onConfigurationChanged");
 	    super.onConfigurationChanged(newConfig);
-	    // Checks the orientation of the screen
-	    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-	        Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-	    } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-	        Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
-	    }
+	    
+	    // 在Manifest中声明android:configChanges="orientation|keyboard|keyboardHidden"之后
+	    // 在改变屏幕方向、弹出软件盘和隐藏软键盘时，不再去执行onCreate()方法，而是直接执行onConfigurationChanged()
 	}
 	
-	public boolean isMultiPane() {
-		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+	@Override
+	public void onBackPressed() {
+		Log.v(TAG, getClass() + "++++++++->onBackPressed");
+		super.onBackPressed();
 	}
 	
-	// 添加导航组件
-	protected void addNavagationAndStatus() {
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.v(TAG, getClass() + "++++++++->onKeyDown");
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		Log.v(TAG, getClass() + "++++++++->onSaveInstanceState");
+		super.onSaveInstanceState(outState);
+		
+		//应用遇到意外情况（如：内存不足、用户直接按Home键）由系统销毁一个Activity时，此方法会被调用;
+		//通常只适合于保存一些临时性的状态，而onPause()适合用于数据的持久化保存
 	}
 
 	@Override
-	public void onTaskStart(String taskName) {
-		// TODO Auto-generated method stub
+	protected final void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.v(TAG, getClass() + "++++++++->onRestoreInstanceState");
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		// Note: onSaveInstanceState方法和onRestoreInstanceState方法不一定是成对的被调用;
+		// onRestoreInstanceState被调用的前提是，activity确实被系统销毁了;
+		// 如果仅仅是停留在有这种可能性的情况下，则该方法不会被调用;
+	}
+	
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		Log.v(TAG, getClass() + "++++++++->onRetainCustomNonConfigurationInstance");
+		return super.onRetainCustomNonConfigurationInstance();
+		
+		// 通常在onSaveInstanceState()之后被调用，调用顺序同样介于onStop()和 onDestroy()之间，
+		// 横竖屏切换保存数据，可以返回一个包含有状态信息的Object，其中甚至可以包含Activity本身
 	}
 
 	@Override
-	public void onTaskFinished(String taskName, Object result) {
-		// TODO Auto-generated method stub
+	public Object getLastCustomNonConfigurationInstance() {
+		Log.v(TAG, getClass() + "++++++++->getLastNonConfigurationInstance");
+		return super.getLastCustomNonConfigurationInstance();
+		
+		// 通常与onRetainCustomNonConfigurationInstance函数一起使用
+		// 恢复窗口时，可以直接使用getLastCustomNonConfigurationInstance()返回数据
 	}
 	
-	public final void showFragment(final int pane, final Fragment fragment, final boolean add_to_backstack) {
-		final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(pane, fragment);
-		if (add_to_backstack) ft.addToBackStack(null);
-		ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		ft.commit();
-	}
+	public final void forceShowActionBarOverflowMenu() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ignored) {
+        }
+    }
 }

@@ -19,8 +19,8 @@ import com.shandagames.android.R;
 public class StickyActivity extends BaseActivity {
 
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sticky);
 		findViewById(R.id.mybutton).setOnClickListener(new View.OnClickListener() {
 			@Override

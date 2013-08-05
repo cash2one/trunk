@@ -339,8 +339,8 @@ public final class ImageCache extends Observable {
 	private final DefaultHttpClient createHttpClient() {
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setStaleCheckingEnabled(params, false);
-		HttpConnectionParams.setConnectionTimeout(params, 60 * 1000);
-		HttpConnectionParams.setSoTimeout(params, 60 * 1000);
+//		HttpConnectionParams.setConnectionTimeout(params, 60 * 1000);
+//		HttpConnectionParams.setSoTimeout(params, 60 * 1000);
 		HttpConnectionParams.setSocketBufferSize(params, 8192);
 		final SchemeRegistry supportedSchemes = new SchemeRegistry();
 		final SocketFactory sf = PlainSocketFactory.getSocketFactory();

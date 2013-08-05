@@ -1,40 +1,89 @@
-package com.shandagames.android.support;
+package com.shandagames.android.util;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.UUID;
+
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 
-/**
- * @file DiagnosticSupport.java
- * @create 2013-4-10 上午10:34:45
- * @author Jacky.Lee
- * @description TODO
- */
-public class DiagnosticSupport {
+public class DeviceUtils {
 
-    public static final int ANDROID_API_LEVEL;
-
-    static {
-        int apiLevel = -1;
-        try {
-            apiLevel = Build.VERSION.class.getField("SDK_INT").getInt(null);
-        } catch (Exception e) {
-            apiLevel = Integer.parseInt(Build.VERSION.SDK);
-        }
-        ANDROID_API_LEVEL = apiLevel;
+	public static int sdkVersion() {
+    	return Build.VERSION.SDK_INT;
+    }
+	
+	/** 判断是否是模拟器  */
+	public static boolean isEmulator() {
+		return Build.MODEL.equals("sdk") || Build.MODEL.equals("google_sdk");
+	}
+	
+	/** 是否为GoogleTV */
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	public static boolean isGoogleTV(Context context) {
+		if (sdkVersion() < Build.VERSION_CODES.ECLAIR) return false;
+    	return context.getPackageManager().hasSystemFeature("com.google.android.tv");
+    }
+	
+	/** 判断是否是平板（官方用法） */
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+	
+    /** 判断是否具有Root权限  */
+    public static boolean isRoot() {
+    	try {
+    		return (!new File("/system/bin/su").exists()) 
+    		&& (!new File("/system/xbin/su").exists());
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    		return false;
+    	}
+    }
+    
+	/** 获取设备的密度大小   */
+    public static float getDeviceDensity(Context context) {
+    	return context.getResources().getDisplayMetrics().density;
+    }
+    
+    /** 获取设备的密度因子  */
+    public static int getDeviceDensitydpi(Context context) {
+    	return context.getResources().getDisplayMetrics().densityDpi;
+    }
+	
+    /** 屏幕分辨率，字符串显示 (例如：640*960)  */
+	public static String getDeviceForResolution(Context ctx) {
+		String s = "%s*%s";
+		int width = ctx.getResources().getDisplayMetrics().widthPixels;
+		int height = ctx.getResources().getDisplayMetrics().heightPixels;
+		return String.format(s, width, height);
+	}
+    
+	 /** 精确获取屏幕尺寸（例如：3.5、4.0、5.0寸屏幕）  */
+    public static double getDevicePhysicalSize(Activity ctx) {
+        DisplayMetrics dm = new DisplayMetrics();
+        ctx.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        double diagonalPixels = Math.sqrt(Math.pow(dm.widthPixels, 2) + Math.pow(dm.heightPixels, 2));
+        return diagonalPixels / (160 * dm.density);
     }
 
-    /** 获取设备唯一标识ID */
+	/**
+	 * 获取设备唯一标识ID
+	 */
 	public static String generateDeviceId(Context context) {
 		UUID uuid = null;
 		final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
@@ -61,11 +110,11 @@ public class DiagnosticSupport {
 		}
 		return uuid.toString().replace("-", "");
 	}
-    
-    public static String createDiagnosis(Activity context, Exception error) {
+	
+	public static String createDiagnosis(Activity context, String version, Exception error) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Application version: v" + ManifestSupport.getApplicationForVersionName(context) + "\n");
+        sb.append("App version: v" + version + "\n");
         sb.append("Device locale: " + Locale.getDefault().toString() + "\n\n");
         sb.append("Android ID: " + generateDeviceId(context));
 
@@ -109,5 +158,4 @@ public class DiagnosticSupport {
 
         return sb.toString();
     }
-
 }

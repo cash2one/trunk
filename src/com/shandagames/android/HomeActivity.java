@@ -4,28 +4,26 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.shandagames.android.util.UIUtils;
+import com.shandagames.android.app.FragmentManagerActivity;
+import com.shandagames.android.fragment.HomeFragment;
+import com.shandagames.android.fragment.PlanetFragment;
+import com.shandagames.android.fragment.WebFlotr2Fragment;
+import com.shandagames.android.fragment.WidgetFragment;
 
-public class HomeActivity extends SherlockFragmentActivity implements OnQueryTextListener {
+public class HomeActivity extends FragmentManagerActivity implements OnQueryTextListener {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -84,7 +82,7 @@ public class HomeActivity extends SherlockFragmentActivity implements OnQueryTex
         toggleDrawer();
         
         if (savedInstanceState == null) {
-            selectItem(0);
+        	selectItem(0);
         }
 	}
 
@@ -93,24 +91,39 @@ public class HomeActivity extends SherlockFragmentActivity implements OnQueryTex
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
-		UIUtils.forceShowActionBarOverflowMenu(this);
+		forceShowActionBarOverflowMenu();
 	}
 
 	private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
+        onItemChanged(position);
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
+	
+	private void onItemChanged(int position) {
+		int resId = R.id.content_frame;
+		switch (position) {
+			case 0:
+				showFragment(resId, new HomeFragment());
+				break;
+			case 1:
+				showFragment(resId, new WidgetFragment());
+				break;
+			case 2:
+				showFragment(resId, new WebFlotr2Fragment());
+				break;
+			default:
+				PlanetFragment fragment = new PlanetFragment();
+				Bundle bundle = new Bundle();
+				bundle.putString(PlanetFragment.ARG_PLANET_EXTRAS, mPlanetTitles[position]);
+				fragment.setArguments(bundle);
+				showFragment(resId, fragment);
+				break;
+		}
+	}
 	
 	@Override
     public void setTitle(CharSequence title) {
@@ -167,36 +180,13 @@ public class HomeActivity extends SherlockFragmentActivity implements OnQueryTex
 			case R.id.menu_search:
 				return false;
 			case R.id.menu_about:
+				showFragment(R.id.content_frame, new WidgetFragment());
 				Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	/**
-     * Fragment that appears in the "content_frame", shows a planet
-     */
-    public static class PlanetFragment extends Fragment {
-        public static final String ARG_PLANET_NUMBER = "planet_number";
-
-        public PlanetFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.drawer_list_item, container, false);
-            int i = getArguments().getInt(ARG_PLANET_NUMBER);
-            String planet = getResources().getStringArray(R.array.simple_menu_list)[i];
-            TextView textView = (TextView)rootView.findViewById(android.R.id.text1);
-            textView.setTextColor(getResources().getColor(android.R.color.black));
-            textView.setText(planet);
-            getActivity().setTitle(planet);
-            return rootView;
-        }
-    }
-
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		// TODO Auto-generated method stub

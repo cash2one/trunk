@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
-
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -30,16 +29,14 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
-
 import com.shandagames.android.http.ssl.EasySSLSocketFactory;
 import com.shandagames.android.network.cache.HttpResponseCache;
-import com.shandagames.android.support.DiagnosticSupport;
-
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Proxy;
+import android.os.Build;
 import android.util.Log;
 
 public class BetterHttp {
@@ -76,7 +73,7 @@ public class BetterHttp {
 
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        if (DiagnosticSupport.ANDROID_API_LEVEL >= 7) {
+        if (Build.VERSION.SDK_INT >= 7) {
             schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
         } else {
             // used to work around a bug in Android 1.6:

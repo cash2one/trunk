@@ -103,8 +103,9 @@ public class PinnedHeaderActivity extends BaseActivity {
     private int mPinnedHeaderTextColor;
     
 	@Override
-	public void _onCreate(Bundle savedInstanceState) {
-	    setContentView(R.layout.pinnedheader_view);
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+		setContentView(R.layout.pinnedheader_view);
 	    
 	    mAdapter = new NamesAdapter(this, R.layout.pinnedheader_list_item, android.R.id.text1, names); 
 

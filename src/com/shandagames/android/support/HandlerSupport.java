@@ -15,34 +15,35 @@ public final class HandlerSupport {
 	// 默认主线程中创建Handler
 	private static Handler mHandler = new Handler(Looper.getMainLooper());
 
-	/** 工厂方法创建实例对象   */
+	/** 工厂方法创建实例对象 */
 	public static HandlerSupport newFactory(Handler handler) {
 		return new HandlerSupport(handler);
 	}
-	
+
 	private HandlerSupport(Handler handler) {
 		mHandler = handler;
 	}
-	
-	
+
 	public static void post(Runnable mRunnable) {
 		mHandler.post(mRunnable);
 	}
-	
+
 	public static void postDelayed(Runnable mRunnable, long delayMillis) {
 		mHandler.postDelayed(mRunnable, delayMillis);
 	}
-	
+
 	public static void postAtTime(Runnable mRunnable, long uptimeMillis) {
 		mHandler.postAtTime(mRunnable, uptimeMillis);
 	}
-	
+
 	public static void removeCallbacks(Runnable mRunnable) {
 		mHandler.removeCallbacks(mRunnable);
 	}
+
 	
+	// #############################################################################################################################
 	
-	
+
 	public void sendMessage(int what) {
 		mHandler.sendMessage(mHandler.obtainMessage(what));
 	}
@@ -55,8 +56,10 @@ public final class HandlerSupport {
 		mHandler.sendMessageDelayed(mHandler.obtainMessage(what), delayMillis);
 	}
 
-	public void sendMessageDelayed(int what, int arg1, int arg2, long delayMillis) {
-		mHandler.sendMessageDelayed(mHandler.obtainMessage(what, arg1, arg2), delayMillis);
+	public void sendMessageDelayed(int what, int arg1, int arg2,
+			long delayMillis) {
+		mHandler.sendMessageDelayed(mHandler.obtainMessage(what, arg1, arg2),
+				delayMillis);
 	}
 
 	public void sendMessage(int what, Object obj) {

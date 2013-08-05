@@ -2,8 +2,6 @@ package com.shandagames.android.support;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import android.content.Context;
-import android.content.res.Configuration;
 
 /**
  * @file ReflectionSupport.java
@@ -51,22 +49,4 @@ public class ReflectionSupport {
 
         return defaultValue;
     }
-	
-	
-	/** 判断是Android手机还是平板*/
-	public static boolean isTabletDevice(Context context) {
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
-			 // test screen size, use reflection because isLayoutSizeAtLeast is only available since 11
-	        Configuration con = context.getResources().getConfiguration();
-	        try {
-	            Method mIsLayoutSizeAtLeast = con.getClass().getMethod("isLayoutSizeAtLeast", int.class);
-	            // Configuration.SCREENLAYOUT_SIZE_XLARGE
-	            Boolean r = (Boolean) mIsLayoutSizeAtLeast.invoke(con, 0x00000004); 
-	            return r;
-	        } catch (Exception x) {
-	            return false;
-	        }
-		}
-		return false;
-	}
 }

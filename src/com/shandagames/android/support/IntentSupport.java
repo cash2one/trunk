@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import android.app.SearchManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +12,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.widget.Toast;
 
-/** 封装常用的Intent操作  */
+/**
+ * @file IntentSupport.java
+ * @create 2013-8-2 上午11:55:46
+ * @author lilong
+ * @description TODO 封装常用的Intent操作 
+ */
 public class IntentSupport {
 
     public static final String MIME_TYPE_EMAIL = "message/rfc822";

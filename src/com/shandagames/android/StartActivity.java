@@ -33,7 +33,8 @@ public class StartActivity extends BaseActivity  implements OnViewTapListener {
 	private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 	
 	@Override
-	protected void _onCreate(Bundle bundle) {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.start_user_guide);
 		

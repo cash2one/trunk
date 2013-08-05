@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flotr2图表</title>
+        <style type="text/css">
+            body {
+                margin: 0px;
+                padding: 0px;
+            } #container {
+                width: 280px;
+                height: 225px;
+                margin: 50px auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+        </div>
+        <script type="text/javascript" src="flotr2.min.js">
+        </script>
+        <script type="text/javascript">
+            function drawChart(data, option){
+                var container = document.getElementById("container");
+                Flotr.draw(container, data, option);
+            }
+            
+			// Fix: "Miss a drag as we are waiting for WebCore's response for touch down"
+            document.addEventListener('touchstart', function(e){
+                if (navigator.userAgent.match(/Android/i)) {
+                    touchEvent.preventDefault();
+                }
+            }, false);
+        </script>
+    </body>
+</html>

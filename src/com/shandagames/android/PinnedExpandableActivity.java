@@ -3,7 +3,7 @@ package com.shandagames.android;
 import java.util.HashMap;
 import java.util.Map;
 import com.shandagames.android.R;
-import com.shandagames.android.support.DisplaySupport;
+import com.shandagames.android.util.UIUtils;
 import com.shandagames.android.widget.PinnedExpandableListView;
 import com.shandagames.android.widget.PinnedExpandableListView.PinnedExpandableListViewAdapter;
 import android.app.Activity;
@@ -130,7 +130,7 @@ public class PinnedExpandableActivity extends Activity {
 		}
 		
 		private TextView getTextView(){
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, DisplaySupport.dip2px(mContext, 45));
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, UIUtils.dip2px(mContext, 45));
             TextView textView = new TextView(mContext);
             textView.setGravity(Gravity.CENTER_VERTICAL);
             textView.setLayoutParams(lp);

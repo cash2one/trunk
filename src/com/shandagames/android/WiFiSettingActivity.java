@@ -56,8 +56,8 @@ public class WiFiSettingActivity extends BaseActivity implements View.OnClickLis
 	private LinearLayout container;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		container = new LinearLayout(this);
 		container.setOrientation(LinearLayout.VERTICAL);
 		setContentView(container);

@@ -1,6 +1,7 @@
 package com.shandagames.android.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,18 +16,17 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.ResultReceiver;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextPaint;
-import android.util.AttributeSet;
-import android.view.InflateException;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -40,10 +40,6 @@ import android.webkit.WebView;
  * @description 封装UI界面常用操作
  */
 public final class UIUtils {
-
-	public static int sdkVersion() {
-    	return Build.VERSION.SDK_INT;
-    }
 
 	public static File URItoFile(String URI) {
         return new File(Uri.decode(URI).replace("file://", ""));
@@ -62,6 +58,28 @@ public final class UIUtils {
         FontPaint.setTextSize(Size);
         return FontPaint.measureText(text);
     }
+
+    /** 获取屏幕的宽度  */
+    public static float getScreenWidth(Context context) {
+    	return context.getResources().getDisplayMetrics().widthPixels;
+    }
+    
+    /** 获取屏幕的高度  */
+    public static float getScreenHeight(Context context) {
+    	return context.getResources().getDisplayMetrics().heightPixels;
+    }
+    
+    /** dip转化成px */
+	public static int dip2px(Context context, float dipValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dipValue * scale + 0.5f);
+	}
+
+	/** px转化成dip */
+	public static int px2dip(Context context, float pxValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (pxValue / scale + 0.5f);
+	}
     
 	/** 获取标题栏高度:注意 在onCreate()中获取为0  */
 	public static int getTitleBarHeight(Activity activity) {
@@ -98,18 +116,17 @@ public final class UIUtils {
 		return sbar;
 	}
 	
-	/** 在有 menu按键的手机上面，ActionBar 上的 overflow menu 默认不会出现，只有当点击了 menu按键时才会显示 */
-	public static void forceShowActionBarOverflowMenu(Context context) {
-        try {
-            ViewConfiguration config = ViewConfiguration.get(context);
-            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-            if (menuKeyField != null) {
-                menuKeyField.setAccessible(true);
-                menuKeyField.setBoolean(config, false);
-            }
-        } catch (Exception ignored) {
-        }
-    }
+	/** 设置震动频率  */
+	public static void vibrate(final Activity activity, long milliseconds) {
+		Vibrator vib = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+		vib.vibrate(milliseconds);
+	}
+	
+	/** 设置震动频率 ，isRepeat 是否重复震动  */
+	public static void vibrate(final Activity activity, long[] pattern,boolean isRepeat) {
+		Vibrator vib = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+		vib.vibrate(pattern, isRepeat ? 1 : -1);
+	}
 	
     /** 匹配手机号码  */
     public static boolean isMobileNum(String mobile) {
@@ -152,44 +169,6 @@ public final class UIUtils {
 				imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 			}
 		}
-	}
-	
-	/** 更改系统选项菜单的默认背景 */
-	public static void setMenuBackground(final Activity activity, final int resId) {
-		activity.getLayoutInflater().setFactory(new LayoutInflater.Factory() {
-			@Override
-			public View onCreateView(String name, Context context, AttributeSet attrs) {
-				if (name.equalsIgnoreCase("com.android.internal.view.menu.IconMenuItemView")) {
-    				try { // Ask our inflater to create the view
-    					LayoutInflater f = activity.getLayoutInflater();
-    					final View view = f.createView(name, null, attrs);
-    					/* 
-    					 * The background gets refreshed each time a new item is added the options menu. 
-    					 * So each time Android applies the default background we need to set our own background. 
-    					 * This is done using a thread giving the background change as runnable object
-    					 */
-    					activity.runOnUiThread(new Runnable() {
-    						@Override
-    						public void run() {
-    							view.setBackgroundResource(resId);
-    						}
-    					});
-    					return view;
-    				}
-    				catch (InflateException e) {}
-    				catch (ClassNotFoundException e) {}
-    			}
-    			return null;
-			}
-		});
-	}
-
-	/** 分辨率  */
-	public static String getDeviceForResolution(Context ctx) {
-		String s = "%s*%s";
-		int width = ctx.getResources().getDisplayMetrics().widthPixels;
-		int height = ctx.getResources().getDisplayMetrics().heightPixels;
-		return String.format(s, width, height);
 	}
 	
 	// And to convert the image URI to the direct file system path of the image file 
@@ -238,7 +217,7 @@ public final class UIUtils {
 	/** 开启或关闭GPS */
 	@TargetApi(8)
 	public static void toggleGPS(Context ctx) {
-		if (sdkVersion() >= 8) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 			boolean status = isGPSEnable(ctx.getContentResolver());
 			System.out.println("current gps status:"+status);
 			Settings.Secure.setLocationProviderEnabled(ctx.getContentResolver(), "gps", !status);
@@ -277,5 +256,33 @@ public final class UIUtils {
 	    wv.loadDataWithBaseURL("fake://not/needed", html, mimeType, encoding, "");
 	}
 	
-    
+	/** 读取照片的方向  */ 
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	public static int getExifOrientation(String filepath) {
+		int degree = 0;
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(filepath);
+		} catch (IOException ex) {
+			Log.e("BackwardSupportUtil", "cannot read exif", ex);
+		}
+		if (exif != null) {
+			int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
+			if (orientation != -1) {
+				// We only recognize a subset of orientation tag values.
+				switch (orientation) {
+				case ExifInterface.ORIENTATION_ROTATE_90:
+					degree = 90;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+					degree = 180;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+					degree = 270;
+					break;
+				}
+			}
+		}
+		return degree;
+	}
 }

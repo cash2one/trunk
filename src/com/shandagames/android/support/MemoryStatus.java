@@ -19,27 +19,10 @@ public class MemoryStatus {
 	
 	static final String TAG = "MemoryStatus";
 	
-	/** 获取SDCard的状态,检验SDCard是否可用具有可读可写权限 */
-	static public boolean isMemoryAvailable() {
-		/*
-		 * Environment.MEDIA_UNMOUNTED 用户手动到手机设置中卸载sd卡之后的状态
-		 * Environment.MEDIA_REMOVED 用户手动卸载,然后将sd卡从手机取出之后的状态
-		 * Environment.MEDIA_BAD_REMOVAL 用户未到手机设置中手动卸载sd卡,直接拨出之后的状态
-		 * Environment.MEDIA_SHARED 手机直接连接到电脑作为U盘使用之后的状态
-		 * Environment.MEDIA_CHECKINGS 手机正在扫描sd卡过程中的状态
-		 */
-	    return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) || 
-	    		!Environment.getExternalStorageState().equals(Environment.MEDIA_REMOVED);
-	}
 	
+	/** 检验SDCard是否可用具有可读可写权限 */
 	public static boolean isExternalStorageMounted() {
-        boolean canRead = Environment.getExternalStorageDirectory().canRead();
-        boolean onlyRead = Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED_READ_ONLY);
-        boolean unMounted = Environment.getExternalStorageState().equals(
-                Environment.MEDIA_UNMOUNTED);
-
-        return !(!canRead || onlyRead || unMounted);
+		return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 	
 	public static String getSdCardPath() {

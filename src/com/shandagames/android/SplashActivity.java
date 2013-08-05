@@ -32,8 +32,8 @@ public class SplashActivity extends BaseActivity {
 	private Toast mCurrentToast;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		ImageView ivSplash = new ImageView(this);
 		bitmap = ImageHelper.readBitmap(getResources(), R.drawable.splash);
 		ivSplash.setImageBitmap(bitmap);
@@ -58,21 +58,23 @@ public class SplashActivity extends BaseActivity {
 	};
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main_menu, menu);
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		//getMenuInflater().inflate(R.menu.main_menu, menu);
+		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
+	public boolean onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		//MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
+		com.actionbarsherlock.view.MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
 		zoomToggle.setTitle(mAttacher.canZoom() ? "Enable Zoom" : "Disable Zoom");
 
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_zoom_toggle:
 				mAttacher.setZoomable(!mAttacher.canZoom());

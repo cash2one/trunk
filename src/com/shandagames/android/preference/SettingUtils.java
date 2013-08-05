@@ -1,22 +1,21 @@
 package com.shandagames.android.preference;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 /**
  * @file SettingUtils.java
  * @create 2013-5-22 下午05:48:12
- * @author lilong
- * @description TODO dreamxsky@gmail.com
+ * @author lilong dreamxsky@gmail.com
+ * @description TODO 封装常用的SharedPreference操作
  */
-public final class SettingUtils {
+public class SettingUtils {
 	
-	private SettingUtils() {
+	SettingUtils() {
 	}
 	
 	public static boolean contains(Context context, int resId) {
@@ -143,37 +142,12 @@ public final class SettingUtils {
 		return PreferenceManager.getDefaultSharedPreferences(context).edit();
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// Apply method via reflection
-
-	private static final Method APPLY_METHOD = findApplyMethod();
-
-	private static Method findApplyMethod() {
-		try {
-			Class<Editor> cls = SharedPreferences.Editor.class;
-			return cls.getMethod("apply");
-		}
-		catch (NoSuchMethodException unused) {
-			Log.i("",
-					"Failed to retrieve Editor.apply(); probably doesn't exist on this phone's OS.  Using Editor.commit() instead.");
-			return null;
-		}
-	}
-
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	public static void commitOrApply(Editor editor) {
-		if (APPLY_METHOD != null) {
-			try {
-				APPLY_METHOD.invoke(editor);
-				return;
-			}
-			catch (InvocationTargetException e) {
-				Log.d("", "Failed while using Editor.apply().  Using Editor.commit() instead.", e);
-			}
-			catch (IllegalAccessException e) {
-				Log.d("", "Failed while using Editor.apply().  Using Editor.commit() instead.", e);
-			}
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+			editor.commit();
+		} else {
+			editor.apply();
 		}
-
-		editor.commit();
 	}
 }

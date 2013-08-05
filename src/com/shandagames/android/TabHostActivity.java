@@ -26,9 +26,8 @@ public class TabHostActivity extends LocalActivityManagerActivity implements OnC
 	private int startLeft;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super._onCreate(savedInstanceState);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabhost);
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		moveImage = (ImageView) findViewById(R.id.iv_move);

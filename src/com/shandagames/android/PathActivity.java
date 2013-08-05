@@ -25,8 +25,8 @@ public class PathActivity extends BaseActivity {
 	private RelativeLayout composerButtonsShowHideButton;
 
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setTheme(android.R.style.Theme_Holo_Light);
 		setContentView(R.layout.imitate_path_layout);
 

@@ -15,7 +15,7 @@ public class LocalActivityManagerActivity extends BaseActivity {
 	private LocalActivityManager mLocalActivityManager;
 
 	@Override
-	protected void _onCreate(final Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Bundle state = null;

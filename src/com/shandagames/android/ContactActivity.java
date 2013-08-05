@@ -26,7 +26,8 @@ public class ContactActivity extends BaseActivity implements TextWatcher, OnTouc
 	private WindowManager wm;
 	
 	@Override
-	public void _onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_layout);
 		ensureUi();
 	}

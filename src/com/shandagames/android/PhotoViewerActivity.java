@@ -55,7 +55,8 @@ public class PhotoViewerActivity extends BaseActivity implements View.OnClickLis
 	private ZoomControls mZoomButtons;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.photo_viewer);
 

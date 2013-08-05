@@ -48,29 +48,4 @@ public class BackwardSupport {
 		}
 		return degree;
 	}
-
-	public static class AnimationHelper {
-
-		public static void cancelAnimation(View paramView,
-				Animation paramAnimation) {
-			if (Build.VERSION.SDK_INT >= 8) {
-				paramAnimation.cancel();
-			} else {
-				if (paramView != null) {
-					paramView.setAnimation(null);
-				}
-			}
-		}
-
-		public static void overridePendingTransition(Activity activity,
-				int entereAnim, int exitAnim) {
-			activity.overridePendingTransition(entereAnim, exitAnim);
-		}
-
-		public static abstract interface IHelper {
-			public abstract void cancelAnimation(View paramView,
-					Animation paramAnimation);
-		}
-	}
-
 }

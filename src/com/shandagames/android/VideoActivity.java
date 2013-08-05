@@ -22,8 +22,8 @@ public class VideoActivity extends BaseActivity implements OnPreparedListener, O
 	private MediaController mediaController;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		videoView = new VideoView(this);

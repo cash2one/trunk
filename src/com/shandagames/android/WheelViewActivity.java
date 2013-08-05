@@ -35,8 +35,8 @@ public class WheelViewActivity extends BaseActivity {
 	private WheelView dayWheel;
 	
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wheelview);
 		ensureUi();
 		initDatePicker();

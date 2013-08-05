@@ -15,4 +15,8 @@
     <item name="return_scan_result" type="id"/>
     <item name="launch_product_query" type="id"/>
 
+    <!-- volley ids -->
+    <item name="parse_json" type="id"/>
+    <item name="app_manage" type="id"/>
+    <item name="gtalk" type="id"/>
 </resources>

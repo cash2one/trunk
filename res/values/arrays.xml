@@ -48,6 +48,9 @@
     </string-array>
     
     <string-array name="simple_menu_list">
+        <item>主页</item>
+        <item>Widget</item>
+        <item>Flotr图表</item>
         <item>微博同步</item>
         <item>语音搜索</item>
         <item>云标签</item>
@@ -84,5 +87,6 @@
         <item>时间控件</item>
         <item>多线程下载</item>
         <item>多点触摸</item>
+        <item>闹钟设置</item>
     </string-array>
 </resources>

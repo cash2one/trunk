@@ -2,6 +2,7 @@ package com.shandagames.android.util;
 
 import android.annotation.SuppressLint;
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,20 @@ public final class DateHelper {
 	private DateHelper() {
 	}
 
+	/** 获取月数  */
+	public static String[] getMonths() {
+		return new DateFormatSymbols().getMonths();
+	}
+	
+	/** 获取星期天数   */
+	public static String[] getWeekdays() {
+		String[] weekdays = new DateFormatSymbols().getWeekdays();
+		return  new String[] { weekdays[Calendar.MONDAY],
+				weekdays[Calendar.TUESDAY], weekdays[Calendar.WEDNESDAY],
+				weekdays[Calendar.THURSDAY], weekdays[Calendar.FRIDAY],
+				weekdays[Calendar.SATURDAY], weekdays[Calendar.SUNDAY] };
+	}
+	
 	/** 格式化日期  */
 	public static String formatString(long milliseconds) {
 		return formatString(milliseconds, "yyyy-MM-dd HH:mm:ss");

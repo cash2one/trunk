@@ -22,7 +22,7 @@ import com.shandagames.android.app.BaseGroupAdapter;
 import com.shandagames.android.fragment.DetailFragment;
 import com.shandagames.android.R;
 import com.shandagames.android.slidingmenu.lib.SlidingMenu;
-import com.shandagames.android.support.DisplaySupport;
+import com.shandagames.android.util.UIUtils;
 
 /**
  * @file SlideMenuActivity.java
@@ -39,15 +39,15 @@ public class SlideMenuActivity extends BaseActivity implements View.OnClickListe
 	private String[] mResData;
 
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		mSlideMenu = new SlidingMenu(this);
 		setContentView(mSlideMenu);
 		
 		mSlideMenu.setBehindScrollScale(0.0f);
-		mSlideMenu.setBehindWidth(DisplaySupport.dip2px(this, 200));
+		mSlideMenu.setBehindWidth(UIUtils.dip2px(this, 200));
 		mSlideMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		mSlideMenu.setContent(R.layout.nav_slide_content);
 		mSlideMenu.setMenu(R.layout.nav_slide_menu);
@@ -73,6 +73,12 @@ public class SlideMenuActivity extends BaseActivity implements View.OnClickListe
 		}
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		addNavagationAndStatus();
+	}
+	
 	private void selectItem(int position) {
 		trans = mFragmentManager.beginTransaction();
 		trans.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -83,7 +89,6 @@ public class SlideMenuActivity extends BaseActivity implements View.OnClickListe
 		mSlideMenu.toggle(true);
 	}
 	
-	@Override
 	protected void addNavagationAndStatus() {
 		((TextView)findViewById(R.id.title)).setText(getTitle());
 		findViewById(R.id.title_btn_home).setOnClickListener(this);

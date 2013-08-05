@@ -7,7 +7,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.shandagames.android.app.BaseActivity;
-import com.shandagames.android.support.DisplaySupport;
+import com.shandagames.android.util.UIUtils;
 import com.shandagames.android.view.SampleSurfaceView;
 import com.shandagames.android.view.WPEditText;
 import com.shandagames.android.view.WPEditText.EditTextImeBackListener;
@@ -19,14 +19,15 @@ public class ImageActivity extends BaseActivity implements
 		OnTextContextMenuItemListener {
 
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setTheme(android.R.style.Theme);
 		LinearLayout mPanel = new LinearLayout(this);
 		mPanel.setOrientation(LinearLayout.VERTICAL);
 		setContentView(mPanel);
 
 		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-		lp.topMargin = DisplaySupport.dip2px(this, 20);
+		lp.topMargin = UIUtils.dip2px(this, 20);
 		
 		WPEditText mContentEditText = new WPEditText(this);
 		mPanel.addView(mContentEditText, lp);

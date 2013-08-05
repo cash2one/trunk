@@ -1,17 +1,16 @@
-package com.shandagames.android.fragment;
+package com.shandagames.android.app;
 
 import android.app.LocalActivityManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 /**
  * This is a fragment that will be used during transition from activities to
  * fragments.
  */
 @SuppressWarnings("deprecation")
-public class LocalActivityManagerFragment extends Fragment {
+public abstract class LocalActivityManagerFragment extends BaseFragment {
 
-	private static final String KEY_STATE_BUNDLE = "localActivityManagerState";
+	private static final String KEY_STATE_BUNDLE = "LocalActivityManagerFragment";
 
 	private LocalActivityManager mLocalActivityManager;
 

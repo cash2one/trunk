@@ -1,9 +1,9 @@
-package com.shandagames.android.support;
+package com.shandagames.android.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexSupport {
+public class RegexUtils {
 	/**
 	 * 检查字符串是否存在值
 	 * 

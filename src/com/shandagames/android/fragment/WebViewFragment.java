@@ -1,6 +1,7 @@
 package com.shandagames.android.fragment;
 
 import com.shandagames.android.app.BaseFragment;
+import com.shandagames.android.support.accessor.ViewAccessor;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -33,6 +34,7 @@ public class WebViewFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		ViewAccessor.setLayerType(mWebView, View.LAYER_TYPE_SOFTWARE, null);
 		mWebView.setWebViewClient(new DefaultWebViewClient(getActivity()));
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		mWebView.getSettings().setJavaScriptEnabled(true);
@@ -46,6 +48,15 @@ public class WebViewFragment extends BaseFragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 		return mWebView = new WebView(getActivity());
+	}
+
+	@Override
+	public boolean onBackPressProcess() {
+		if (mWebView.canGoBack()) {
+			mWebView.goBack();
+			return true;
+		}
+		return false;
 	}
 
 	public final void setWebViewClient(final WebViewClient client) {
@@ -73,8 +84,8 @@ public class WebViewFragment extends BaseFragment {
 			mActivity.setProgressBarIndeterminateVisibility(true);
 		}
 
-		@TargetApi(Build.VERSION_CODES.FROYO)
 		@Override
+		@TargetApi(Build.VERSION_CODES.FROYO)
 		public void onReceivedSslError(final WebView view, final SslErrorHandler handler, final SslError error) {
 			handler.proceed();
 		}

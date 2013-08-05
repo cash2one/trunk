@@ -27,7 +27,7 @@ import android.util.Log;
  * @author Jacky.Lee
  * @description TODO
  */
-public final class ManifestSupport {
+public class ManifestSupport {
 	private static final String TAG = "ManifestSupport";
 	
 	private static final int ERROR = -1;

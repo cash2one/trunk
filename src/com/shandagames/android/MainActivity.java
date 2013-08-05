@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.shandagames.android.adapter.MenuAdapter;
+import com.shandagames.android.app.ActivityStack;
 import com.shandagames.android.app.AndroidApplication;
 import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.ballons.BallonsActivity;
@@ -28,12 +29,10 @@ import com.shandagames.android.network.Request;
 import com.shandagames.android.network.RequestExecutor;
 import com.shandagames.android.network.CountingOutputStream.Progress;
 import com.shandagames.android.parser.Result;
-import com.shandagames.android.support.DisplaySupport;
 import com.shandagames.android.support.IntentSupport;
 import com.shandagames.android.support.StrOperate;
 import com.shandagames.android.task.GenericTask;
 import com.shandagames.android.task.TaskListener;
-import com.shandagames.android.util.ActivityStack;
 import com.shandagames.android.util.UIUtils;
 import com.shandagames.android.util.BrightNessHelper;
 import com.shandagames.android.util.ToastUtil;
@@ -91,7 +90,7 @@ import android.widget.Toast;
  * @description TODO
  */
 public class MainActivity extends BaseActivity implements OnItemClickListener, 
-	OnInitListener, OnMediaPickerListener {
+	OnInitListener, OnMediaPickerListener, TaskListener {
 
 	private static final int ID_DIALOG_DATE = 0;
 	private static final int ID_DIALOG_TIME = 1;
@@ -114,7 +113,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private int mYear, mMonth, mDay, mHour, mMinute;
 
 	@Override
-	protected void _onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		initialize();
 		
 		mMediaPicker = new ExtendMediaPicker(this);
@@ -359,8 +359,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	private void changeBrightNess() {
-		int width = DisplaySupport.dip2px(this, getResources().getDisplayMetrics().widthPixels-150);
-		int height = DisplaySupport.dip2px(this, 10);
+		int width = UIUtils.dip2px(this, getResources().getDisplayMetrics().widthPixels-150);
+		int height = UIUtils.dip2px(this, 10);
 		int brightness = BrightNessHelper.getScreenBrightness(this);
 
 		SeekBar seekBar = new SeekBar(this);
@@ -515,19 +515,25 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		// TODO Auto-generated method stub
 		menu.add("menu");
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
+	public void openOptionsMenu() {
+		mOptionsMenu = new ExtendOptionsMenu(this);
+		mOptionsMenu.show(getWindow().getDecorView());
+	}
+	
+	/*@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
 		// TODO Auto-generated method stub
 		mOptionsMenu = new ExtendOptionsMenu(this);
 		mOptionsMenu.show(getWindow().getDecorView());
 		return false;
-	}
+	}*/
 	
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
