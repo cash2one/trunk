@@ -1,4 +1,4 @@
-package com.shandagames.android.app;
+package com.shandagames.android.fragment.callback;
 
 public interface FragmentCallback {
 

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <style name="BaseTheme" parent="@style/Theme.AppCompat.Light" />
+    <style name="BaseTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowActionBarOverlay">false</item>
+   		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    </style>
     
-    <style name="BaseDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog" />
-    
+	<!-- Widget ProgressBar Style -->    
+    <style name="Widget.Styled.ActionBar" parent="@style/Widget.AppCompat.ActionBar">
+    	<item name="android:indeterminateProgressStyle">@style/Widget.IndeterminateProgress</item>
+    </style>
+    <style name="Widget.IndeterminateProgress" parent="@android:style/Widget.Holo.ProgressBar">
+        <item name="android:minHeight">32dip</item>
+        <item name="android:maxHeight">32dip</item>
+    </style>
 </resources>

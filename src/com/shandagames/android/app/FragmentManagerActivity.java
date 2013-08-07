@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.Window;
+import com.shandagames.android.fragment.callback.FragmentCallback;
 
 /**
  * @file FragmentManagerActivity.java
@@ -24,17 +27,20 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 	// 自定义栈存储Fragment
 	private FragmentStack fragmentStack;
 	// Fragment管理容器FragmentManger
-	private FragmentManager fragmentManager;
+	public FragmentManager fragmentManager;
 	// ActionBar视图
 	public ActionBar actionBar;
 	
 	
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
+
+		setProgressBarIndeterminateVisibility(false);
 		fragmentManager = getSupportFragmentManager();
 		fragmentStack = FragmentStack.getInstance();
-		
 		forceShowActionBarOverflowMenu();
+
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
@@ -51,7 +57,7 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 			fragmentStack.pushFragment(fragment);
 		}
 		this.currentFragment = fragment;
-		ft.replace(contentViewID, fragment, fragment.getClass().getSimpleName());
+		ft.replace(contentViewID, fragment);
 		ft.commit();
 	}
 	
@@ -61,14 +67,13 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 			if (currentFragment != null) {
 				if (((FragmentCallback) currentFragment).onBackPressProcess()) {
 					return true;
-				} else {
+				} 
+				if (fragmentManager.getBackStackEntryCount() > 0) {
 					// 对Fragment进行弹栈处理
-					if (fragmentManager.getBackStackEntryCount() >= 1) {
-						fragmentStack.popFragment(); 
-						fragmentManager.popBackStackImmediate();
-						currentFragment = fragmentStack.peekFragment();
-						return true;
-					} 
+					fragmentStack.popFragment(); 
+					fragmentManager.popBackStackImmediate();
+					currentFragment = fragmentStack.peekFragment();
+					return true;
 				}
 			}
 		}
@@ -78,7 +83,11 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			finish();
+			/*Intent intent = new Intent(this, HomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			finish();*/
+			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

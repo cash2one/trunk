@@ -1,36 +1,24 @@
 package com.shandagames.android.app;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.ListFragmentTrojan;
-import android.util.AttributeSet;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import com.shandagames.android.fragment.callback.FragmentCallback;
-import com.shandagames.android.fragment.callback.InvalidateProgressBarRunnable;
 
-/**
- * @file BaseFragment.java
- * @create 2012-8-20 上午11:23:16
- * @author lilong dreamxsky@gmail.com
- * @description Fragment基类，对Fragment栈的管理
- */
-public class BaseListFragment extends ListFragment implements FragmentCallback {
+public class BaseDialogFragment extends DialogFragment {
 
-	public String TAG = "BaseListFragment.class";
+	public String TAG = "BaseDialogFragment.class";
 	
 	/**
 	 * 必须有此构造方法
 	 */
-	public BaseListFragment() {
+	public BaseDialogFragment() {
 		TAG = getClass().getSimpleName();
     }
 
@@ -76,13 +64,6 @@ public class BaseListFragment extends ListFragment implements FragmentCallback {
 		activity.setProgressBarIndeterminateVisibility(visible);
 	}
 
-    @Override
-	public void onInflate(Activity activity, AttributeSet attrs,
-			Bundle savedInstanceState) {
-    	Log.v(TAG, "onInflate");
-    	super.onInflate(activity, attrs, savedInstanceState);
-    }
-    
 	@Override
 	public void onAttach(Activity activity) {
 		Log.v(TAG, "onAttach");
@@ -96,23 +77,11 @@ public class BaseListFragment extends ListFragment implements FragmentCallback {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-			Bundle savedInstanceState) {
-		Log.v(TAG, "onCreateView");
-		final View view = super.onCreateView(inflater, container, savedInstanceState);
-		final ViewGroup progress_container = (ViewGroup) view
-				.findViewById(ListFragmentTrojan.INTERNAL_PROGRESS_CONTAINER_ID);
-		final View progress = progress_container.getChildAt(0);
-		progress.post(new InvalidateProgressBarRunnable(progress));
-		return view;
+	public Dialog onCreateDialog(final Bundle savedInstanceState) {
+		Log.v(TAG, "onCreateDialog");
+		return super.onCreateDialog(savedInstanceState);
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		Log.v(TAG, "onViewCreated");
-		super.onViewCreated(view, savedInstanceState);
-	}
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.v(TAG, "onActivityCreated");
@@ -171,24 +140,5 @@ public class BaseListFragment extends ListFragment implements FragmentCallback {
 	public void onConfigurationChanged(Configuration newConfig) {
 		Log.v(TAG, "onConfigurationChanged");
 		super.onConfigurationChanged(newConfig);
-	}
-
-	/**
-	 * 获取栈的数量
-	 */
-	public int getStackEntryCount() {
-		return getFragmentManager().getBackStackEntryCount();
-	}
-	
-	public boolean isBackStack() {
-		return true;
-	}
-	
-	public boolean isCleanStack() {
-		return false;
-	}
-	
-	public boolean onBackPressProcess() {
-		return false;
 	}
 }

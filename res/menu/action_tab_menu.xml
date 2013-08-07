@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
     <item
-        android:id="@+id/mode_standard"
-        android:alphabeticShortcut="c"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:title="标准"/>
+        android:id="@+id/menu_mode"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="MODE"
+        app:showAsAction="ifRoom|withText">
+        <menu>
+            <item
+                android:id="@+id/mode_standard"
+                android:alphabeticShortcut="c"
+                android:orderInCategory="100"
+                android:title="标准"/>
+            <item
+                android:id="@+id/mode_list"
+                android:alphabeticShortcut="d"
+                android:orderInCategory="200"
+                android:title="列表"/>
+            <item
+                android:id="@+id/mode_tabs"
+                android:alphabeticShortcut="s"
+                android:orderInCategory="300"
+                android:title="选项卡"/>
+        </menu>
+    </item>
     <item
-        android:id="@+id/mode_list"
-        android:alphabeticShortcut="c"
-        android:orderInCategory="200"
-        android:showAsAction="ifRoom"
-        android:title="列表"/>
+        android:id="@+id/menu_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="添加"
+        app:showAsAction="ifRoom|withText"/>
     <item
-        android:id="@+id/mode_tabs"
-        android:alphabeticShortcut="s"
-        android:orderInCategory="300"
-        android:showAsAction="ifRoom"
-        android:title="选项卡"/>
+        android:id="@+id/menu_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="编辑"
+        app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="删除"
+        app:showAsAction="ifRoom|withText"/>
 </menu>

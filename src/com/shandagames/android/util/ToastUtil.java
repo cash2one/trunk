@@ -22,7 +22,7 @@ public final class ToastUtil {
 		handler = new Handler(Looper.getMainLooper());
 	}
 
-	public static void showMessage(Context ctx, String msg) {
+	public static void showMessage(Context ctx, CharSequence msg) {
 		showMessage(ctx, msg, Toast.LENGTH_SHORT);
 	}
 
@@ -30,7 +30,7 @@ public final class ToastUtil {
 		showMessage(ctx, ctx.getString(msg), Toast.LENGTH_SHORT);
 	}
 
-	public static void showMessage(final Context ctx, final String text,
+	public static void showMessage(final Context ctx, final CharSequence text,
 			final int len) {
 		handler.post(new Runnable() {
 			@Override

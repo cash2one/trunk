@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import com.shandagames.android.app.FragmentManagerActivity;
 import com.shandagames.android.fragment.PlanetFragment;
+import com.shandagames.android.util.ToastUtil;
 
 public class ActionTabActivity extends FragmentManagerActivity {
 
@@ -24,6 +25,7 @@ public class ActionTabActivity extends FragmentManagerActivity {
 		FrameLayout container = new FrameLayout(this);
 		container.setId(android.R.id.content);
 		setContentView(container);
+		setNavigationModeTab();
 	}
 
 	private void setNavigationModeTab() {
@@ -65,28 +67,39 @@ public class ActionTabActivity extends FragmentManagerActivity {
 		case R.id.mode_tabs:
 			setNavigationModeTab();
 			break;
+		case R.id.menu_add:
+		case R.id.menu_edit:
+		case R.id.menu_delete:
+			ToastUtil.showMessage(this, item.getTitle());
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	class FragmentTabListener implements ActionBar.TabListener {
 
-		private String title;
+		private String tag;
 		private Fragment fragment;
 		
-		public FragmentTabListener(String title) {
-			this.title = title;
-			this.fragment = PlanetFragment.newInstance(title);
+		public FragmentTabListener(String tag) {
+			this.tag = tag;
 		}
 		
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			ft.add(android.R.id.content, fragment, title);
+			if (fragment == null) {
+				this.fragment = PlanetFragment.newInstance(tag);
+				ft.add(android.R.id.content, fragment, tag);
+			} else {
+				ft.attach(fragment);
+			}
 		}
 
 		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			ft.remove(fragment);
+			if (fragment != null) {
+				ft.detach(fragment);
+			}
 		}
 
 		@Override

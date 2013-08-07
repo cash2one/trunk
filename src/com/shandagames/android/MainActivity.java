@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.shandagames.android.adapter.MenuAdapter;
-import com.shandagames.android.app.ActivityStack;
 import com.shandagames.android.app.AndroidApplication;
 import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.ballons.BallonsActivity;
@@ -608,10 +607,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			if (mOptionsMenu != null) {
 				mOptionsMenu.dismiss();
 			}
-		}
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount()==0) {
-			ActivityStack.getInstance().showDialog(this);
-			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}

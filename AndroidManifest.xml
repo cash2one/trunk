@@ -82,7 +82,20 @@
             </intent-filter>
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity" android:label="@string/app_name"/>
+        
+        <activity android:name=".HomeActivity"
+			android:label="@string/app_name" 
+            android:launchMode="singleTask" 
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".ActionTabActivity" 
+            android:configChanges="keyboardHidden|orientation|screenSize" 
+            android:uiOptions="splitActionBarWhenNarrow" 
+            android:parentActivityName=".HomeActivity">
+            <!-- 支持Android 4.0.3和更早期的版本，表示父Activity与子Activity的关系 -->
+        	<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".HomeActivity"/>
+        </activity>
+        
         <activity android:name="SettingsActivity" android:exported="false">
         	<intent-filter> <!-- 提供网络控制   -->
         	    <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
@@ -104,7 +117,6 @@
         <activity android:name="PlacesMapActivity" />
         <activity android:name="WordsActivity" />
         <activity android:name="PullToRefreshActivity" />
-        <activity android:name="ActionTabActivity"/>
         <activity android:name="SegmentedRadioActivity" />
         <activity android:name="WiFiSettingActivity" />
         <activity android:name="PathActivity" />

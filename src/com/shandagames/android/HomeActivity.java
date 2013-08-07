@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.shandagames.android.app.FragmentManagerActivity;
+import com.shandagames.android.fragment.ExitTipsDialogFragment;
 import com.shandagames.android.fragment.HomeFragment;
 import com.shandagames.android.fragment.PlanetFragment;
 import com.shandagames.android.fragment.WebFlotr2Fragment;
@@ -151,5 +153,17 @@ public class HomeActivity extends FragmentManagerActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getRepeatCount() == 0)) {
+			if (fragmentManager.getBackStackEntryCount() == 0) {
+				ExitTipsDialogFragment dialogFragment = new ExitTipsDialogFragment();
+				dialogFragment.show(fragmentManager, dialogFragment.getClass().getName());
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

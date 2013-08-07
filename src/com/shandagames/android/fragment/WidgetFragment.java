@@ -6,9 +6,11 @@ import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -24,12 +26,16 @@ import com.shandagames.android.util.ToastUtil;
 
 public class WidgetFragment extends BaseListFragment implements OnItemClickListener {
 
+	private ListView listView;
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getListView().setOnItemClickListener(this);
+		listView = getListView();
+		listView.setBackgroundColor(Color.WHITE);
+		listView.setOnItemClickListener(this);
 		
-		String[] data = {"读取Json数据", "应用程序管理", "读取Gtalk联系人"};
+		String[] data = {"读取Json数据", "应用程序管理", "读取Gtalk联系人", "GridLayout布局"};
 		ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(getActivity(), 
 				android.R.layout.simple_list_item_1, android.R.id.text1, data);
 		setListAdapter(mAdapter);
@@ -47,16 +53,22 @@ public class WidgetFragment extends BaseListFragment implements OnItemClickListe
 		case 2:
 			connectGtalk();
 			break;
+		case 3:
+			UnsaveDialogFragment unSaveDialogFragment = new UnsaveDialogFragment();
+			unSaveDialogFragment.show(getChildFragmentManager(), unSaveDialogFragment.getClass().getName());
+			break;
 		}
 	}
 	
 	private void parseJson() {
+		setProgressBarIndeterminateVisibility(true);
 		final RequestQueue volleyQueue = Volley.newRequestQueue(getActivity());
 		String url = "http://jsonview.com/example.json";
 		volleyQueue.add(new StringRequest(url, new Listener<String>() {
 
 			@Override
 			public void onResponse(String response) {
+				setProgressBarIndeterminateVisibility(false);
 				Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
 			}
 		}, new ErrorListener() {
@@ -64,6 +76,7 @@ public class WidgetFragment extends BaseListFragment implements OnItemClickListe
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				volleyQueue.cancelAll(this);
+				setProgressBarIndeterminateVisibility(false);
 				Toast.makeText(getActivity(), "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
 			}
 		}));

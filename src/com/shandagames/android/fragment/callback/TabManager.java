@@ -1,4 +1,4 @@
-package com.shandagames.android.fragment;
+package com.shandagames.android.fragment.callback;
 
 import android.content.Context;
 import android.os.Bundle;

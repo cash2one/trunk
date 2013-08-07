@@ -1,13 +1,16 @@
 package com.shandagames.android.fragment;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -23,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.shandagames.android.R;
 import com.shandagames.android.app.BaseFragment;
@@ -81,9 +85,6 @@ public class HomeFragment extends BaseFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_share:
-		case R.id.menu_search:
-			return false;
 		case R.id.menu_about:
 			Toast.makeText(getActivity(), item.getTitle(), Toast.LENGTH_SHORT).show();
 			return true;
@@ -152,14 +153,12 @@ public class HomeFragment extends BaseFragment {
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		public void transformPage(View page, float position) {
 			page.setRotationY(position * -30);
-			// final float normalizedposition = Math.abs(Math.abs(position) -
-			// 1);
+			// final float normalizedposition = Math.abs(Math.abs(position) - 1);
 			// page.setAlpha(normalizedposition);
 		}
 
 	}
 	
-
 	class SearchQueryTextListener implements OnQueryTextListener {
 
 		@Override
@@ -173,5 +172,27 @@ public class HomeFragment extends BaseFragment {
 			return true;
 		}
 		
+	}
+
+	public static class SettingsActionProvider extends ActionProvider {
+		/** An intent for launching the system settings. */
+		private static final Intent sSettingsIntent = new Intent(Settings.ACTION_SETTINGS);
+		
+		public SettingsActionProvider(Context context) {
+			super(context);
+		}
+
+		@Override
+		public View onCreateActionView() {
+			TextView txtView = new TextView(getContext());
+			txtView.setText("setting");
+			return txtView;
+		}
+		
+		@Override
+        public boolean onPerformDefaultAction() {
+			getContext().startActivity(sSettingsIntent);
+			return true;
+		}
 	}
 }

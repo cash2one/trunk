@@ -2,9 +2,6 @@ package com.shandagames.android.app;
 
 import java.util.Stack;
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.util.DisplayMetrics;
 import java.io.ObjectStreamException;
 
 /**
@@ -90,21 +87,4 @@ public class ActivityStack {
 		  return instance;//返回该类的单例对象
     }
 	
-	/** 退出整个应用,带提示功能 */
-    public void showDialog(final Context context) {   
-    	DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(context);   
-        builder.setTitle("温馨提示");   
-        builder.setMinWidth(dm.widthPixels-50);
-        builder.setMessage("确认退出该应用吗?");
-        builder.setPositiveButton(android.R.string.ok,   
-                new DialogInterface.OnClickListener() {   
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    	dialog.dismiss();
-                    	((Activity)context).finish();
-                    }   
-                });   
-        builder.setNegativeButton(android.R.string.cancel, null); 
-        builder.create().show();
-    }  
 }

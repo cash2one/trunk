@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <!-- Widget Style -->
+    <!-- Widget CompoundButton Style -->
     <style name="Theme.Checkbox" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/btn_checkbox_selector</item>
     </style>
@@ -10,6 +10,15 @@
     </style>
     <style name="Theme.TextAppearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">#FF464646</item>
+    </style>
+    
+    <!-- Widget ProgressBar Style -->
+    <style name="Widget.Styled.ActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="indeterminateProgressStyle">@android:style/Widget.ProgressBar.Small.Inverse</item> 
+    </style>
+    <style name="Widget.IndeterminateProgress" parent="@android:style/Widget.ProgressBar">
+        <item name="android:minHeight">32dip</item>
+        <item name="android:maxHeight">32dip</item>
     </style>
     
     <!-- Dashboard 布局 -->
