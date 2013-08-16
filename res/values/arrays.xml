@@ -49,20 +49,17 @@
     
     <string-array name="simple_menu_list">
         <item>主页</item>
-        <item>ActionTab</item>
+        <item>Tab导航</item>
         <item>Widget</item>
         <item>Flotr图表</item>
+        <item>TabHost</item>
         <item>微博同步</item>
-        <item>语音搜索</item>
         <item>云标签</item>
         <item>定位服务</item>
         <item>流动布局</item>
         <item>侧边栏导航</item>
         <item>PhoneGap</item>
         <item>选择图片</item>
-        <item>下载文件</item>
-        <item>扩展通知</item>
-        <item>语音朗读</item>
         <item>快速反馈</item>
         <item>系统设置</item>
         <item>TabHost</item>
@@ -89,5 +86,19 @@
         <item>多线程下载</item>
         <item>多点触摸</item>
         <item>闹钟设置</item>
+    </string-array>
+    <string-array name="widget_menu_list">
+        <item>读取Json数据</item>
+        <item>应用程序管理</item>
+        <item>读取Gtalk联系人</item>
+        <item>GridLayout布局</item>
+        <item>系统语音搜索</item>
+        <item>TTS语音朗读</item>
+        <item>内容上拉滑动</item>
+        <item>内容侧拉滑动</item>
+        <item>发送系统通知</item>
+        <item>NDK常用操作</item>
+        <item>系统内容分享</item>
+        <item>网络文件下载</item>
     </string-array>
 </resources>

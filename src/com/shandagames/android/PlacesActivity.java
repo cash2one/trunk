@@ -25,7 +25,6 @@ import com.shandagames.android.local.CacheManager;
 import com.shandagames.android.log.LogUtils;
 import com.shandagames.android.parser.Group;
 import com.shandagames.android.parser.Result;
-import com.shandagames.android.task.AsyncTaskEx.Status;
 import com.shandagames.android.task.GenericTask;
 import com.shandagames.android.task.TaskListener;
 
@@ -127,8 +126,8 @@ public class PlacesActivity extends BaseActivity implements TaskListener {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if (loadPlaces!=null && loadPlaces.getStatus() == Status.RUNNING) {
-			loadPlaces.cancel(true);
+		if (loadPlaces!=null) {
+			loadPlaces.cancelTask(true);
 			loadPlaces = null;
 		}
 	}

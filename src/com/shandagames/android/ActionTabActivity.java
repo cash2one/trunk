@@ -19,12 +19,15 @@ public class ActionTabActivity extends FragmentManagerActivity {
 
 	private String[] mTitles = {"首页", "类别", "热门免费", "免费新品"};
 	
+	private ActionBar actionBar;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		FrameLayout container = new FrameLayout(this);
 		container.setId(android.R.id.content);
 		setContentView(container);
+		actionBar = getSupportActionBar();
 		setNavigationModeTab();
 	}
 

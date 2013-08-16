@@ -25,7 +25,11 @@ public class PlanetFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.planet_list_item, null);
 		TextView textView = (TextView) rootView.findViewById(android.R.id.text1);
-		textView.setText(getArguments().getString(ARG_PLANET_EXTRAS));
+		String message = "";
+		if (getArguments() != null) {
+			message = getArguments().getString(ARG_PLANET_EXTRAS);
+		}
+		textView.setText(message);
 		return rootView;
 	}
 

@@ -1,12 +1,14 @@
 package com.shandagames.android.task;
 
+import android.os.AsyncTask;
+
 /**
  * @file GenericTask.java
  * @create 2013-4-9 下午03:10:17
  * @author lilong
  * @description TODO
  */
-public abstract class GenericTask<Result> extends AsyncTaskEx<String, Integer, Result> {
+public abstract class GenericTask<Result> extends AsyncTask<String, Integer, Result> {
 
 	protected String taskName;
 	private TaskListener mListener = null;
@@ -41,7 +43,7 @@ public abstract class GenericTask<Result> extends AsyncTaskEx<String, Integer, R
 	@Override
 	abstract protected Result doInBackground(String... params);
 
-	
+
 	protected String getTaskName() {
 		return this.taskName;
 	}

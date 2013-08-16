@@ -1,11 +1,9 @@
 package com.shandagames.android.app;
 
-import com.shandagames.android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -27,10 +25,7 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 	// 自定义栈存储Fragment
 	private FragmentStack fragmentStack;
 	// Fragment管理容器FragmentManger
-	public FragmentManager fragmentManager;
-	// ActionBar视图
-	public ActionBar actionBar;
-	
+	private FragmentManager fragmentManager;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -41,9 +36,9 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 		fragmentStack = FragmentStack.getInstance();
 		forceShowActionBarOverflowMenu();
 
-		actionBar = getSupportActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
+		actionBar.setHomeButtonEnabled(true);
 	}
 	
 	public final void showFragment(final int contentViewID, final Fragment fragment) {
@@ -82,14 +77,15 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			/*Intent intent = new Intent(this, HomeActivity.class);
+		/*if (item.getItemId() == android.R.id.home) {
+			Intent intent = new Intent(this, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-			finish();*/
+			finish();
+			
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
-		}
+		}*/
 		return super.onOptionsItemSelected(item);
 	}
 }

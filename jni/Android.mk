@@ -1,4 +1,4 @@
-LOCAL_PATH:=$(call my-dir)	#编译时的目录    
+LOCAL_PATH:=$(call all-subdir-makefiles)	#编译时的目录    
 
 include $(CLEAR_VARS) 		#清除之前的一些系统变量
 LOCAL_MODULE:=myjni			#编译的目标对象

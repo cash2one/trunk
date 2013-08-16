@@ -76,6 +76,7 @@ public class HomeFragment extends BaseFragment {
 		inflater.inflate(R.menu.action_bar_main_menu, menu);
 		
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
+		searchView.setQueryHint("请输入文字");
 		searchView.setOnQueryTextListener(new SearchQueryTextListener());
 		
 		ShareActionProvider shareProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.menu_share));
@@ -97,6 +98,19 @@ public class HomeFragment extends BaseFragment {
 		return false;
 	}
 
+	@Override
+	public boolean isCleanStack() {
+		// 清空栈中Fragment
+		return true;
+	}
+	
+	@Override
+	public boolean onBackPressProcess() {
+		ExitTipsDialogFragment dialogFragment = new ExitTipsDialogFragment();
+		dialogFragment.show(getFragmentManager(), dialogFragment.getClass().getName());
+		return true;
+	}
+	
 	class HomePagerAdapter extends FragmentStatePagerAdapter {
 
 		public HomePagerAdapter(FragmentManager fm) {

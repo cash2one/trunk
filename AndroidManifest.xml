@@ -95,6 +95,23 @@
             <!-- 支持Android 4.0.3和更早期的版本，表示父Activity与子Activity的关系 -->
         	<meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".HomeActivity"/>
         </activity>
+        <activity android:name=".SlidingPanelActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".HomeActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".HomeActivity"/>
+        </activity>
+        <activity android:name=".SlidingUpPanelActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".HomeActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".HomeActivity"/>
+        </activity>
+         <activity android:name=".FragmentTabHostActivtity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".HomeActivity"/>
+        </activity>
+        <activity android:name=".MultiItemRowListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
         
         <activity android:name="SettingsActivity" android:exported="false">
         	<intent-filter> <!-- 提供网络控制   -->
@@ -173,7 +190,7 @@
 
         <service android:name="com.shandagames.android.service.UpdateService" />
 
-        <uses-library android:name="com.google.android.maps" />
+        <uses-library android:name="com.google.android.maps" android:required="false" />
         <!-- 引入单元测试库 -->
         <uses-library android:name="android.test.runner" />
     </application>
