@@ -104,13 +104,6 @@ public class HomeFragment extends BaseFragment {
 		return true;
 	}
 	
-	@Override
-	public boolean onBackPressProcess() {
-		ExitTipsDialogFragment dialogFragment = new ExitTipsDialogFragment();
-		dialogFragment.show(getFragmentManager(), dialogFragment.getClass().getName());
-		return true;
-	}
-	
 	class HomePagerAdapter extends FragmentStatePagerAdapter {
 
 		public HomePagerAdapter(FragmentManager fm) {

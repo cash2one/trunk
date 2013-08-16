@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				startActivity(intent);
 				break;
 			case 12:
-				startActivity(new Intent(this, SettingsActivity.class));
+				startActivity(new Intent(this, InternalSettingsActivity.class));
 				break;
 			case 13:
 				startActivity(new Intent(this, TabHostActivity.class));

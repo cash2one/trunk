@@ -113,7 +113,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         
-        <activity android:name="SettingsActivity" android:exported="false">
+        <activity android:name=".InternalSettingsActivity" android:exported="false">
         	<intent-filter> <!-- 提供网络控制   -->
         	    <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
         	    <category android:name="android.intent.category.DEFAULT" />
