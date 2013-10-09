@@ -3,6 +3,7 @@ package com.shandagames.android.app;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -14,8 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.shandagames.android.fragment.callback.FragmentCallback;
-import com.shandagames.android.fragment.callback.InvalidateProgressBarRunnable;
+
+import com.shandagames.android.fragment.FragmentCallback;
+import com.shandagames.android.widget.InvalidateProgressBarRunnable;
 
 /**
  * @file BaseFragment.java
@@ -69,6 +71,18 @@ public class BaseListFragment extends ListFragment implements FragmentCallback {
 		if (activity == null) return;
 		activity.unregisterReceiver(receiver);
 	}
+    
+    public void startService(Intent service) {
+    	final Activity activity = getActivity();
+		if (activity == null) return;
+		activity.startService(service);
+    }
+    
+    public void stopService(Intent name) {
+    	final Activity activity = getActivity();
+		if (activity == null) return;
+		activity.stopService(name);
+    }
     
     public void setProgressBarIndeterminateVisibility(final boolean visible) {
 		final Activity activity = getActivity();

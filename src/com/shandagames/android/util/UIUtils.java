@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.shandagames.android.log.LogUtils;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -81,6 +80,18 @@ public final class UIUtils {
 		return (int) (pxValue / scale + 0.5f);
 	}
     
+	/** px转化成sp */
+	public static float px2sp(Context ctx, float px) {
+    	float scaledDensity = ctx.getResources().getDisplayMetrics().scaledDensity;
+    	return (px / scaledDensity);
+    }
+ 
+	/** sp转化成px */
+    public static float sp2px(Context ctx, float sp) {
+        float scaledDensity = ctx.getResources().getDisplayMetrics().scaledDensity;
+        return sp * scaledDensity;
+    }
+	
 	/** 获取标题栏高度:注意 在onCreate()中获取为0  */
 	public static int getTitleBarHeight(Activity activity) {
 		// 获取windows最顶层view
@@ -111,7 +122,7 @@ public final class UIUtils {
 		    x = Integer.parseInt(field.get(obj).toString());
 		    sbar = context.getResources().getDimensionPixelSize(x);
 		} catch (Exception ex) {
-		    LogUtils.out("get status bar height failure");
+		    System.out.println("get status bar height failure");
 		}  
 		return sbar;
 	}

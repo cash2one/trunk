@@ -5,14 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.webkit.WebSettings;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import com.shandagames.android.MapViewerActivity.MapInterface;
+import com.shandagames.android.constant.Constants;
 
-public class WebMapFragment extends WebViewFragment {
+public class WebMapFragment extends WebViewFragment implements Constants, MapInterface {
 
-	public static final String INTENT_KEY_LATITUDE = "latitude";
-	public static final String INTENT_KEY_LONGITUDE = "longitude";
-	
 	private final Uri mUri = Uri.parse("file:///android_asset/mapview.html");
 
 	private double latitude, longitude;
@@ -50,12 +49,8 @@ public class WebMapFragment extends WebViewFragment {
 		setWebViewClient(new MapWebViewClient(getActivity()));
 		loadUrl(mUri.toString());
 
-		final WebSettings settings = webview.getSettings();
-		settings.setBuiltInZoomControls(false);
-
 		/** Allows JavaScript calls to access application resources **/
 		webview.addJavascriptInterface(new JavaScriptInterface(), "android");
-
 	}
 
 	/**
@@ -64,10 +59,12 @@ public class WebMapFragment extends WebViewFragment {
 	 **/
 	class JavaScriptInterface {
 
+		@JavascriptInterface // 4.2 version must annotation
 		public double getLatitude() {
 			return latitude;
 		}
 
+		@JavascriptInterface
 		public double getLongitude() {
 			return longitude;
 		}

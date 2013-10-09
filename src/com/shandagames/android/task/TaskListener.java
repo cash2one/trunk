@@ -9,10 +9,10 @@ package com.shandagames.android.task;
  * @author Jacky.Lee
  * @description TODO
  */
-public interface TaskListener {
+public interface TaskListener<T> {
 
 	
 	void onTaskStart(String taskName);
 	
-	void onTaskFinished(String taskName, Object result);
+	void onTaskFinished(String taskName, T result);
 }

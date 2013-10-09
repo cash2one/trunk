@@ -3,12 +3,14 @@ package com.shandagames.android.app;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.Window;
-import com.shandagames.android.fragment.callback.FragmentCallback;
+
+import com.shandagames.android.fragment.FragmentCallback;
 
 /**
  * @file FragmentManagerActivity.java
@@ -18,12 +20,8 @@ import com.shandagames.android.fragment.callback.FragmentCallback;
  */
 public abstract class FragmentManagerActivity extends BaseActivity {
 
-	// Fragment入栈的栈名
-	private static final String STACK_NAME = "LevelStack"; 
 	// 记录当前栈顶fragment
 	private Fragment currentFragment;
-	// 自定义栈存储Fragment
-	private FragmentStack fragmentStack;
 	// Fragment管理容器FragmentManger
 	private FragmentManager fragmentManager;
 	
@@ -32,8 +30,8 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setProgressBarIndeterminateVisibility(false);
+		FragmentManager.enableDebugLogging(false);
 		fragmentManager = getSupportFragmentManager();
-		fragmentStack = FragmentStack.getInstance();
 		forceShowActionBarOverflowMenu();
 
 		ActionBar actionBar = getSupportActionBar();
@@ -41,19 +39,34 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
-	public final void showFragment(final int contentViewID, final Fragment fragment) {
+	public final void showFragment(final int resViewId, final Fragment fragment) {
 		final FragmentTransaction ft = fragmentManager.beginTransaction();
 		if (((FragmentCallback) fragment).isCleanStack()) {
-			fragmentStack.clearFragments();  // 清空栈中存储的Fragment
-			fragmentManager.popBackStack(STACK_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			clearFragment();
 		} 
+		String tag = fragment.getClass().getSimpleName();
 		if (((FragmentCallback) fragment).isBackStack()) {
-			ft.addToBackStack(STACK_NAME);
-			fragmentStack.pushFragment(fragment);
+			ft.addToBackStack(tag);
 		}
 		this.currentFragment = fragment;
-		ft.replace(contentViewID, fragment);
+		ft.replace(resViewId, fragment, tag);
 		ft.commit();
+	}
+	
+	private Fragment peekFragment() {
+		int backStackCount = fragmentManager.getBackStackEntryCount();
+		if (backStackCount > 0) {
+			BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(backStackCount-1);
+			return fragmentManager.findFragmentByTag(backEntry.getName());
+		}
+		return null;
+	}
+	
+	private void clearFragment() {
+		int backStackCount = fragmentManager.getBackStackEntryCount();
+		for (int i=0; i < backStackCount; i++) {
+			fragmentManager.popBackStackImmediate();
+		}
 	}
 	
 	@Override
@@ -64,12 +77,10 @@ public abstract class FragmentManagerActivity extends BaseActivity {
 					return true;
 				} 
 				if (fragmentManager.getBackStackEntryCount() > 0) {
-					// 对Fragment进行弹栈处理
-					fragmentStack.popFragment(); 
 					fragmentManager.popBackStackImmediate();
-					currentFragment = fragmentStack.peekFragment();
+					this.currentFragment = peekFragment();
 					return true;
-				}
+				} 
 			}
 		}
 		return super.onKeyDown(keyCode, event);

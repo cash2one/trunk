@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shandagames.android.app.BaseActivity;
+import com.shandagames.android.constant.Config.City;
 import com.shandagames.android.constant.Constants;
 import com.shandagames.android.widget.wheel.OnWheelChangedListener;
 import com.shandagames.android.widget.wheel.OnWheelScrollListener;
@@ -45,15 +46,15 @@ public class WheelViewActivity extends BaseActivity {
 	private void ensureUi() {
 		provinceWheel = (WheelView) findViewById(R.id.country);
 		cityWheel = (WheelView) findViewById(R.id.city);
-		provinceWheel.setViewAdapter(new ArrayWheelAdapter<String>(this, Constants.PROVINCES));
+		provinceWheel.setViewAdapter(new ArrayWheelAdapter<String>(this, City.PROVINCES));
 		provinceWheel.setCurrentItem(1);
-		updateCities(cityWheel, Constants.CITIES, provinceWheel.getCurrentItem());
+		updateCities(cityWheel, City.CITIES, provinceWheel.getCurrentItem());
 		provinceWheel.addChangingListener(new OnWheelChangedListener() {
 			
 			@Override
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 			    if (!scrolling) {
-			        updateCities(cityWheel, Constants.CITIES, newValue);
+			        updateCities(cityWheel, City.CITIES, newValue);
 			    }
 			}
 		});
@@ -67,7 +68,7 @@ public class WheelViewActivity extends BaseActivity {
 			@Override
             public void onScrollingFinished(WheelView wheel) {
                 scrolling = false;
-                updateCities(cityWheel, Constants.CITIES, provinceWheel.getCurrentItem());
+                updateCities(cityWheel, City.CITIES, provinceWheel.getCurrentItem());
             }
         });
 	}
@@ -85,7 +86,7 @@ public class WheelViewActivity extends BaseActivity {
 		yearWheel.setCurrentItem(curYear);
 		yearWheel.addChangingListener(listener);
 		
-		monthWheel.setViewAdapter(new DateArrayAdapter(this, Constants.MONTHS_CN, curMonth));
+		monthWheel.setViewAdapter(new DateArrayAdapter(this, City.MONTHS_CN, curMonth));
 		monthWheel.setCurrentItem(curMonth);
         monthWheel.addChangingListener(listener);
         

@@ -2,6 +2,7 @@ package com.shandagames.android.app;
 
 import java.lang.reflect.Field;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,7 +25,8 @@ public class BaseActivity extends ActionBarActivity {
 		TAG = getClass().getSimpleName();
 		Log.v(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
-		
+		// 开启fragment的debug模式
+		FragmentManager.enableDebugLogging(false);
 		// 开启视图层次优化调试
 		ViewServer.get(this).addWindow(this);
 		// 开始trace性能调试

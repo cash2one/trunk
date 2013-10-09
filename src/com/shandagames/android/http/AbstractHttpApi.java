@@ -18,6 +18,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import android.util.Log;
+
+import com.shandagames.android.constant.Config;
 import com.shandagames.android.constant.Constants;
 import com.shandagames.android.network.CountingOutputStream;
 import com.shandagames.android.network.CountingOutputStream.Progress;
@@ -56,7 +58,7 @@ abstract public class AbstractHttpApi implements HttpApi {
     private final String mClientVersion;
     private final DefaultHttpClient mHttpClient;
    
-    protected static final boolean DEBUG = Constants.DEVELOPER_MODE;
+    protected static final boolean DEBUG = Config.DEBUG;
 
     public AbstractHttpApi(DefaultHttpClient httpClient, String clientVersion) {
         mHttpClient = httpClient;

@@ -16,6 +16,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -34,6 +35,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.shandagames.android.HomeActivity;
+import com.shandagames.android.PullToRefreshActivity;
 import com.shandagames.android.R;
 import com.shandagames.android.SlidingPanelActivity;
 import com.shandagames.android.SlidingUpPanelActivity;
@@ -44,9 +46,11 @@ import com.shandagames.android.jni.NativeSample01;
 import com.shandagames.android.jni.NativeSample02;
 import com.shandagames.android.log.Log;
 import com.shandagames.android.network.RequestExecutor;
+import com.shandagames.android.service.SocketService;
 import com.shandagames.android.support.IntentSupport;
 import com.shandagames.android.task.DownloadFileTask;
 import com.shandagames.android.task.ITaskListener;
+import com.shandagames.android.util.NetworkUtils;
 import com.shandagames.android.util.ToastUtil;
 
 public class WidgetFragment extends BaseListFragment implements OnItemClickListener {
@@ -104,18 +108,30 @@ public class WidgetFragment extends BaseListFragment implements OnItemClickListe
 			startActivity(new Intent(activity, SlidingPanelActivity.class));
 			break;
 		case 8:
-			showNotification();
+			startActivity(new Intent(activity, PullToRefreshActivity.class));
 			break;
 		case 9:
-			useNdk();
+			showNotification();
 			break;
 		case 10:
-			shareContent();
+			useNdk();
 			break;
 		case 11:
+			shareContent();
+			break;
+		case 12:
 			String url="http://shouji.baidu.com/download/1426l/AppSearch_Android_1426l.apk";
 			downloadTask = new DownloadFileTask(REQUEST_DOWNLOAD_FILE_TASK,mTaskListener);
 			downloadTask.execute(RequestExecutor.getThreadExecutor(), url);
+			break;
+		case 13:
+			startService(new Intent(activity, SocketService.class));
+			break;
+		case 14:
+			String uriString="http://" + NetworkUtils.ipToString(activity) + ":"+SocketService.CONNECTION_POST;
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(uriString));
+			startActivity(intent);
 			break;
 		}
 	}

@@ -18,7 +18,7 @@ import android.content.IntentFilter;
  */
 public class MediaCardStateBroadcastReceiver extends BroadcastReceiver {
 
-	private static final String TAG = LogUtils.makeLogTag(MediaCardStateBroadcastReceiver.class);
+	private static final String TAG = "MediaCardStateBroadcastReceiver";
 
 	public static interface OnMediaCardAvailableListener {
 		public void onMediaCardAvailable();
@@ -54,4 +54,17 @@ public class MediaCardStateBroadcastReceiver extends BroadcastReceiver {
 	public void setOnMediaCardAvailableListener(OnMediaCardAvailableListener listener) {
 		this.onMediaCardAvailableListener = listener;
 	}
+	
+	
+	/* <intent-filter>
+	     <action android:name="android.intent.action.MEDIA_MOUNTED" />
+	     <action android:name="android.intent.action.MEDIA_EJECT" />
+	     <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+	     <action android:name="android.intent.action.MEDIA_SHARED" />
+	     <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
+	     <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
+	     <action android:name="android.intent.action.MEDIA_REMOVED" />
+	     <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
+	     <data android:scheme="file" />
+     </intent-filter>*/
 }

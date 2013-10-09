@@ -1,7 +1,6 @@
 package com.shandagames.android.location;
 
 import android.content.Context;
-import android.location.Location;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.LocationListener;
 
@@ -27,17 +26,16 @@ public class LbsHelper implements LocationListener {
 	}
 	
 	@Override
-	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
+	public void onLocationChanged(android.location.Location location) {
 		onBestLocationListener(location);
 		mBMapMan.getLocationManager().removeUpdates(this);
 		mBMapMan.stop();
 	}
 
-	private void onBestLocationListener(Location mLocation) {
-		com.shandagames.android.location.Location mLastLocation = null;
+	private void onBestLocationListener(android.location.Location mLocation) {
+		Location mLastLocation = null;
 		if (mLocation != null) {
-			mLastLocation = new com.shandagames.android.location.Location();
+			mLastLocation = new Location();
 			mLastLocation.setGeolat(mLocation.getLatitude());
 			mLastLocation.setGeolng(mLocation.getLongitude());
 			mLastLocation.setAcc(mLocation.getAccuracy());

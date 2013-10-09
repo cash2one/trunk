@@ -22,7 +22,6 @@ import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.bean.Place;
 import com.shandagames.android.http.BetterHttpApiV1;
 import com.shandagames.android.local.CacheManager;
-import com.shandagames.android.log.LogUtils;
 import com.shandagames.android.parser.Group;
 import com.shandagames.android.parser.Result;
 import com.shandagames.android.task.GenericTask;
@@ -67,7 +66,7 @@ public class PlacesActivity extends BaseActivity implements TaskListener {
 
 		Object object = CacheManager.getCacheValue("location");
 		if (object != null) {
-			LogUtils.out("get data for the memory cache!");
+			System.out.println("get data for the memory cache!");
 			places = (Group<Place>)object;
 			ensureUi(places);
 		} else {

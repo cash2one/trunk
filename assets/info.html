@@ -1,18 +1,19 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>Web服务 - WiFi状态</title>
 		<style type="text/css">
-			label {color:#FF0000;font-size:25px;}
-			td {font-size:25px;padding:10px;}
+			label {color:#FF0000;}
+			table {border-collapse: collapse;text-align:left;font-size:14px;}
 		</style>
     </head>
 	
     <body>
-        <table>
+        <table border="1" cellspacing="0" cellpadding="10">
             <tr>
-                <td width="201">MAC地址：</td>
-                <td width="265"><label>#mac#</label></td>
+                <td width="100px">MAC地址：</td>
+                <td><label>#mac#</label></td>
             </tr>
             <tr>
                 <td>IP地址：</td>
@@ -34,6 +35,30 @@
                 <td>网络列表：</td>
                 <td><label>#network#</label></td>
             </tr>
+            <tr>
+            	<td>浏览器类型：</td>
+            	<td><label id="browser"></label></td>
+            </tr>
+            <tr>
+            	<td>打开本地应用：</td>
+            	<td><a href="wuxian://search?param=value&isappinstalled=1">点击试试!</a></td>
+            </tr>
+            <tr>
+            	<td>打开应用市场：</td>
+            	<td><a href="market://search?q=com.tencent.mm">搜索"微信"</a></td>
+            </tr>
+            <tr>
+            	<td>打开谷歌地图：</td>
+            	<td><a href="wuxian://map?lat=39.90960456049752&lng=116.3972282409668">搜索"天安门"</a></td>
+            </tr>
         </table>
     </body>
+    
+    <script type="text/javascript">
+    	if (navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad)/i)) {
+			document.getElementById("browser").innerHTML=navigator.userAgent;
+		} else {
+			document.getElementById("browser").innerHTML=navigator.appVersion;
+		}
+    </script>
 </html>

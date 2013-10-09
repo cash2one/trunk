@@ -16,31 +16,28 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import com.android.volley.toolbox.ImageLoader;
 import com.shandagames.android.bean.User;
 import com.shandagames.android.cache.core.NullDiskCache;
 import com.shandagames.android.cache.core.RemoteResourceManager;
 import com.shandagames.android.cache.lib.ImageFetcher;
+import com.shandagames.android.constant.Config;
 import com.shandagames.android.constant.Constants;
 import com.shandagames.android.constant.PreferenceSettings;
 import com.shandagames.android.http.BetterHttpApiV1;
 import com.shandagames.android.location.BestLocationListener;
-import com.shandagames.android.location.LocationException;
 import com.shandagames.android.log.Log;
 import com.shandagames.android.log.LoggingHandler;
 import com.shandagames.android.receiver.LoggedInOutBroadcastReceiver;
 import com.shandagames.android.receiver.MediaCardStateBroadcastReceiver;
 import com.shandagames.android.util.ImageCache;
 import com.shandagames.android.util.SmileyParser;
+import com.shandagames.android.volley.RequestManager;
 
 /**
  * 
@@ -54,38 +51,31 @@ public class AndroidApplication extends Application implements
 		LoggedInOutBroadcastReceiver.OnLoggedInOutStateListener {
 
 	private static final String TAG = "AndroidApplication";
-	private static final boolean DEBUG = Constants.DEVELOPER_MODE;
 	
 	public static int mVersion;
 	public static String mToken;
+	public static ImageLoader imageLoader;
 	public static SharedPreferences mPrefs;
 	public static SharedPreferences mUserPrefs;
 	private static AndroidApplication instance;
 	
 	private User self;
 	private boolean ready = true;
-	private TaskHandler mTaskHandler;
-	private HandlerThread mTaskThread;
 	
-	private BestLocationListener mBestLocationListener;
 	private RemoteResourceManager mRemoteResourceManager;
-
+	private BestLocationListener mBestLocationListener = new BestLocationListener();
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		Log.setLevel(DEBUG);
+		Log.setLevel(Config.DEBUG);
 
+		// Volley networking setup
+		RequestManager.init(this);
+		
         inital();
         register();
-        
-        // 应用需要后台执行数据处理，开启新的线程处理
-        mTaskThread = new HandlerThread(TAG + "-AsyncThread");
-        mTaskThread.start();
-        mTaskHandler = new TaskHandler(mTaskThread.getLooper());
-        
-        mBestLocationListener = new BestLocationListener();
-        
 	}
 
 	private void inital() {
@@ -198,90 +188,40 @@ public class AndroidApplication extends Application implements
         }
     }
 	
-	public void requestLocationUpdates(boolean gps) {
-		mBestLocationListener.register((LocationManager) getSystemService(Context.LOCATION_SERVICE), gps);
+	public void requestLocationUpdates() {
+		mBestLocationListener.register(this);
 	}
 
 	public void requestLocationUpdates(Observer observer) {
 		mBestLocationListener.addObserver(observer);
-		mBestLocationListener.register((LocationManager) getSystemService(Context.LOCATION_SERVICE), true);
+		mBestLocationListener.register(this);
 	}
 
-	public void updateLocation() {
-		mBestLocationListener.updateLastKnownLocation((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-	}
-	
-	public void updateLocation(Location location) {
-		mBestLocationListener.updateLocation(location);
-	}
-	
 	public void removeLocationUpdates() {
-		mBestLocationListener.unregister((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+		mBestLocationListener.unregister();
 	}
 
 	public void removeLocationUpdates(Observer observer) {
 		mBestLocationListener.deleteObserver(observer);
-		this.removeLocationUpdates();
+		mBestLocationListener.unregister();
 	}
 
 	public Location getLastKnownLocation() {
 		return mBestLocationListener.getLastKnownLocation();
 	}
 
-	public Location getLastKnownLocationOrThrow() throws LocationException {
-		Location location = mBestLocationListener.getLastKnownLocation();
-		if (location == null) {
-			throw new LocationException();
-		}
-		return location;
-	}
-
-	public void clearLastKnownLocation() {
-		mBestLocationListener.clearLastKnownLocation();
-	}
-
 	@Override
 	public void onMediaCardAvailable() {
-		// TODO Auto-generated method stub
 		Log.d("Media state changed, reloading resource managers");
 		loadResourceManagers();
-		mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_INIT_DIR);
 	}
 
 	@Override
 	public void onMediaCardUnavailable() {
-		// TODO Auto-generated method stub
 		getRemoteResourceManager().shutdown();
         loadResourceManagers();
 	}
 
-	static class TaskHandler extends Handler {
-		private static final int MESSAGE_INIT_DIR = 0;
-        private static final int MESSAGE_UPDATE_USER = 1;
-        private static final int MESSAGE_START_SERVICE = 2;
-
-        
-        public TaskHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (DEBUG) Log.d(TAG, "handleMessage: " + msg.what);
-            
-            switch (msg.what) {
-	            case MESSAGE_INIT_DIR:
-	            	setupDefaults();
-	            	break;
-	            case MESSAGE_UPDATE_USER:
-	            	break;
-	            case MESSAGE_START_SERVICE:
-	            	break;
-            }
-        }
-	}
-	
 	private static void setupDefaults() {
 		try { //创建默认文件目录
 			File root=new File(Environment.getExternalStorageDirectory(), Constants.APP_NAME);
@@ -307,13 +247,13 @@ public class AndroidApplication extends Application implements
 	            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
 	            return pi.versionCode;
 	        } catch (NameNotFoundException e) {
-	            if (DEBUG) Log.d(TAG, "Could not retrieve package info", e);
+	            if (Config.DEBUG) Log.d(TAG, "Could not retrieve package info", e);
 	            throw new RuntimeException(e);
 	        }
     }
 	
 	private void sendCrashReports() {
-		if (!DEBUG) { // 非调试状态，收集异常日志 
+		if (!Config.DEBUG) { // 非调试状态，收集异常日志 
 			Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 				@Override
 				public void uncaughtException(Thread t, Throwable e) {
@@ -338,7 +278,6 @@ public class AndroidApplication extends Application implements
 	@Override
 	public void onLoggedIn() {
 		// TODO 登陆成功
-		 mTaskHandler.sendEmptyMessage(TaskHandler.MESSAGE_UPDATE_USER);
 	}
 
 	@Override

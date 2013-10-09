@@ -88,7 +88,7 @@ public final class QPopupWindow {
 					LayoutParams.WRAP_CONTENT, true);
 			popupWindow.setOutsideTouchable(true);
 			popupWindow.setBackgroundDrawable(new ColorDrawable(0xb0000000));
-			popupWindow.setAnimationStyle(R.style.Theme_PopDownMenu);
+			popupWindow.setAnimationStyle(R.style.Animations_PopDownMenu);
 		}
 	}
 	

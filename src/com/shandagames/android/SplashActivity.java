@@ -1,12 +1,12 @@
 package com.shandagames.android;
 
 import com.shandagames.android.R;
-import com.shandagames.android.app.BaseActivity;
 import com.shandagames.android.log.Log;
 import com.shandagames.android.photoview.PhotoViewAttacher;
 import com.shandagames.android.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import com.shandagames.android.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import com.shandagames.android.util.ImageHelper;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
@@ -23,7 +23,7 @@ import android.widget.Toast;
  * @author  lilong
  * @version 2012-6-15 下午2:49:59
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends Activity {
 	static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
 	
 	private Bitmap bitmap = null;

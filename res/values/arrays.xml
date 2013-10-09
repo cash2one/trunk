@@ -50,10 +50,13 @@
     <string-array name="simple_menu_list">
         <item>主页</item>
         <item>Tab导航</item>
-        <item>Widget</item>
+        <item>Widget组件</item>
         <item>Flotr图表</item>
         <item>TabHost</item>
-		<item>系统设置</item>
+		<item>传感器</item>
+       	<item>系统设置</item>
+       	<item>谷歌地图</item>
+		<item>视频播放</item>
         <item>微博同步</item>
         <item>云标签</item>
         <item>定位服务</item>
@@ -92,14 +95,17 @@
         <item>读取Json数据</item>
         <item>应用程序管理</item>
         <item>读取Gtalk联系人</item>
-        <item>GridLayout布局</item>
+        <item>Grid表格布局</item>
         <item>系统语音搜索</item>
         <item>TTS语音朗读</item>
         <item>内容上拉滑动</item>
         <item>内容侧拉滑动</item>
+        <item>列表下拉刷新</item>
         <item>发送系统通知</item>
         <item>NDK常用操作</item>
         <item>系统内容分享</item>
         <item>网络文件下载</item>
+        <item>开启服务监听</item>
+        <item>打开本地应用</item>
     </string-array>
 </resources>

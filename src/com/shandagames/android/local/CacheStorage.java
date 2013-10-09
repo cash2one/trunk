@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.shandagames.android.log.LogUtils;
-
 /**
  * @file CacheStorage.java
  * @create 2012-10-9 上午10:24:41
@@ -35,10 +33,10 @@ public class CacheStorage {
 			out.writeObject(CacheManager.getCacheMap());
 			out.writeObject(CacheManager.getCacheConfigMap());
 		} catch (FileNotFoundException e) {
-			LogUtils.out(e.getMessage());
+			System.out.println(e.getMessage());
 			return false;
 		} catch (IOException e) {
-			LogUtils.out(e.getMessage());
+			System.out.println(e.getMessage());
 			return false;
 		}  catch (Exception e) {
 			return false;

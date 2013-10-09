@@ -41,7 +41,7 @@ public final class NetworkUtils {
 	}
 
 	/** 获取设备IP地址 */
-	public static String getIPAddress(Context context) {
+	public static String ipToString(Context context) {
 		WifiManager wifiManager = (WifiManager) context
 				.getSystemService(Context.WIFI_SERVICE);
 		WifiInfo wifiInfo = wifiManager.getConnectionInfo();

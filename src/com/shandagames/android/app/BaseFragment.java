@@ -1,6 +1,6 @@
 package com.shandagames.android.app;
 
-import com.shandagames.android.fragment.callback.FragmentCallback;
+import com.shandagames.android.fragment.FragmentCallback;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

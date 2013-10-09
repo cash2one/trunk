@@ -18,7 +18,7 @@ import android.widget.Button;
  */
 public class QButton extends Button {
 
-	private static final String TAG = LogUtils.makeLogTag(QButton.class);
+	private static final String TAG = "QButton";
 	
 	/**
 	 * @param context

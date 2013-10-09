@@ -13,9 +13,9 @@ public class Location implements Parcelable {
 
 	private double geolat;
 	private double geolng;
-	private String address="";
-	private float acc=-1;
-	
+	private String address = "";
+	private float acc = -1;
+
 	public Location() {
 	}
 
@@ -92,8 +92,7 @@ public class Location implements Parcelable {
 
 	@Override
 	public String toString() {
-		return "Location [geolat=" + geolat + ", geolng=" + geolng
-				+ ", address=" + address + ", acc=" + acc + "]";
+		return "Location [geolat=" + geolat + ", geolng=" + geolng + ", address=" + address + ", acc=" + acc + "]";
 	}
 
 }

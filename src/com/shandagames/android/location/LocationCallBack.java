@@ -1,9 +1,8 @@
 package com.shandagames.android.location;
 
+import android.os.Handler;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.Handler;
-
 import com.shandagames.android.app.AndroidApplication;
 
 /**

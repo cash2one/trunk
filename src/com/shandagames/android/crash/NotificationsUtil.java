@@ -1,6 +1,6 @@
 package com.shandagames.android.crash;
 
-import com.shandagames.android.constant.Constants;
+import com.shandagames.android.constant.Config;
 import com.shandagames.android.location.LocationException;
 import android.content.Context;
 import android.util.Log;
@@ -17,7 +17,7 @@ import java.net.SocketTimeoutException;
  */
 public class NotificationsUtil {
     private static final String TAG = "NotificationsUtil";
-    private static final boolean DEBUG = Constants.DEVELOPER_MODE;
+    private static final boolean DEBUG = Config.DEBUG;
 
     public static void ToastReasonForFailure(Context context, Exception e) {
         if (DEBUG) Log.d(TAG, "Toasting for exception: ", e);

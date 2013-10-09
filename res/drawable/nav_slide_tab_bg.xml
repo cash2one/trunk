@@ -3,7 +3,7 @@
 
     <item android:drawable="@drawable/nav_tab_bg_pressed" android:state_selected="true"/>
     <item android:drawable="@drawable/nav_tab_bg_pressed" android:state_pressed="true"/>
-    <item android:drawable="@drawable/nav_tab_bg_pressed" android:state_focused="true"/>
+    <item android:drawable="@drawable/nav_tab_bg_pressed" android:state_checked="true"/>
     <item android:drawable="@android:color/transparent"/>
 
 </selector>

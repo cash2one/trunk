@@ -18,7 +18,7 @@ import android.content.Intent;
  */
 public class AppWidgetProviderHelper extends AppWidgetProvider {
 
-	private static final String TAG = LogUtils.makeLogTag(AppWidgetProviderHelper.class);
+	private static final String TAG = "AppWidgetProviderHelper";
 	
 	private static final String UPDATE_ACTION = "com.app.widget.provider.UPDATE_APP_WIDGET";
 	

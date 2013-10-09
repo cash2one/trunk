@@ -39,7 +39,7 @@ import com.shandagames.android.util.CameraHelper.Size;
 public class CameraView extends SurfaceView implements Callback,
 		PreviewCallback, PictureCallback {
 
-	private static final String TAG = LogUtils.makeLogTag(CameraView.class);
+	private static final String TAG = "CameraView";
 	
 	private Context mContext;
 	private Camera mCamera;

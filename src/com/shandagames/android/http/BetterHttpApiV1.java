@@ -11,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import android.content.Context;
 import android.util.Log;
+
+import com.shandagames.android.constant.Config;
 import com.shandagames.android.constant.Constants;
 import com.shandagames.android.parser.GroupParser;
 import com.shandagames.android.parser.Result;
@@ -23,7 +25,7 @@ import com.shandagames.android.parser.json.PlaceParser;
  * @description TODO
  */
 public class BetterHttpApiV1 {
-	private static final boolean DEBUG = Constants.DEVELOPER_MODE;
+	private static final boolean DEBUG = Config.DEBUG;
 	
 	// Google API Key
 	private static final String API_KEY = "AIzaSyCRLa4LQZWNQBcjCYcIVYA45i9i8zfClqc"; // place your API key here

@@ -9,17 +9,30 @@ import android.os.Environment;
 
 public final class EnvironmentAccessor {
 
-	@TargetApi(Build.VERSION_CODES.FROYO)
-	public static File getExternalCacheDir(final Context context) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
-			return context.getExternalCacheDir();
-		final File ext_storage_dir = Environment.getExternalStorageDirectory();
-		if (ext_storage_dir != null && ext_storage_dir.isDirectory()) {
-			final String ext_cache_path = ext_storage_dir.getAbsolutePath() + "/Android/data/"
-					+ context.getPackageName() + "/cache/";
-			final File ext_cache_dir = new File(ext_cache_path);
-			if (ext_cache_dir.isDirectory() || ext_cache_dir.mkdirs()) return ext_cache_dir;
-		}
-		return null;
+	public static boolean isExternalStorageAvailable() {
+		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
 	}
+	
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	public static boolean isExternalStorageRemovable() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            return Environment.isExternalStorageRemovable();
+        }
+        return true;
+    }
+	
+	public static boolean hasExternalCacheDir() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.FROYO)
+	public static File getExternalCacheDir(Context context) {
+        if (hasExternalCacheDir()) {
+            return context.getExternalCacheDir();
+        }
+
+        // Before Froyo we need to construct the external cache dir ourselves
+        final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
+        return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+    }
 }

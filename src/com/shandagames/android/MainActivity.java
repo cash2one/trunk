@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	
 	protected void onResume() {
 		super.onResume();
-		((AndroidApplication)getApplication()).requestLocationUpdates(false);
+		((AndroidApplication)getApplication()).requestLocationUpdates();
 	}
 	
 	@Override

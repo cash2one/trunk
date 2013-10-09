@@ -1,62 +1,75 @@
-
 package com.shandagames.android.location;
 
+import java.util.List;
+import java.util.Observable;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import java.util.Date;
-import java.util.List;
-import java.util.Observable;
 
 /**
- * 
- * @file BestLocationListener.java
- * @create 2012-9-19 下午5:55:15
- * @author lilong
- * @description TODO
+ * @file BestLocationListener
+ * @create 2013-2-1 上午10:36:14
+ * @author Jacky.Lee (dreamxsky@gmail.com)
+ * @description 启用谷歌定位当前地理位置
  */
 public class BestLocationListener extends Observable implements LocationListener {
-    private static final String TAG = "BestLocationListener";
-    private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
+	private static final String TAG = "BestLocationListener";
+	
+	private static final int CHECK_INTERVAL = 1000 * 30;
+	
+	private static final long LOCATION_UPDATE_MIN_TIME = 1000; // 间隔最小时间
+	private static final long LOCATION_UPDATE_MIN_DISTANCE = 10; // 间隔最小距离
+	    
+	private Location mLastLocation;
+	private LocationManager locationManager;
+	
+	public BestLocationListener() {
+		super();
+	}
+	
+	public void onLocationChanged(Location location) {
+		if (DEBUG) Log.d(TAG, "onLocationChanged: " + location);
+		updateLocation(location);
+	}
 
-    public static final long LOCATION_UPDATE_MIN_TIME = 0;
-    public static final long LOCATION_UPDATE_MIN_DISTANCE = 0;
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
 
-    public static final long SLOW_LOCATION_UPDATE_MIN_TIME = 1000 * 60 * 5;
-    public static final long SLOW_LOCATION_UPDATE_MIN_DISTANCE = 50;
+	@Override
+	public void onProviderEnabled(String provider) {
+	}
 
-    public static final float REQUESTED_FIRST_SEARCH_ACCURACY_IN_METERS = 100.0f;
-    public static final int REQUESTED_FIRST_SEARCH_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
+	@Override
+	public void onProviderDisabled(String provider) {
+	}
+	
+	public void updateLocation(Location location) {
+        if (DEBUG) {
+            Log.d(TAG, "updateLocation: Old: " + mLastLocation);
+            Log.d(TAG, "updateLocation: New: " + location);
+        }
+        // Cases where we only have one or the other.
+        if (location != null && mLastLocation == null) {
+            if (DEBUG) Log.d(TAG, "updateLocation: Null last location");
+            onBestLocationChanged(location);
+            return;
 
-    public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 1000 * 60 * 5;
-
-    private Location mLastLocation;
-
-    public BestLocationListener() {
-        super();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (DEBUG) Log.d(TAG, "onLocationChanged: " + location);
-        updateLocation(location);
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    synchronized public void onBestLocationChanged(Location location) {
+        } else if (location != null && isBetterLocation(location, mLastLocation)) {
+        	if (DEBUG) Log.d(TAG, "the best location is " + location);
+        	onBestLocationChanged(location);
+        	 
+        } else if (location == null) {
+            if (DEBUG) Log.d(TAG, "updated location is null, doing nothing");
+            return;
+        } 
+	 }
+	
+	synchronized public void onBestLocationChanged(Location location) {
         if (DEBUG) Log.d(TAG, "onBestLocationChanged: " + location);
         mLastLocation = location;
         setChanged();
@@ -70,125 +83,85 @@ public class BestLocationListener extends Observable implements LocationListener
     synchronized public void clearLastKnownLocation() {
         mLastLocation = null;
     }
-
-    public void updateLocation(Location location) {
-        if (DEBUG) {
-            Log.d(TAG, "updateLocation: Old: " + mLastLocation);
-            Log.d(TAG, "updateLocation: New: " + location);
-        }
-
-        // Cases where we only have one or the other.
-        if (location != null && mLastLocation == null) {
-            if (DEBUG) Log.d(TAG, "updateLocation: Null last location");
-            onBestLocationChanged(location);
-            return;
-
-        } else if (location == null) {
-            if (DEBUG) Log.d(TAG, "updated location is null, doing nothing");
-            return;
-        }
-
-        long now = new Date().getTime();
-        long locationUpdateDelta = now - location.getTime();
-        long lastLocationUpdateDelta = now - mLastLocation.getTime();
-        boolean locationIsInTimeThreshold = locationUpdateDelta <= LOCATION_UPDATE_MAX_DELTA_THRESHOLD;
-        boolean lastLocationIsInTimeThreshold = lastLocationUpdateDelta <= LOCATION_UPDATE_MAX_DELTA_THRESHOLD;
-        boolean locationIsMostRecent = locationUpdateDelta <= lastLocationUpdateDelta;
-
-        boolean accuracyComparable = location.hasAccuracy() || mLastLocation.hasAccuracy();
-        boolean locationIsMostAccurate = false;
-        if (accuracyComparable) {
-            // If we have only one side of the accuracy, that one is more
-            // accurate.
-            if (location.hasAccuracy() && !mLastLocation.hasAccuracy()) {
-                locationIsMostAccurate = true;
-            } else if (!location.hasAccuracy() && mLastLocation.hasAccuracy()) {
-                locationIsMostAccurate = false;
-            } else {
-                // If we have both accuracies, do a real comparison.
-                locationIsMostAccurate = location.getAccuracy() <= mLastLocation.getAccuracy();
-            }
-        }
-
-        if (DEBUG) {
-            Log.d(TAG, "locationIsMostRecent:\t\t\t" + locationIsMostRecent);
-            Log.d(TAG, "locationUpdateDelta:\t\t\t" + locationUpdateDelta);
-            Log.d(TAG, "lastLocationUpdateDelta:\t\t" + lastLocationUpdateDelta);
-            Log.d(TAG, "locationIsInTimeThreshold:\t\t" + locationIsInTimeThreshold);
-            Log.d(TAG, "lastLocationIsInTimeThreshold:\t" + lastLocationIsInTimeThreshold);
-
-            Log.d(TAG, "accuracyComparable:\t\t\t" + accuracyComparable);
-            Log.d(TAG, "locationIsMostAccurate:\t\t" + locationIsMostAccurate);
-        }
-
-        // Update location if its more accurate and w/in time threshold or if
-        // the old location is
-        // too old and this update is newer.
-        if (accuracyComparable && locationIsMostAccurate && locationIsInTimeThreshold) {
-            onBestLocationChanged(location);
-        } else if (locationIsInTimeThreshold && !lastLocationIsInTimeThreshold) {
-            onBestLocationChanged(location);
-        }
+    
+    public void register(Context context) {
+    	if (DEBUG) Log.d(TAG, "Registering this location listener: " + this.toString());
+    	locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    	List<String> providers = locationManager.getProviders(true);
+    	for (int i = 0; i < providers.size(); i++) {
+    		String providerName = providers.get(i);
+    		if (locationManager.isProviderEnabled(providerName)) {
+    			updateLocation(locationManager.getLastKnownLocation(providerName));
+    			locationManager.requestLocationUpdates(providerName, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, this);
+    		}
+    	}
     }
-
-    public boolean isAccurateEnough(Location location) {
-        if (location != null && location.hasAccuracy()
-                && location.getAccuracy() <= REQUESTED_FIRST_SEARCH_ACCURACY_IN_METERS) {
-            long locationUpdateDelta = new Date().getTime() - location.getTime();
-            if (locationUpdateDelta < REQUESTED_FIRST_SEARCH_MAX_DELTA_THRESHOLD) {
-                if (DEBUG) Log.d(TAG, "Location is accurate: " + location.toString());
-                return true;
-            }
-        }
-        if (DEBUG) Log.d(TAG, "Location is not accurate: " + String.valueOf(location));
-        return false;
-    }
-
-    public void register(LocationManager locationManager, boolean gps) {
-        if (DEBUG) Log.d(TAG, "Registering this location listener: " + this.toString());
-        long updateMinTime = SLOW_LOCATION_UPDATE_MIN_TIME;
-        long updateMinDistance = SLOW_LOCATION_UPDATE_MIN_DISTANCE;
-        if (gps) {
-            updateMinTime = LOCATION_UPDATE_MIN_TIME;
-            updateMinDistance = LOCATION_UPDATE_MIN_DISTANCE;
-        }
-        List<String> providers = locationManager.getProviders(true);
-        for (int i = 0; i < providers.size(); i++) {
-            String providerName = providers.get(i);
-            if (locationManager.isProviderEnabled(providerName)) {
-            	locationManager.requestLocationUpdates(providerName, updateMinTime, updateMinDistance, this);
-            }
-            
-          /*if (locationManager.isProviderEnabled(providerName)) {
-                updateLocation(locationManager.getLastKnownLocation(providerName));
-            }
-            // Only register with GPS if we've explicitly allowed it.
-            if (gps || !LocationManager.GPS_PROVIDER.equals(providerName)) {
-                locationManager.requestLocationUpdates(providerName, updateMinTime, updateMinDistance, this);
-            }*/
-        }
-    }
-
-    public void unregister(LocationManager locationManager) {
+    
+    public void unregister() {
         if (DEBUG) Log.d(TAG, "Unregistering this location listener: " + this.toString());
-        locationManager.removeUpdates(this);
-    }
-
-    /**
-     * Updates the current location with the last known location without
-     * registering any location listeners.
-     * 
-     * @param locationManager the LocationManager instance from which to
-     *            retrieve the latest known location
-     */
-    synchronized public void updateLastKnownLocation(LocationManager locationManager) {
-        List<String> providers = locationManager.getProviders(true);
-        for (int i = 0, providersCount = providers.size(); i < providersCount; i++) {
-            String providerName = providers.get(i);
-            if (locationManager.isProviderEnabled(providerName)) {
-                updateLocation(locationManager.getLastKnownLocation(providerName));
-            }
+        if (locationManager != null) {
+        	locationManager.removeUpdates(this);
         }
     }
     
+	/**
+	 * Determines whether one Location reading is better than the current Location fix
+	 * 
+	 * @param location The new Location that you want to evaluate
+	 * @param currentBestLocation The current Location fix, to which you want to compare the new one
+	 */
+	public boolean isBetterLocation(Location location, Location currentBestLocation) {
+		if (currentBestLocation == null) {
+			// A new location is always better than no location
+			return true;
+		}
+
+		// Check whether the new location fix is newer or older
+		long timeDelta = location.getTime() - currentBestLocation.getTime();
+		boolean isSignificantlyNewer = timeDelta > CHECK_INTERVAL;
+		boolean isSignificantlyOlder = timeDelta < -CHECK_INTERVAL;
+		boolean isNewer = timeDelta > 0;
+
+		// If it's been more than two minutes since the current location, use
+		// the new location
+		// because the user has likely moved
+		if (isSignificantlyNewer) {
+			return true;
+			// If the new location is more than two minutes older, it must be
+			// worse
+		} else if (isSignificantlyOlder) {
+			return false;
+		}
+
+		// Check whether the new location fix is more or less accurate
+		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+		boolean isLessAccurate = accuracyDelta > 0;
+		boolean isMoreAccurate = accuracyDelta < 0;
+		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+		// Check if the old and new location are from the same provider
+		boolean isFromSameProvider = isSameProvider(location.getProvider(),
+				currentBestLocation.getProvider());
+
+		// Determine location quality using a combination of timeliness and
+		// accuracy
+		if (isMoreAccurate) {
+			return true;
+		} else if (isNewer && !isLessAccurate) {
+			return true;
+		} else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether two providers are the same
+	 */
+	public boolean isSameProvider(String provider1, String provider2) {
+		if (provider1 == null) {
+			return provider2 == null;
+		}
+		return provider1.equals(provider2);
+	}
 }

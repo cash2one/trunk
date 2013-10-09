@@ -1,8 +1,6 @@
 package com.shandagames.android.log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Locale;
 import android.util.Log;
 
 /**
@@ -14,125 +12,61 @@ import android.util.Log;
  */
 public class LogUtils {
 
-    private static boolean debug = false;
+    private static boolean DEBUG = false;
     
-    /**
-     * WARNING: Don't use this when obfuscating class names with Proguard!
-     */
-    public static String makeLogTag(Class<?> clazz){
-        return clazz.getSimpleName();
+    private static String TAG = "makeLog";
+    
+    
+    public static void enableDebugLogging(boolean enabled) {
+    	DEBUG = enabled;
     }
     
-    public static void isDebug(boolean isDebug){
-        debug = isDebug;
+    public static void setTag(String tag) {
+    	TAG = tag;
     }
     
-    public static void d(final String tag, String message) {
-        if (debug && Log.isLoggable(tag, Log.DEBUG)) {
-            Log.d(tag, message);
-        }
-    }
-
-    public static void d(final String tag, String message, Throwable cause) {
-        if (debug && Log.isLoggable(tag, Log.DEBUG)) {
-            Log.d(tag, message, cause);
-        }
-    }
-
-    public static void v(final String tag, String message) {
-        if (debug && Log.isLoggable(tag, Log.VERBOSE)) {
-            Log.v(tag, message);
-        }
-    }
-
-    public static void v(final String tag, String message, Throwable cause) {
-        if (debug && Log.isLoggable(tag, Log.VERBOSE)) {
-            Log.v(tag, message, cause);
-        }
+    public static void setTag(Class<?> clazz) {
+    	TAG = clazz.getSimpleName();
     }
     
-    public static void i(final String tag, String message) {
-    	if (debug && Log.isLoggable(tag, Log.INFO)) {
-            Log.i(tag, message);
-        }
-    }
-
-    public static void i(final String tag, String message, Throwable cause) {
-        if (debug && Log.isLoggable(tag, Log.INFO)) {
-        	Log.i(tag, message, cause);
-        }
-    }
-    
-    
-    public static void w(String tag, String message){
-    	 if (debug && Log.isLoggable(tag, Log.WARN)) {
-         	Log.w(tag, message);
-         }
-    }
-    
-    public static void w(String tag, String message, Throwable cause){
-   	 if (debug && Log.isLoggable(tag, Log.WARN)) {
-        	Log.w(tag, message, cause);
-        }
-   }
-    
-    public static void e(String tag, String message){
-        if(debug && Log.isLoggable(tag, Log.ERROR)){
-            Log.e(tag, message);
-        }
-    } 
-    
-    public static void e(String tag, String message, Throwable cause){
-        if(debug && Log.isLoggable(tag, Log.ERROR)){
-            Log.e(tag, message);
-        }
-    } 
-    
-    public static void out(Object message) {
-    	if(debug) {
-    		System.out.println(message);
+    public static void v(String msgFormat, Object... args) {
+    	if (DEBUG) {
+    		Log.v(TAG, buildMessage(msgFormat, args));
     	}
     }
     
-    public static void out(Object message, Throwable cause) {
-    	if(debug) {
-    		System.out.println(message);
-    		cause.printStackTrace();
+    public static void d(String msgFormat, Object... args) {
+    	if (DEBUG) {
+    		Log.d(TAG, buildMessage(msgFormat, args));
     	}
     }
     
-    private LogUtils() {
+    public static void i(String msgFormat, Object... args) {
+    	if (DEBUG) {
+    		Log.i(TAG, buildMessage(msgFormat, args));
+    	}
     }
     
-    /*
-     * capture application log. add android.permission.READ_LOGS;
-     */
-    public static String captureAppLog() {
-    	Process mLogcatProc = null; 
-    	BufferedReader reader = null;
-    	
-    	try {
-    		mLogcatProc = Runtime.getRuntime().exec(new String[]{"logcat", "-d"});          
-    		reader = new BufferedReader(new InputStreamReader(mLogcatProc.getInputStream()));         
-    		String line;         
-    		StringBuffer log = new StringBuffer();         
-    		String separator = System.getProperty("line.separator");           
-    		while ((line = reader.readLine()) != null) {                 
-    			log.append(line);                 
-    			log.append(separator);         
-    		} 
-    		return log.toString();
-    		
-    	} catch(IOException ex) {
-    		out("capture application log occur error :" + ex.getMessage());
-    	} finally {
-    		if(reader != null) {
-    			try {
-    				reader.close();
-    			} catch(IOException ex){
-    			}
-    		}
+    public static void w(String msgFormat, Object... args) {
+    	if (DEBUG) {
+    		Log.w(TAG, buildMessage(msgFormat, args));
     	}
-    	return "";
     }
+    
+    public static void e(String msgFormat, Object... args) {
+    	if (DEBUG) {
+    		Log.e(TAG, buildMessage(msgFormat, args));
+    	}
+    }
+    
+    private static String buildMessage(String format, Object... args) {
+        String msg = (args == null) ? format : String.format(Locale.US, format, args);
+        StackTraceElement ste = new Throwable().getStackTrace()[1];
+        String traceInfo = ste.getClassName() + "::";
+		traceInfo += ste.getMethodName();
+		traceInfo += "@" + ste.getLineNumber() + ">>>";
+        return String.format(Locale.US, "[%d] %s",
+                Thread.currentThread().getId(), traceInfo + msg);
+    }
+    
 }

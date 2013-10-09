@@ -40,9 +40,8 @@ public class PullToRefreshActivity extends Activity {
                 android.R.layout.simple_list_item_1, mListItems);
 
         mListView.setAdapter(adapter);
-        
         mListView.setLastUpdated(date);
-        mListView.autoStartRefresh();
+        mListView.prepareForRefresh();
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {

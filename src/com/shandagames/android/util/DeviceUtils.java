@@ -6,7 +6,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.UUID;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -18,6 +17,7 @@ import android.provider.Settings.Secure;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 public class DeviceUtils {
 
@@ -54,6 +54,25 @@ public class DeviceUtils {
     		return false;
     	}
     }
+    
+    public static float pxToDp(Context ctx, float px) {
+    	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, ctx.getResources().getDisplayMetrics());
+    }
+    
+    public static float dpToPx(Context ctx, float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, ctx.getResources().getDisplayMetrics());
+    }
+    
+    public static float PxToSp(Context ctx, float px) {
+    	float scaledDensity = ctx.getResources().getDisplayMetrics().scaledDensity;
+    	return (px / scaledDensity);
+    }
+ 
+    public static float spToPx(Context ctx, float sp) {
+        float scaledDensity = ctx.getResources().getDisplayMetrics().scaledDensity;
+        return sp * scaledDensity;
+    }
+    
     
 	/** 获取设备的密度大小   */
     public static float getDeviceDensity(Context context) {
